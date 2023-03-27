@@ -1,4 +1,4 @@
-package com.metroporto;
+package com.metroporto.users;
 
 public abstract class User
 {
