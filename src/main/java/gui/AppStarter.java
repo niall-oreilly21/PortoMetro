@@ -1,4 +1,4 @@
-package com.metroporto;
+package gui;
 
 public class AppStarter
 {
