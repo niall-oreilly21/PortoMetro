@@ -1,0 +1,136 @@
+/*
+	****************** PORTO METRO SYSTEM *******************
+*/
+
+
+/*-----------------------------------------------------------------CREATES-------------------------------------------------------------------------------------*/
+
+/*CREATES the porto metro system database*/
+CREATE DATABASE IF NOT EXISTS porto_metro_system DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE porto_metro_system;
+
+/*DROPS any of the tables that may already exists*/
+DROP TABLE IF EXISTS station_facilities, facilities, stations_in_schedules, schedules, trains, lines, stations, cards, card_types, users, zones;
+
+
+/*CREATE zones table*/
+CREATE TABLE zones 
+(
+  zone_id INT NOT NULL,
+  zone_name VARCHAR(255) NOT NULL,
+  PRIMARY KEY (zone_id)
+);
+
+
+/*CREATE card types table*/
+CREATE TABLE card_types 
+(
+  card_type_id INT NOT NULL,
+  card_type_name VARCHAR(255) NOT NULL,
+  total_trips_allowed INT,
+  zone_id INT,
+  PRIMARY KEY(card_type_id),
+  FOREIGN KEY (zone_id) REFERENCES zones(zone_id)
+);
+
+
+/*CREATE users table*/
+CREATE TABLE users
+(
+    user_id INT NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    user_password VARCHAR(255) NOT NULL,
+    user_type ENUM('passenger', 'administrator', 'student') NOT NULL,
+    PRIMARY KEY (user_id),
+    UNIQUE (username, user_password)
+);
+
+
+/*CREATE cards table*/
+CREATE TABLE cards
+(
+    card_id INT NOT NULL,
+    user_id INT NOT NULL,
+    card_type_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (card_type_id) REFERENCES card_types(card_type_id),
+    PRIMARY KEY(card_id),
+    UNIQUE(user_id)
+);
+
+
+/*CREATE stations table*/
+CREATE TABLE stations
+(
+    station_id VARCHAR(5) NOT NUll,
+    zone_id INT NOT NULL,
+    station_name VARCHAR(50),
+    PRIMARY KEY (station_id),
+    FOREIGN KEY (zone_id) REFERENCES zones(zone_id)
+);
+
+/*CREATE lines table*/
+CREATE TABLE lines
+(
+    line_id VARCHAR(1) NOT NULL,
+    line_name VARCHAR(255),
+    PRIMARY KEY (line_id)
+);
+
+-- /*CREATE trains table*/
+-- CREATE TABLE trains
+-- (
+--     train_id VARCHAR(4) NOT NULL,
+--     line_id INT,
+--     train_model VARCHAR(255),
+--     carriages INT(2),
+--     capacity INT(3),
+--     PRIMARY KEY (train_id),
+--     FOREIGN KEY (line_id) REFERENCES metro_lines(line_id)
+-- );
+
+
+/*CREATE schedules table*/
+CREATE TABLE schedules
+(
+    schedule_id VARCHAR(7) NOT NULL,
+    train_id VARCHAR(4),
+    schedule_description VARCHAR(255),
+    PRIMARY KEY (schedule_id)
+    -- FOREIGN KEY (train_id) REFERENCES trains(train_id)
+);
+
+
+/*CREATE stations_in_schedules table*/
+CREATE TABLE stations_in_schedules
+(
+    station_id VARCHAR(5) NOT NUll,
+    schedule_id VARCHAR(7) NOT NULL,
+    arrival_time DATETIME,
+    PRIMARY KEY (station_id, schedule_id),
+    FOREIGN KEY (station_id) REFERENCES stations(station_id),
+    FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id)
+);
+
+
+/*CREATE facilities table*/
+CREATE TABLE facilities
+(
+    facility_id INT NOT NUll AUTO_INCREMENT,
+    facility_description VARCHAR(255),
+    PRIMARY KEY (facility_id)
+);
+
+
+/*CREATE facilities table*/
+CREATE TABLE station_facilities
+(
+    station_id VARCHAR(5) NOT NUll,
+    facility_id INT NOT NUll,
+    PRIMARY KEY (station_id, facility_id),
+    FOREIGN KEY (station_id) REFERENCES stations(station_id),
+    FOREIGN KEY (facility_id) REFERENCES facilities(facility_id)
+);
+
+
+

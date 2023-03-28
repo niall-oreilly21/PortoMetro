@@ -26,7 +26,6 @@ public class Passenger extends User
             if(Passenger.class.isInstance(Student.class))
             {
                     this.metroCard = metroCard;
-
             }
             else
             {
