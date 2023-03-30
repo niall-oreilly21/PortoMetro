@@ -1,0 +1,24 @@
+@font-face {
+    font-family: "HarmoniaSansProCyr-Regular";
+    src: url("/fonts/HarmoniaSansProCyr-Regular.ttf");
+}
+
+@font-face {
+    font-family: "HarmoniaSansProCyr-Bold";
+    src: url("/fonts/HarmoniaSansProCyr-Bold.ttf");
+}
+
+.root {
+    -fx-font-size: 13pt;
+    -fx-font-family: "HarmoniaSansProCyr-Regular";
+}
+
+.header-label {
+    -fx-font-size: 36pt;
+    -fx-font-family: "HarmoniaSansProCyr-Bold";
+}
+
+.text-field {
+    -fx-focus-color: #00305f;
+    -fx-faint-focus-color: #00305f22;
+}

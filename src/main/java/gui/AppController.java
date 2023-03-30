@@ -11,11 +11,11 @@ public class AppController
     private Label label;
 
     public void initialize() {
-        // TODO
+        label.setText("Secret text, click button to reveal!");
     }
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        label.setText("Hello World!");
+        label.setText("You're a bitch!");
     }
 }
