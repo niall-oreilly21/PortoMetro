@@ -6,9 +6,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="gui.SignUpController">
+            fx:controller="gui.SignUpController"
+            stylesheets="/style/main.css">
     <HBox>
         <AnchorPane>
             <ImageView fx:id="metro1" preserveRatio="true" fitHeight="800"
@@ -16,8 +18,38 @@
             <ImageView fx:id="logo" fitHeight="100" fitWidth="100" AnchorPane.leftAnchor="20" AnchorPane.topAnchor="20"/>
         </AnchorPane>
         <AnchorPane>
-            <VBox>
-                <Label text="Sign Up" fx:id="titleLabel" AnchorPane.leftAnchor="600" AnchorPane.topAnchor="20" textFill="#00305f"/>
+            <VBox AnchorPane.topAnchor="170" AnchorPane.leftAnchor="160" maxWidth="290">
+                <Label text="Hello there" styleClass="header-label" textFill="#00305f" wrapText="true" />
+                <Label text="Sign up for your personalised Porto Metro experience!" textFill="#8c8c8c" wrapText="true">
+                    <padding>
+                        <Insets bottom="35"/>
+                    </padding>
+                </Label>
+                <Label text="E-mail"/>
+                <TextField styleClass="form-text-field" promptText="name@mail.com">
+                    <VBox.margin>
+                        <Insets>
+                            <bottom>20</bottom>
+                        </Insets>
+                    </VBox.margin>
+                </TextField>
+                <Label text="Password"/>
+                <PasswordField styleClass="form-text-field">
+                    <VBox.margin>
+                        <Insets>
+                            <bottom>20</bottom>
+                        </Insets>
+                    </VBox.margin>
+                </PasswordField>
+                <Label text="Confirm Password"/>
+                <PasswordField styleClass="form-text-field">
+                    <VBox.margin>
+                        <Insets>
+                            <bottom>35</bottom>
+                        </Insets>
+                    </VBox.margin>
+                </PasswordField>
+                <Button text="Create account" prefWidth="270" styleClass="form-button"/>
             </VBox>
         </AnchorPane>
     </HBox>

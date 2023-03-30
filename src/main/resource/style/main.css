@@ -18,7 +18,16 @@
     -fx-font-family: "HarmoniaSansProCyr-Bold";
 }
 
+.form-text-field {
+    -fx-max-width: 270px;
+}
+
 .text-field {
     -fx-focus-color: #00305f;
     -fx-faint-focus-color: #00305f22;
+}
+
+.form-button {
+    -fx-background-color: #00305f;
+    -fx-text-fill: white;
 }

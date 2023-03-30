@@ -35,8 +35,6 @@ public class SignUpController
 
         Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
         logo.setImage(logoImage);
-
-        VBox.setMargin(titleLabel, new Insets(0, 0, 42, 0));
     }
 
     public void setScene(Scene scene) {
