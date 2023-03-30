@@ -25,31 +25,39 @@
                         <Insets bottom="35"/>
                     </padding>
                 </Label>
-                <Label text="E-mail"/>
-                <TextField styleClass="form-text-field" promptText="name@mail.com">
+                <Label text="E-mail" fx:id="emailLabel"/>
+                <TextField fx:id="emailText" styleClass="form-text-field" promptText="name@mail.com">
                     <VBox.margin>
                         <Insets>
                             <bottom>20</bottom>
                         </Insets>
                     </VBox.margin>
                 </TextField>
-                <Label text="Password"/>
-                <PasswordField styleClass="form-text-field">
+                <Label fx:id="passwordLabel" text="Password"/>
+                <PasswordField fx:id="passwordText" styleClass="form-text-field">
                     <VBox.margin>
                         <Insets>
                             <bottom>20</bottom>
                         </Insets>
                     </VBox.margin>
                 </PasswordField>
-                <Label text="Confirm Password"/>
-                <PasswordField styleClass="form-text-field">
+                <Label fx:id="confirmPasswordLabel" text="Confirm Password"/>
+                <PasswordField fx:id="confirmPasswordText" styleClass="form-text-field">
                     <VBox.margin>
                         <Insets>
-                            <bottom>35</bottom>
+                            <bottom>20</bottom>
                         </Insets>
                     </VBox.margin>
                 </PasswordField>
-                <Button text="Create account" prefWidth="270" styleClass="form-button"/>
+                <!--       TODO: add form field to differentiate different types of accounts         -->
+                <Label fx:id="errorText" textFill="#de2a1d">
+                    <VBox.margin>
+                        <Insets>
+                            <bottom>20</bottom>
+                        </Insets>
+                    </VBox.margin>
+                </Label>
+                <Button onAction="#submitForm" text="Create account" prefWidth="270" styleClass="form-button"/>
             </VBox>
         </AnchorPane>
     </HBox>
