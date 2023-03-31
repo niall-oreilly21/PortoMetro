@@ -10,15 +10,14 @@ CREATE DATABASE IF NOT EXISTS porto_metro_system DEFAULT CHARACTER SET utf8 COLL
 USE porto_metro_system;
 
 /*DROPS any of the tables that may already exists*/
-DROP TABLE IF EXISTS station_facilities, facilities, stations_in_schedules, schedules, trains, station_lines, metro_lines, stations_in_journey_routes, journey_routes, stations, blue_cards, timer_cards, cards, students_university, university, users, zones;
+DROP TABLE IF EXISTS station_facilities, facilities, stations_in_schedules, schedules, trains, station_lines, metro_lines, stations_in_journey_routes, journey_routes, stations, blue_cards, timer_cards, cards_zones, cards_prices, cards, students_universities, universities, users, zones;
 
 
 /*CREATE zones table*/
 CREATE TABLE zones 
 (
-    zone_id INT NOT NULL,
+    zone_id INT NOT NULL AUTO_INCREMENT,
     zone_name VARCHAR(255) NOT NULL,
-    zone_price DECIMAL(5, 2),
     PRIMARY KEY (zone_id)
 );
 
@@ -34,21 +33,21 @@ CREATE TABLE users
     UNIQUE (user_id, email, user_password)
 );
 
-/*CREATE university table*/
-CREATE TABLE university
+/*CREATE universities table*/
+CREATE TABLE universities
 (
-    university_id INT NOT NULL AUTO_INCREMENT,
+    university_id VARCHAR(30) NOT NULL,
     university_name VARCHAR(255) NOT NULL,
     PRIMARY KEY (university_id)
 );
 
-/*CREATE students_university table*/
-CREATE TABLE students_university
+/*CREATE students_universities table*/
+CREATE TABLE students_universities
 (
     user_id INT NOT NULL,
-    university_id INT NOT NULL,
+    university_id VARCHAR(30) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (university_id) REFERENCES university(university_id),
+    FOREIGN KEY (university_id) REFERENCES universities(university_id),
     PRIMARY KEY(user_id, university_id)
 );
 
@@ -224,4 +223,54 @@ CREATE TABLE station_facilities
 );
 
 
+/*-----------------------------------------------------------------INSERTIONS-------------------------------------------------------------------------------------*/
 
+
+/*INSERTS data INTO the zones table*/
+INSERT INTO zones (zone_name) VALUES
+("PV_VC"),
+("VCD3"),
+("VCD8"),
+("MTS1"),
+("MAI1"),
+("MAI2"),
+("MAI4"),
+("PRT1"),
+("PRT2"),
+("PRT3"),
+("GDM1"),
+("VNG1");
+
+
+/*INSERTS data INTO the universities table*/
+INSERT INTO universities (university_id, university_name) VALUES
+("UOP", "University of Porto"),
+("PIP", "Polytechnic Institute of Porto"),
+("FPU", "Fernando Pessoa University"),
+("PUI", "Portucalense University Infante D. Henrique"),
+("LUP", "Lusíada University of Porto"),
+("CUP", "Catholic University of Portugal - Porto"),
+("PIL", "Portucalense Institute for Legal Research"),
+("HEH", "Higher Education School of Health Sciences of Porto"),
+("HEM", "Higher Education School of Music and Performing Arts of Porto"),
+("HEE", "Higher Education School of Education of Porto"),
+("PIM", "Polytechnic Institute of Maia"),
+("PICA", "Polytechnic Institute of Cávado and Ave"),
+("HIM", "Higher Institute of Maia"),
+("HIA", "Higher Institute of Accounting and Administration of Porto"),
+("ISVOUGA", "Instituto Superior de Entre Douro e Vouga"),
+("ISAG", "Instituto Superior de Administração e Gestão"),
+("ESEP", "Escola Superior de Enfermagem do Porto"),
+("ESHT", "Escola Superior de Hotelaria e Turismo do Porto"),
+("ESB-UCP", "Escola Superior de Biotecnologia da Universidade Católica Portuguesa"),
+("ESAP", "Escola Superior Artística do Porto"),
+("ESP", "Escola Superior de Educação Jean Piaget (ESE Jean Piaget)"),
+("ES-ESVA", "Escola Superior de Saúde do Vale do Ave"),
+("ESTSP", "Escola Superior de Tecnologia da Saúde do Porto"),
+("ISAVE", "Instituto Superior de Saúde do Alto Ave"),
+("ISPGAYA", "Instituto Superior Politécnico Gaya"),
+("ISTA", "Instituto Superior de Tecnologias Avançadas"),
+("IPAM", "Instituto Português de Administração de Marketing"),
+("ULP", "Universidade Lusófona do Porto"),
+("IPP", "Instituto Português de Psicologia e Outras Ciências"),
+("ESTGF", "Escola Superior de Tecnologia e Gestão de Felgueiras (ESTGF)");
