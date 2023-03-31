@@ -18,7 +18,7 @@
             <ImageView fx:id="logo" fitHeight="100" fitWidth="100" AnchorPane.leftAnchor="20" AnchorPane.topAnchor="20"/>
         </AnchorPane>
         <AnchorPane>
-            <VBox AnchorPane.topAnchor="120" AnchorPane.leftAnchor="170" maxWidth="290">
+            <VBox AnchorPane.topAnchor="120" AnchorPane.leftAnchor="140" maxWidth="290">
                 <Label text="Hello there" styleClass="header-label" textFill="#00305f" wrapText="true" />
                 <Label text="Sign up for your personalised Porto Metro experience!" textFill="#8c8c8c" wrapText="true">
                     <padding>
@@ -68,7 +68,7 @@
                         </Insets>
                     </VBox.margin>
                 </Label>
-                <Button onAction="#submitForm" text="Create account" prefWidth="270" styleClass="form-button"/>
+                <Button onAction="#submitForm" text="Create account" prefWidth="300" styleClass="form-button"/>
             </VBox>
         </AnchorPane>
     </HBox>

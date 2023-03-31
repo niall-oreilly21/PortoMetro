@@ -19,7 +19,7 @@
 }
 
 .form-text-field {
-    -fx-max-width: 270px;
+    -fx-max-width: 300px;
 }
 
 .text-field, .combo-box {
