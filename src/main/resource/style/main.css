@@ -42,3 +42,8 @@
     -fx-background-color: #00305f;
     -fx-text-fill: white;
 }
+
+.hyperlink {
+    -fx-text-fill: #00305f;
+
+}

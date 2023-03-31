@@ -56,6 +56,9 @@ public class SignUpController
     @FXML
     private ToggleGroup passengerTypeToggleGroup;
 
+    private StudentUniversityController studentUniversityController;
+
+
     public void initialize()
     {
         Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/metro_1.jpg")));
@@ -127,22 +130,17 @@ public class SignUpController
             System.out.println("Sign up successful with email: " + email + ", passenger type: "  + passengerType);
 
             if (passengerType.equals("student"))
-                redirectToStudentUniversity(event);
+            {
+                ControllersUtil<StudentUniversityController> util = new ControllersUtil<>();
+                util.redirectToPage("com/gui/student_university.fxml", event, StudentUniversityController.class);
+            }
+
         }
     }
 
-    private void redirectToStudentUniversity(ActionEvent event) throws IOException
+    public void redirectToSignIn(ActionEvent event) throws IOException
     {
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getClassLoader().getResource("com/gui/student_university.fxml")));
-        Parent root = loader.load();
-        StudentUniversityController controller = loader.getController();
-
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-        stage.setTitle("Porto Metro");
-        Scene scene = new Scene(root, 1200, 768);
-        stage.setScene(scene);
-        stage.show();
-        controller.setScene(scene);
+        ControllersUtil<SignInController> util = new ControllersUtil<>();
+        util.redirectToPage("com/gui/sign_in.fxml", event, SignInController.class);
     }
 }

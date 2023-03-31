@@ -9,7 +9,7 @@
 <?import javafx.geometry.Insets?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="gui.SignUpController"
+            fx:controller="gui.SignInController"
             stylesheets="/style/main.css">
     <HBox>
         <AnchorPane>
@@ -18,9 +18,9 @@
             <ImageView fx:id="logo" fitHeight="100" fitWidth="100" AnchorPane.leftAnchor="20" AnchorPane.topAnchor="20"/>
         </AnchorPane>
         <AnchorPane>
-            <VBox AnchorPane.topAnchor="95" AnchorPane.leftAnchor="140" maxWidth="300">
-                <Label text="Hello there" styleClass="header-label" textFill="#00305f" wrapText="true" />
-                <Label text="Sign up for your personalised Porto Metro experience!" textFill="#8c8c8c" wrapText="true">
+            <VBox AnchorPane.topAnchor="190" AnchorPane.leftAnchor="130" maxWidth="350">
+                <Label text="Welcome back" styleClass="header-label" textFill="#00305f" wrapText="true" />
+                <Label text="Sign in to continue your personalised Porto Metro experience!" textFill="#8c8c8c" wrapText="true">
                     <padding>
                         <Insets bottom="35"/>
                     </padding>
@@ -41,25 +41,6 @@
                         </Insets>
                     </VBox.margin>
                 </PasswordField>
-                <Label fx:id="confirmPasswordLabel" text="Confirm Password"/>
-                <PasswordField fx:id="confirmPasswordText" styleClass="form-text-field">
-                    <VBox.margin>
-                        <Insets>
-                            <bottom>20</bottom>
-                        </Insets>
-                    </VBox.margin>
-                </PasswordField>
-                <Label text="Are you a student?"/>
-                <HBox spacing="15">
-                    <VBox.margin>
-                        <Insets>
-                            <top>20</top>
-                            <bottom>20</bottom>
-                        </Insets>
-                    </VBox.margin>
-                    <RadioButton text="Yes, I am" userData="student" fx:id="studentRadioButton"/>
-                    <RadioButton text="No, I'm not" userData="passenger" fx:id="passengerRadioButton" selected="true" />
-                </HBox>
                 <Label fx:id="errorText" textFill="#de2a1d">
                     <VBox.margin>
                         <Insets>
@@ -67,15 +48,17 @@
                         </Insets>
                     </VBox.margin>
                 </Label>
-                <Button onAction="#submitForm" text="Create account" prefWidth="300" styleClass="form-button">
+                <Button onAction="#submitForm" text="Sign in" prefWidth="300" styleClass="form-button">
                     <VBox.margin>
                         <Insets>
                             <bottom>20</bottom>
                         </Insets>
                     </VBox.margin>
                 </Button>
-                <HBox prefWidth="300" alignment="CENTER">
-                    <Hyperlink text="I have an account already" underline="true" onAction="#redirectToSignIn"/>
+                <HBox prefWidth="300" alignment="CENTER_LEFT">
+                    <HBox prefWidth="300" alignment="CENTER">
+                        <Hyperlink text="I don't have an account" underline="true" onAction="#redirectToSignUp"/>
+                    </HBox>
                 </HBox>
             </VBox>
         </AnchorPane>
