@@ -10,27 +10,15 @@ CREATE DATABASE IF NOT EXISTS porto_metro_system DEFAULT CHARACTER SET utf8 COLL
 USE porto_metro_system;
 
 /*DROPS any of the tables that may already exists*/
-DROP TABLE IF EXISTS station_facilities, facilities, stations_in_schedules, schedules, trains, station_lines, metro_lines, stations_in_journey_routes, journey_routes, stations, cards, users, card_types, zones;
+DROP TABLE IF EXISTS station_facilities, facilities, stations_in_schedules, schedules, trains, station_lines, metro_lines, stations_in_journey_routes, journey_routes, stations, blue_cards, timer_cards, cards, students_university, university, users, zones;
 
 
 /*CREATE zones table*/
 CREATE TABLE zones 
 (
-  zone_id INT NOT NULL,
-  zone_name VARCHAR(255) NOT NULL,
-  PRIMARY KEY (zone_id)
-);
-
-
-/*CREATE card types table*/
-CREATE TABLE card_types 
-(
-  card_type_id INT NOT NULL,
-  card_type_name VARCHAR(255) NOT NULL,
-  total_trips_allowed INT,
-  zone_id INT,
-  PRIMARY KEY(card_type_id),
-  FOREIGN KEY (zone_id) REFERENCES zones(zone_id)
+    zone_id INT NOT NULL,
+    zone_name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (zone_id)
 );
 
 
@@ -38,24 +26,64 @@ CREATE TABLE card_types
 CREATE TABLE users
 (
     user_id INT NOT NULL,
-    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
     user_password VARCHAR(255) NOT NULL,
     user_type ENUM('passenger', 'administrator', 'student') NOT NULL,
     PRIMARY KEY (user_id),
-    UNIQUE (username, user_password)
+    UNIQUE (user_id, email, user_password)
 );
 
+/*CREATE university table*/
+CREATE TABLE university
+(
+    university_id INT NOT NULL AUTO_INCREMENT,
+    university_name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (university_id)
+);
+
+/*CREATE students_university table*/
+CREATE TABLE students_university
+(
+    user_id INT NOT NULL,
+    university_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (university_id) REFERENCES university(university_id),
+    PRIMARY KEY(user_id, university_id)
+);
 
 /*CREATE cards table*/
 CREATE TABLE cards
 (
     card_id INT NOT NULL,
     user_id INT NOT NULL,
-    card_type_id INT NOT NULL,
+    card_type ENUM('blue card', 'grey card', 'student card', 'tour card') NOT NULL,
+    card_is_active BOOLEAN NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (card_type_id) REFERENCES card_types(card_type_id),
+    PRIMARY KEY(card_id)
+);
+
+
+/*CREATE blue card table*/
+CREATE TABLE timer_cards 
+(
+    card_id INT NOT NULL,
+    start_datetime DATETIME NOT NULL,
+    end_datetime DATETIME NOT NULL,
+    timer DATETIME,
     PRIMARY KEY(card_id),
-    UNIQUE(user_id)
+    FOREIGN KEY (card_id) REFERENCES cards(card_id)
+);
+
+
+/*CREATE card types table*/
+CREATE TABLE blue_cards
+(
+    card_id INT NOT NULL,
+    zone_id INT NOT NULL,
+    total_trips_allowed INT,
+    PRIMARY KEY(card_id),
+    FOREIGN KEY (card_id) REFERENCES cards(card_id),
+    FOREIGN KEY (zone_id) REFERENCES zones(zone_id)
 );
 
 
@@ -68,6 +96,7 @@ CREATE TABLE stations
     PRIMARY KEY (station_id),
     FOREIGN KEY (zone_id) REFERENCES zones(zone_id)
 );
+
 
 /*CREATE journey_routes table*/
 CREATE TABLE journey_routes 
@@ -86,6 +115,7 @@ CREATE TABLE journey_routes
     FOREIGN KEY (end_station_id) REFERENCES stations(station_id)
 );
 
+
 /*CREATE stations_in_journey_routes table*/
 CREATE TABLE stations_in_journey_routes 
 (
@@ -96,6 +126,7 @@ CREATE TABLE stations_in_journey_routes
     FOREIGN KEY (station_id) REFERENCES stations(station_id)
 ); 
 
+
 /*CREATE lines table*/
 CREATE TABLE metro_lines
 (
@@ -103,6 +134,7 @@ CREATE TABLE metro_lines
     line_name VARCHAR(255),
     PRIMARY KEY (line_id)
 );
+
 
 CREATE TABLE station_lines 
 (
@@ -112,6 +144,7 @@ CREATE TABLE station_lines
   FOREIGN KEY (station_id) REFERENCES stations(station_id),
   FOREIGN KEY (line_id) REFERENCES metro_lines(line_id)
 );
+
 
 /*CREATE trains table*/
 CREATE TABLE trains
