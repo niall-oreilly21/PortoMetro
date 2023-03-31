@@ -4,9 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -49,6 +47,12 @@ public class SignUpController
     @FXML
     private Label errorText;
 
+    @FXML
+    private RadioButton studentRadioButton;
+
+    @FXML
+    private RadioButton passengerRadioButton;
+
     public void initialize()
     {
         Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/metro_1.jpg")));
@@ -56,6 +60,10 @@ public class SignUpController
 
         Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
         logo.setImage(logoImage);
+
+        ToggleGroup passengerType = new ToggleGroup();
+        studentRadioButton.setToggleGroup(passengerType);
+        passengerRadioButton.setToggleGroup(passengerType);
     }
 
     public void setScene(Scene scene)

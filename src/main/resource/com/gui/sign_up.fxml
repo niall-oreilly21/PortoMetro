@@ -18,7 +18,7 @@
             <ImageView fx:id="logo" fitHeight="100" fitWidth="100" AnchorPane.leftAnchor="20" AnchorPane.topAnchor="20"/>
         </AnchorPane>
         <AnchorPane>
-            <VBox AnchorPane.topAnchor="170" AnchorPane.leftAnchor="160" maxWidth="290">
+            <VBox AnchorPane.topAnchor="130" AnchorPane.leftAnchor="170" maxWidth="290">
                 <Label text="Hello there" styleClass="header-label" textFill="#00305f" wrapText="true" />
                 <Label text="Sign up for your personalised Porto Metro experience!" textFill="#8c8c8c" wrapText="true">
                     <padding>
@@ -49,6 +49,16 @@
                         </Insets>
                     </VBox.margin>
                 </PasswordField>
+                <Label fx:id="passengerTypeLabel" text="Are you a student?"/>
+                <HBox spacing="15">
+                    <VBox.margin>
+                        <Insets>
+                            <top>20</top>
+                        </Insets>
+                    </VBox.margin>
+                    <RadioButton text="Yes, I am" userData="student" fx:id="studentRadioButton"/>
+                    <RadioButton text="No, I'm not" userData="passenger" fx:id="passengerRadioButton" selected="true" />
+                </HBox>
                 <!--       TODO: add form field to differentiate different types of accounts         -->
                 <Label fx:id="errorText" textFill="#de2a1d">
                     <VBox.margin>
