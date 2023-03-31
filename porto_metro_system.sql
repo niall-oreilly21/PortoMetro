@@ -18,6 +18,7 @@ CREATE TABLE zones
 (
     zone_id INT NOT NULL,
     zone_name VARCHAR(255) NOT NULL,
+    zone_price DECIMAL(5, 2),
     PRIMARY KEY (zone_id)
 );
 
@@ -62,6 +63,27 @@ CREATE TABLE cards
     PRIMARY KEY(card_id)
 );
 
+
+/*CREATE table cards_prices*/
+CREATE TABLE cards_prices
+(
+    card_price_id INT NOT NULL AUTO_INCREMENT,
+    card_id INT NOT NULL,
+    access_type ENUM('All zones', '3 zones') NOT NULL,
+    card_price DECIMAL(5, 2),
+    FOREIGN KEY (card_id) REFERENCES cards(card_id),
+    PRIMARY KEY(card_price_id)
+);
+
+/*CREATE table card_zones*/
+CREATE TABLE cards_zones
+(
+    card_id INT NOT NULL,
+    zone_id INT NOT NULL,
+    FOREIGN KEY (card_id) REFERENCES cards(card_id),
+    FOREIGN KEY (zone_id) REFERENCES zones(zone_id),
+    PRIMARY KEY(card_id, zone_id)
+);
 
 /*CREATE blue card table*/
 CREATE TABLE timer_cards 
