@@ -111,7 +111,7 @@ CREATE TABLE blue_cards
 /*CREATE stations table*/
 CREATE TABLE stations
 (
-    station_id VARCHAR(5) NOT NUll,
+    station_id VARCHAR(3) NOT NUll,
     zone_id INT NOT NULL,
     station_name VARCHAR(50),
     PRIMARY KEY (station_id),
@@ -124,8 +124,8 @@ CREATE TABLE journey_routes
 (
     journey_route_id INT(3) NOT NULL,
     user_id INT NOT NULL,
-    start_station_id VARCHAR(5) DEFAULT NULL,
-    end_station_id VARCHAR(5) DEFAULT NULL,
+    start_station_id VARCHAR(3) DEFAULT NULL,
+    end_station_id VARCHAR(3) DEFAULT NULL,
     start_time DATETIME NOT NULL,
     end_time DATETIME NOT NULL,
     fare DECIMAL(5,2) NOT NULL,
@@ -152,14 +152,18 @@ CREATE TABLE stations_in_journey_routes
 CREATE TABLE metro_lines
 (
     line_id VARCHAR(1) NOT NULL,
+    start_station_id VARCHAR(3) DEFAULT NULL,
+    end_station_id VARCHAR(3) DEFAULT NULL,
     line_name VARCHAR(255),
-    PRIMARY KEY (line_id)
+    PRIMARY KEY (line_id),
+    FOREIGN KEY (start_station_id) REFERENCES stations(station_id),
+    FOREIGN KEY (end_station_id) REFERENCES stations(station_id)
 );
 
 
 CREATE TABLE station_lines 
 (
-  station_id VARCHAR(5) NOT NULL,
+  station_id VARCHAR(3) NOT NULL,
   line_id VARCHAR(1) NOT NULL,
   PRIMARY KEY (station_id, line_id),
   FOREIGN KEY (station_id) REFERENCES stations(station_id),
@@ -194,7 +198,7 @@ CREATE TABLE schedules
 /*CREATE stations_in_schedules table*/
 CREATE TABLE stations_in_schedules
 (
-    station_id VARCHAR(5) NOT NUll,
+    station_id VARCHAR(3) NOT NUll,
     schedule_id VARCHAR(7) NOT NULL,
     arrival_time DATETIME,
     PRIMARY KEY (station_id, schedule_id),
@@ -215,7 +219,7 @@ CREATE TABLE facilities
 /*CREATE facilities table*/
 CREATE TABLE station_facilities
 (
-    station_id VARCHAR(5) NOT NUll,
+    station_id VARCHAR(3) NOT NUll,
     facility_id INT NOT NUll,
     PRIMARY KEY (station_id, facility_id),
     FOREIGN KEY (station_id) REFERENCES stations(station_id),
@@ -278,7 +282,7 @@ INSERT INTO universities (university_id, university_name) VALUES
 
 /*INSERTS data INTO the stations table*/    
 INSERT INTO stations (station_id, zone_id, station_name) VALUES
-("SEM", 4,"Senhor De Matosinhos"),
+("SEM", 4, "Senhor De Matosinhos"),
 ("MER", 4, "Mercado"),
 ("BRI", 4, "Brito Capelo"),
 ("MAT", 4, "Matosinhos Sul"),
@@ -295,7 +299,7 @@ INSERT INTO stations (station_id, zone_id, station_name) VALUES
 ("BOL", 8, "Bolhão"),
 ("HER", 8, "Heroísmo"),
 ("CPH", 8, "Campanhã"),
-("PVV", 1, "Póvoa De Varzim"),
+("PDV", 1, "Póvoa De Varzim"),
 ("SBR", 1, "São Brás"),
 ("PFR", 1, "Portas Fronhas"),
 ("ADP", 1, "Alto Da Pega"),
@@ -360,3 +364,13 @@ INSERT INTO stations (station_id, zone_id, station_name) VALUES
 ("CAR", 7, "Carreira"),
 ("VEN", 11, "Venda Nova"),
 ("FNZ", 11, "Fânzeres");
+
+
+/*INSERTS data INTO the metro_lines table*/    
+INSERT INTO metro_lines (line_id, start_station_id, end_station_id, line_name) VALUES
+("A", "DRG", "SEM", "Blue"),
+("B", "DRG", "PDV", "Red"),
+("C", "CPH",  "ISM", "Green"),
+("D", "HSJ", "STO", "Yellow"),
+("E", "TRI", "APO", "Purple"),
+("F", "FNZ", "SDH", "Orange");
