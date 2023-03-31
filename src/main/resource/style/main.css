@@ -22,9 +22,20 @@
     -fx-max-width: 270px;
 }
 
-.text-field {
+.text-field, .combo-box {
     -fx-focus-color: #00305f;
     -fx-faint-focus-color: #00305f22;
+    -fx-background-color: white;
+    -fx-border-color: #cfcfcf;
+    -fx-border-radius: 5px;
+}
+
+.radio-button .radio {
+    -fx-focus-color: #00305f;
+    -fx-faint-focus-color: #00305f22;
+    -fx-background-color: white;
+    -fx-border-color: #cfcfcf;
+    -fx-border-radius: 100%;
 }
 
 .form-button {

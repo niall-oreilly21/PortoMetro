@@ -2,18 +2,18 @@ package gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,6 +53,9 @@ public class SignUpController
     @FXML
     private RadioButton passengerRadioButton;
 
+    @FXML
+    private ToggleGroup passengerTypeToggleGroup;
+
     public void initialize()
     {
         Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/metro_1.jpg")));
@@ -61,9 +64,9 @@ public class SignUpController
         Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
         logo.setImage(logoImage);
 
-        ToggleGroup passengerType = new ToggleGroup();
-        studentRadioButton.setToggleGroup(passengerType);
-        passengerRadioButton.setToggleGroup(passengerType);
+        passengerTypeToggleGroup = new ToggleGroup();
+        studentRadioButton.setToggleGroup(passengerTypeToggleGroup);
+        passengerRadioButton.setToggleGroup(passengerTypeToggleGroup);
     }
 
     public void setScene(Scene scene)
@@ -74,7 +77,7 @@ public class SignUpController
         });
     }
 
-    public void submitForm(ActionEvent event)
+    public void submitForm(ActionEvent event) throws IOException
     {
         String email = emailText.getText();
         String emailPattern = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
@@ -85,6 +88,9 @@ public class SignUpController
         String confirmPassword = confirmPasswordText.getText();
         String asterisk = "*";
         String errorColour = "#de2a1d";
+
+        RadioButton selectedPassengerType = (RadioButton) passengerTypeToggleGroup.getSelectedToggle();
+        String passengerType = (String) selectedPassengerType.getUserData();
 
         Text redAsterisk = new Text(asterisk);
         redAsterisk.setFill(Color.web(errorColour));
@@ -118,7 +124,25 @@ public class SignUpController
             errorText.setText("");
 
             // TODO: Add details to MySQL database
-            System.out.println("Sign up successful with email: " + email);
+            System.out.println("Sign up successful with email: " + email + ", passenger type: "  + passengerType);
+
+            if (passengerType.equals("student"))
+                redirectToStudentUniversity(event);
         }
+    }
+
+    private void redirectToStudentUniversity(ActionEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getClassLoader().getResource("com/gui/student_university.fxml")));
+        Parent root = loader.load();
+        StudentUniversityController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+        controller.setScene(scene);
     }
 }

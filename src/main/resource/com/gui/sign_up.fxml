@@ -18,7 +18,7 @@
             <ImageView fx:id="logo" fitHeight="100" fitWidth="100" AnchorPane.leftAnchor="20" AnchorPane.topAnchor="20"/>
         </AnchorPane>
         <AnchorPane>
-            <VBox AnchorPane.topAnchor="130" AnchorPane.leftAnchor="170" maxWidth="290">
+            <VBox AnchorPane.topAnchor="120" AnchorPane.leftAnchor="170" maxWidth="290">
                 <Label text="Hello there" styleClass="header-label" textFill="#00305f" wrapText="true" />
                 <Label text="Sign up for your personalised Porto Metro experience!" textFill="#8c8c8c" wrapText="true">
                     <padding>
@@ -49,11 +49,12 @@
                         </Insets>
                     </VBox.margin>
                 </PasswordField>
-                <Label fx:id="passengerTypeLabel" text="Are you a student?"/>
+                <Label text="Are you a student?"/>
                 <HBox spacing="15">
                     <VBox.margin>
                         <Insets>
                             <top>20</top>
+                            <bottom>20</bottom>
                         </Insets>
                     </VBox.margin>
                     <RadioButton text="Yes, I am" userData="student" fx:id="studentRadioButton"/>
