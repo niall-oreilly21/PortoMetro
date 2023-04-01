@@ -865,3 +865,41 @@ DROP INDEX IF EXISTS stations_in_metro_lines_index;
 /*CREATES an index called stations_in_metro_lines_index on station_id and line_id in stations_in_metro_lines*/
 CREATE INDEX stations_in_metro_lines_index
 ON stations_in_metro_lines(station_id, line_id);
+
+
+/*-----------------------------------------------------------------VIEWS-------------------------------------------------------------------------------------*/
+
+
+DROP VIEW IF EXISTS students_details, blue_cards_details;
+
+/*CREATE A VIEW which shows students*/
+CREATE VIEW students_details AS
+SELECT users.*, universities.* FROM users
+JOIN students_universities ON users.user_id = students_universities.user_id
+JOIN universities ON students_universities.university_id = universities.university_id
+WHERE users.user_type = "student"; 
+
+/*CREATE A VIEW which shows blue_cards*/
+CREATE VIEW blue_cards_details AS
+SELECT cards.*, cards_prices.card_price_id, cards_prices.access_type, cards_prices.card_price, blue_cards.zone_id, blue_cards.total_trips_allowed  FROM cards
+JOIN blue_cards ON cards.card_id = blue_cards.card_id
+JOIN cards_prices ON cards.card_id = cards_prices.card_id
+WHERE cards.card_type = "blue card";
+
+
+/*-----------------------------------------------------------------PROCEDURES-------------------------------------------------------------------------------------*/
+
+
+/*Create a procedure that gets the grey card details*/
+DROP PROCEDURE IF EXISTS get_timer_cards_details;
+
+DELIMITER //
+CREATE PROCEDURE get_timer_cards_details(IN card_type ENUM("grey card", "student card", "tour card"))
+BEGIN 
+SELECT cards.*, cards_price_id, cards_prices.access_type, cards_prices.card_price, timer_cards.start_datetime, timer_cards.end_datetime, timer_cards.timer  FROM cards
+JOIN timer_cards ON cards.card_id = timer_cards.card_id
+JOIN cards_prices ON cards.card_id = cards_prices.card_id
+WHERE cards.card_type = card_type;
+END //
+
+DELIMITER ;
