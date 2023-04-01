@@ -90,7 +90,7 @@ public class SignInController
             passwordLabel.setGraphic(null);
             errorText.setText("");
 
-            // TODO: implement sign in authentication using Session -> might need to make Session class
+            // TODO: implement sign in authentication using MySQL + set user in App
         }
     }
 

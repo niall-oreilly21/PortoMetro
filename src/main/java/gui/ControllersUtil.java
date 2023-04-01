@@ -35,6 +35,9 @@ public class ControllersUtil<T>
             {
                 Method setSceneMethod = controllerClass.getMethod("setScene", Scene.class);
                 setSceneMethod.invoke(controller, scene);
+
+                Method setMainAppMethod = controllerClass.getMethod("setMainApp", App.class);
+                setMainAppMethod.invoke(controller, App.getApplication());
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
             {
                 // The setScene method is not defined in the controller, do nothing

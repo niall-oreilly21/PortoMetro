@@ -1,5 +1,7 @@
 package gui;
 
+import com.metroporto.Passenger;
+import com.metroporto.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -57,6 +59,14 @@ public class SignUpController
     private ToggleGroup passengerTypeToggleGroup;
 
     private StudentUniversityController studentUniversityController;
+
+    // Create a private instance variable for the MainApp instance
+    private App app;
+
+    // Setter method to set the MainApp instance
+    public void setApp(App app) {
+        this.app = app;
+    }
 
 
     public void initialize()
@@ -126,14 +136,17 @@ public class SignUpController
             confirmPasswordLabel.setGraphic(null);
             errorText.setText("");
 
-            // TODO: Add details to MySQL database
+            // TODO: Add details to MySQL database + set user in App
             System.out.println("Sign up successful with email: " + email + ", passenger type: "  + passengerType);
+
+//            User user = new User(1, email, password);
+//            app.setUser(user);
+//            System.out.println(app.getUser());
 
             if (passengerType.equals("student"))
             {
                 ControllersUtil<StudentUniversityController> util = new ControllersUtil<>();
-                util.redirectToPage("com/gui/student_university.fxml", event, StudentUniversityController.class);
-            }
+                util.redirectToPage("com/gui/student_university.fxml", event, StudentUniversityController.class);}
 
         }
     }
