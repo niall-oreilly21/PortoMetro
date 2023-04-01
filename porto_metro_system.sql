@@ -783,3 +783,85 @@ INSERT INTO station_facilities (station_id, facility_id) VALUES
 ("PDR", 7), 
 ("PDR", 9), 
 ("PDR", 11); 
+
+
+/*-----------------------------------------------------------------INDEXES-------------------------------------------------------------------------------------*/
+
+ALTER TABLE users
+DROP INDEX IF EXISTS users_index;
+
+/*CREATES an index called users_index on user_id in users*/
+CREATE INDEX users_index
+ON users(user_id);
+
+
+ALTER TABLE students_universities 
+DROP INDEX IF EXISTS student_universities_index;
+
+/*CREATES an index called student_universities_index on user_id and university_id in students_universities*/
+CREATE INDEX student_universities_index
+ON students_universities(user_id, university_id);
+
+
+ALTER TABLE cards 
+DROP INDEX IF EXISTS cards_index;
+
+/*CREATES an index called cards_index on user_id in cards*/
+CREATE INDEX cards_index
+ON cards(user_id);
+
+
+ALTER TABLE cards_prices
+DROP INDEX IF EXISTS cards_prices_index;
+
+/*CREATES an index called cards_prices_index on card_id in cards_prices*/
+CREATE INDEX cards_prices_index
+ON cards_prices(card_id);
+
+
+ALTER TABLE cards_zones
+DROP INDEX IF EXISTS cards_zones_index;
+
+/*CREATES an index called cards_prices_index on card_id and zone_id in cards_zones*/
+CREATE INDEX cards_zones_index
+ON cards_zones(card_id, zone_id);
+
+
+ALTER TABLE timer_cards
+DROP INDEX IF EXISTS timer_cards_index;
+
+/*CREATES an index called timer_cards_index on card_id in timer_cards*/
+CREATE INDEX timer_cards_index
+ON timer_cards(card_id);
+
+
+ALTER TABLE blue_cards
+DROP INDEX IF EXISTS blue_cards_index;
+
+/*CREATES an index called blue_cards_index on card_id and zone_id in timer_cards*/
+CREATE INDEX blue_cards_index
+ON blue_cards(card_id, zone_id);
+
+
+ALTER TABLE facilities
+DROP INDEX IF EXISTS facilities_index;
+
+/*CREATES an index called facilities_index on facility_id in facilities*/
+CREATE INDEX facilities_index
+ON facilities(facility_id);
+
+
+ALTER TABLE station_facilities 
+DROP INDEX IF EXISTS station_facilities_index;
+
+/*CREATES an index called station_facilities_index on station_id and facility_id in station_facilities*/
+CREATE INDEX station_facilities_index
+ON station_facilities(station_id, facility_id);
+
+
+ALTER TABLE stations_in_metro_lines  
+DROP INDEX IF EXISTS stations_in_metro_lines_index;
+
+/*CREATES an index called stations_in_metro_lines_index on station_id and line_id in stations_in_metro_lines*/
+CREATE INDEX stations_in_metro_lines_index
+ON stations_in_metro_lines(station_id, line_id);
