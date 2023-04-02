@@ -2,18 +2,18 @@ package com.metroporto.metro;
 
 public class Facility implements Comparable<Facility>
 {
-    private final int FACILITY_ID;
+    private final int facilityId;
     private String facilityDescription;
 
     public Facility(int facilityID, String facilityDescription)
     {
-        this.FACILITY_ID = facilityID;
+        this.facilityId = facilityID;
         this.facilityDescription = facilityDescription;
     }
 
-    public int getFACILITY_ID()
+    public int getFacilityId()
     {
-        return FACILITY_ID;
+        return facilityId;
     }
 
     public String getFacilitiesDescription()
@@ -30,6 +30,6 @@ public class Facility implements Comparable<Facility>
     @Override
     public int compareTo(Facility otherFacility)
     {
-        return this.FACILITY_ID - otherFacility.getFACILITY_ID();
+        return this.facilityId - otherFacility.getFacilityId();
     }
 }

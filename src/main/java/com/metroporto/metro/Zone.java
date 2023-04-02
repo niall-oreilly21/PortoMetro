@@ -4,18 +4,18 @@ import java.util.Objects;
 
 public class Zone implements Comparable<Zone>
 {
-    private int zoneID;
+    private final int zoneId;
     private String zoneName;
 
     public Zone(int zoneID, String zoneName)
     {
-        this.zoneID = zoneID;
+        this.zoneId = zoneID;
         this.zoneName = zoneName;
     }
 
-    public int getZoneID()
+    public int getZoneId()
     {
-        return zoneID;
+        return zoneId;
     }
 
     public String getZoneName()
@@ -26,13 +26,16 @@ public class Zone implements Comparable<Zone>
     @Override
     public String toString()
     {
-        return zoneName;
+        return "Zone{" +
+                "zoneId=" + zoneId +
+                ", zoneName='" + zoneName + '\'' +
+                '}';
     }
 
     @Override
     public int compareTo(Zone otherZone)
     {
-        return this.zoneID - otherZone.zoneID;
+        return this.zoneId - otherZone.zoneId;
     }
 
     @Override
@@ -41,12 +44,12 @@ public class Zone implements Comparable<Zone>
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Zone zone = (Zone) o;
-        return zoneID == zone.zoneID && Objects.equals(zoneName, zone.zoneName);
+        return zoneId == zone.zoneId && Objects.equals(zoneName, zone.zoneName);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(zoneID, zoneName);
+        return Objects.hash(zoneId, zoneName);
     }
 }

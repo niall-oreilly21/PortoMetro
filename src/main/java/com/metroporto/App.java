@@ -15,8 +15,8 @@ public class App
 {
     public static void main( String[] args )
     {
-        User passenger = new Passenger(12345,"niall","passwprd", "Niall O' Reilly", "niall.blackrock@gmail.com","123456789",new GreyCard(3434, new Time(12,12,12)));
+        User passenger = new Passenger(12345,"niall","passwprd", new GreyCard(3434, new Time(12,12,12)));
 
-        System.out.println(((Passenger) passenger).getEmail());
+        System.out.println(passenger.getEmail());
     }
 }

@@ -2,19 +2,19 @@ package com.metroporto.metro;
 
 public class University implements Comparable<University>
 {
-    private final int UNIVERSITY_ID;
+    private final int universityId;
     private String universityName;
 
 
     public University(int universityID, String universityName)
     {
-        UNIVERSITY_ID = universityID;
+        universityId = universityID;
         this.universityName = universityName;
     }
 
-    public int getUNIVERSITY_ID()
+    public int getUniversityId()
     {
-        return UNIVERSITY_ID;
+        return universityId;
     }
 
     public String getUniversityName()
@@ -25,12 +25,15 @@ public class University implements Comparable<University>
     @Override
     public String toString()
     {
-        return universityName;
+        return "University{" +
+                "universityId=" + universityId +
+                ", universityName='" + universityName + '\'' +
+                '}';
     }
 
     @Override
     public int compareTo(University otherUniversity)
     {
-        return this.UNIVERSITY_ID - otherUniversity.getUNIVERSITY_ID();
+        return this.universityId - otherUniversity.getUniversityId();
     }
 }

@@ -4,29 +4,22 @@ import com.metroporto.enums.TrainModel;
 
 public class Train implements Comparable<Train>
 {
-    private String trainID;
-    private String lineID;
+    private String trainId;
     private TrainModel trainModel;
     private int carriages;
     private int capacity;
 
-    public Train(String trainID, String lineID, TrainModel trainModel, int carriages, int capacity)
+    public Train(String trainId, TrainModel trainModel, int carriages, int capacity)
     {
-        this.trainID = trainID;
-        this.lineID = lineID;
+        this.trainId = trainId;
         this.trainModel = trainModel;
         this.carriages = carriages;
         this.capacity = capacity;
     }
 
-    public String getTrainID()
+    public String getTrainId()
     {
-        return trainID;
-    }
-
-    public String getLineID()
-    {
-        return lineID;
+        return trainId;
     }
 
     public TrainModel getTrainModel()
@@ -48,8 +41,7 @@ public class Train implements Comparable<Train>
     public String toString()
     {
         return "Train{" +
-                "trainID='" + trainID + '\'' +
-                ", lineID='" + lineID + '\'' +
+                "trainID='" + trainId + '\'' +
                 ", trainModel=" + trainModel +
                 ", carriages=" + carriages +
                 ", capacity=" + capacity +
@@ -59,10 +51,10 @@ public class Train implements Comparable<Train>
     @Override
     public int compareTo(Train otherTrain)
     {
-        if(this.lineID.equalsIgnoreCase(otherTrain.getLineID()))
+        if(this.trainModel.getLabel().equals(otherTrain.getTrainModel().getLabel()))
         {
-            return this.trainID.compareToIgnoreCase(otherTrain.getTrainID());
+            return this.trainId.compareToIgnoreCase(otherTrain.getTrainId());
         }
-        return this.lineID.compareToIgnoreCase(otherTrain.getLineID());
+        return this.trainModel.getLabel().compareTo(otherTrain.getTrainModel().getLabel());
     }
 }

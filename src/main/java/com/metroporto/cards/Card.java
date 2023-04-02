@@ -3,7 +3,7 @@ import java.sql.Time;
 
 public abstract class Card
 {
-    private int cardID;
+    private final int cardID;
     private Time durationOfCard;
 
     public Card(int cardID, Time durationOfCard)

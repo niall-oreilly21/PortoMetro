@@ -5,17 +5,11 @@ import com.metroporto.cards.StudentCard;
 
 public class Passenger extends User
 {
-    private String name;
-    private String email;
-    private String phoneNumber;
-    private Card metroCard;
+    protected Card metroCard;
 
-    public Passenger(int userID, String username, String password, String name, String email, String phoneNumber, Card metroCard)
+    public Passenger(int userID, String username, String password, Card metroCard)
     {
         super(userID, username, password);
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
         checkMetroCard(metroCard);
     }
 
@@ -38,23 +32,14 @@ public class Passenger extends User
             this.metroCard = metroCard;
         }
     }
-    public String getName()
-    {
-        return name;
-    }
-
-    public String getEmail()
-    {
-        return email;
-    }
-
-    public String getPhoneNumber()
-    {
-        return phoneNumber;
-    }
 
     public Card getMetroCard()
     {
         return metroCard;
+    }
+
+    public void setMetroCard(Card metroCard)
+    {
+        this.metroCard = metroCard;
     }
 }

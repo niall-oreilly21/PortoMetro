@@ -2,25 +2,25 @@ package com.metroporto.users;
 
 public abstract class User
 {
-    private int userID;
-    private String username;
-    private String password;
+    protected final int userId;
+    protected final String email;
+    protected final String password;
 
     public User(int userID, String username, String password)
     {
-        this.userID = userID;
-        this.username = username;
+        this.userId = userID;
+        this.email = username;
         this.password = password;
     }
 
-    public int getUserID()
+    public int getUserId()
     {
-        return userID;
+        return userId;
     }
 
-    public String getUsername()
+    public String getEmail()
     {
-        return username;
+        return email;
     }
 
     public String getPassword()

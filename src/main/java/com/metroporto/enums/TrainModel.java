@@ -1,6 +1,6 @@
 package com.metroporto.enums;
 
-public enum TrainModel
+public enum TrainModel implements LabelInterface
 {
     EURO_TRAM("Eurotram"),
     LRVs("Flexity Swift LRVs");
@@ -12,6 +12,7 @@ public enum TrainModel
         this.label = label;
     }
 
+    @Override
     public String getLabel()
     {
         return label;

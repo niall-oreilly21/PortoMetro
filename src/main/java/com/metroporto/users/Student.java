@@ -1,17 +1,19 @@
 package com.metroporto.users;
 
 import com.metroporto.cards.Card;
+import com.metroporto.metro.University;
 
 public class Student extends Passenger
 {
-    private String university;
+    private University university;
 
-    public Student(int userID, String username, String password, String name, String email, String phoneNumber, Card metroCard)
+    public Student(int userID, String username, String password, Card metroCard, University university)
     {
-        super(userID, username, password, name, email, phoneNumber, metroCard);
+        super(userID, username, password, metroCard);
+        this.university = university;
     }
 
-    public String getUniversity()
+    public University getUniversity()
     {
         return university;
     }
