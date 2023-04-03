@@ -2,13 +2,13 @@ package com.metroporto.users;
 
 public abstract class User
 {
-    protected final int userId;
+    protected int userId;
     protected final String email;
-    protected final String password;
+    protected String password;
 
-    public User(int userID, String username, String password)
+    public User(int userId, String username, String password)
     {
-        this.userId = userID;
+        this.userId = userId;
         this.email = username;
         this.password = password;
     }

@@ -1,11 +1,14 @@
 package com.metroporto.cards;
 
-import java.sql.Time;
+import com.metroporto.enums.CardAccessType;
 
-public class StudentCard extends Card
+import java.sql.Time;
+import java.time.LocalDateTime;
+
+public class StudentCard extends GreyCard
 {
-    public StudentCard(int cardID, Time durationOfCard)
+    public StudentCard(int cardId, boolean isActive, CardAccessType accessType, double cardPrice, LocalDateTime startDateTime, LocalDateTime endDateTime)
     {
-        super(cardID, durationOfCard);
+        super(cardId, isActive, accessType, cardPrice, startDateTime, endDateTime);
     }
 }
