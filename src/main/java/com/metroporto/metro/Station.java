@@ -2,6 +2,7 @@ package com.metroporto.metro;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Station implements Comparable<Station>
 {
@@ -9,6 +10,21 @@ public class Station implements Comparable<Station>
     private Zone zone;
     private String stationName;
     private List<Facility> facilities;
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Station station = (Station) o;
+        return Objects.equals(stationId, station.stationId) && Objects.equals(zone, station.zone) && Objects.equals(stationName, station.stationName) && Objects.equals(facilities, station.facilities);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(stationId, zone, stationName, facilities);
+    }
 
     public Station(String stationId, Zone zone, String stationName, List<Facility> facilities)
     {

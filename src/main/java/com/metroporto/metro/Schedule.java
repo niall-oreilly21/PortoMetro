@@ -1,66 +1,31 @@
 package com.metroporto.metro;
 
-import java.time.LocalDateTime;
+import com.metroporto.enums.TimeTableType;
 
-public class Schedule implements Comparable<Schedule>
+import java.time.LocalTime;
+
+public class Schedule
 {
-    private final String scheduleId;
-    private Train train;
     private Station station;
-    private LocalDateTime arrivalTime;
+    private LocalTime departureTime;
 
-    public Schedule(String scheduleId, Train train, Station station, LocalDateTime arrivalTime)
+    public Schedule(Station station, LocalTime departureTime)
     {
-        this.scheduleId = scheduleId;
-        this.train = train;
         this.station = station;
-        this.arrivalTime = arrivalTime;
+        this.departureTime = departureTime;
     }
 
-    public void setArrivalTime(LocalDateTime arrivalTime)
-    {
-        this.arrivalTime = arrivalTime;
-    }
 
-    public String getScheduleId()
-    {
-        return scheduleId;
-    }
 
-    public Train getTrain()
-    {
-        return train;
-    }
 
-    public Station getStation()
-    {
-        return station;
-    }
-
-    public LocalDateTime getArrivalTime()
-    {
-        return arrivalTime;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Schedule{" +
-                "scheduleId='" + scheduleId + '\'' +
-                ", train=" + train +
-                ", station=" + station +
-                ", arrivalTime=" + arrivalTime +
-                '}';
-    }
-
-    @Override
-    public int compareTo(Schedule otherSchedule)
-    {
-        if(this.arrivalTime.equals(otherSchedule.getArrivalTime()))
-        {
-            return this.scheduleId.compareToIgnoreCase(otherSchedule.getScheduleId());
-        }
-
-        return this.arrivalTime.compareTo(otherSchedule.getArrivalTime());
-    }
+//    @Override
+//    public int compareTo(Schedule otherSchedule)
+//    {
+//        if(this.arrivalTime.equals(otherSchedule.getArrivalTime()))
+//        {
+//            return this.scheduleId.compareToIgnoreCase(otherSchedule.getScheduleId());
+//        }
+//
+//        return this.arrivalTime.compareTo(otherSchedule.getArrivalTime());
+//    }
 }
