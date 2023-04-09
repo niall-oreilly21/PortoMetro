@@ -15,9 +15,21 @@ public class Schedule
         this.departureTime = departureTime;
     }
 
+    public Station getStation()
+    {
+        return station;
+    }
 
+    public LocalTime getDepartureTime()
+    {
+        return departureTime;
+    }
 
-
+    @Override
+    public String toString()
+    {
+        return  departureTime.toString() + ", ";
+    }
 //    @Override
 //    public int compareTo(Schedule otherSchedule)
 //    {

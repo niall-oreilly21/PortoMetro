@@ -1,7 +1,5 @@
 package com.metroporto;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 
 import java.io.*;
 import java.util.*;

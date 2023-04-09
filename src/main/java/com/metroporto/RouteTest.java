@@ -3,7 +3,7 @@ package com.metroporto;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-public class Route
+public class RouteTest
 {
     private Leg[] legs;
 

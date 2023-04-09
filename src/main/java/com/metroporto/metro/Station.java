@@ -11,21 +11,6 @@ public class Station implements Comparable<Station>
     private String stationName;
     private List<Facility> facilities;
 
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Station station = (Station) o;
-        return Objects.equals(stationId, station.stationId) && Objects.equals(zone, station.zone) && Objects.equals(stationName, station.stationName) && Objects.equals(facilities, station.facilities);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(stationId, zone, stationName, facilities);
-    }
-
     public Station(String stationId, Zone zone, String stationName, List<Facility> facilities)
     {
         this.stationId = stationId;
@@ -71,6 +56,21 @@ public class Station implements Comparable<Station>
         }
 
         return this.zone.compareTo(otherStation.zone);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Station station = (Station) o;
+        return Objects.equals(stationId, station.stationId) && Objects.equals(zone, station.zone) && Objects.equals(stationName, station.stationName) && Objects.equals(facilities, station.facilities);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(stationId, zone, stationName, facilities);
     }
 
     @Override

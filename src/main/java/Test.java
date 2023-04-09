@@ -1,9 +1,5 @@
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
-import com.metroporto.Route;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.metroporto.RouteTest;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -66,13 +62,13 @@ import java.util.Scanner;
                     JsonObject obj = gson.fromJson(response.toString(), JsonObject.class);
                     JsonArray routes = obj.getAsJsonArray("routes");
                     JsonObject routeObj = routes.get(0).getAsJsonObject();
-                    Route route = gson.fromJson(routeObj, Route.class);
+                    RouteTest route = gson.fromJson(routeObj, RouteTest.class);
 
-                    Route.Leg[] legs = route.getLegs();
-                    Route.Step[] steps = legs[0].getSteps();
-                    Route.ArrivalTime arrivalTime = null;
+                    RouteTest.Leg[] legs = route.getLegs();
+                    RouteTest.Step[] steps = legs[0].getSteps();
+                    RouteTest.ArrivalTime arrivalTime = null;
 
-                    for (Route.Step step : steps) {
+                    for (RouteTest.Step step : steps) {
                         if (step.getTransit_details() != null) {
                             arrivalTime = step.getTransit_details().getArrival_time();
                             break;

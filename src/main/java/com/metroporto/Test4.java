@@ -46,14 +46,14 @@ public class Test4
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
 
         // Find the missing values from the list that are not in the HashMap
-        List<Station> missingValues = new ArrayList<>();
-        for (Station value : stations)
-        {
-            if (!schedules.containsKey(value))
-            {
-                missingValues.add(value);
-            }
-        }
+//        List<Station> missingValues = new ArrayList<>();
+//        for (Station value : stations)
+//        {
+//            if (!schedules.containsKey(value))
+//            {
+//                missingValues.add(value);
+//            }
+//        }
 
 //        // Print the missing values
 //        System.out.println("Missing values from the list that are not in the HashMap:");
@@ -61,22 +61,22 @@ public class Test4
 //            System.out.println(missingValue.getStationName());
 //        }
 
-        for (Station key : schedules.keySet())
-        {
-//            if (key.getStationName().equalsIgnoreCase("Fânzeres"))
-//            {
-                System.out.println("\n\n" + key.getStationId() + " : " + key.getStationName());
-
-                for (Schedule value : schedules.get(key))
-                {
-//                    if (value.getScheduleDays().equals(ScheduleDays.SATURDAY))
-//                    {
-//                        String formattedTime = value.getArrivalTime().format(formatter);
-//                        System.out.println(formattedTime + " " + value.getScheduleDays().getLabel());
-                    //}
-                }
-            //}
-        }
+//        for (Station key : schedules.keySet())
+//        {
+////            if (key.getStationName().equalsIgnoreCase("Fânzeres"))
+////            {
+//                System.out.println("\n\n" + key.getStationId() + " : " + key.getStationName());
+//
+//                for (Schedule value : schedules.get(key))
+//                {
+////                    if (value.getScheduleDays().equals(ScheduleDays.SATURDAY))
+////                    {
+////                        String formattedTime = value.getArrivalTime().format(formatter);
+////                        System.out.println(formattedTime + " " + value.getScheduleDays().getLabel());
+//                    //}
+//                }
+//            //}
+//        }
 
         //System.out.println("Missing stations length: " + missingValues.size());
         System.out.println("Stations: " + schedules.size());
@@ -92,6 +92,7 @@ public class Test4
         Line lineB = new Line("B", "Red");
     }
 
+    private static  int scheduleId = 0;
     private static void getSchedulesFromPdf(PortoMetroPdfPage portoMetroPdfPage, PDDocument document, PDFTextStripperByArea stripper, HashMap<Station, List<Schedule>> schedules) throws IOException
     {
         // Get the text from the specified region
@@ -100,24 +101,37 @@ public class Test4
         List<Station> listStations = getStations(text, portoMetroPdfPage);
 
         List<List<LocalTime>> times = getSchedules(text, listStations, portoMetroPdfPage);
+        System.out.println();
+//        for(List<LocalTime> time : times)
+//        {
+//            for (LocalTime t : time)
+//            {
+//                System.out.print(t + ", ");
+//            }
+//            System.out.println();
+//        }
 
-        Timetable timetable = new Timetable(1, "", TimeTableType.SUNDAY);
+        Timetable timetable = new Timetable(scheduleId++, "", TimeTableType.SUNDAY);
 
-        for (int i = 0; i < stations.size(); i++)
+        for (int i = 0; i < times.size(); i++)
         {
-            Station station = stations.get(i);
+
             List<LocalTime> departureTimes = times.get(i);
 
             List<Schedule> rowSchedules = new ArrayList<>();
 
-            for (LocalTime departureTime : departureTimes)
+            for (int j = 0; j < departureTimes.size(); j++)
             {
-                Schedule schedule = new Schedule(station, departureTime);
+                Station station = listStations.get(j);
+                Schedule schedule = new Schedule(station, departureTimes.get(j));
                 rowSchedules.add(schedule);
             }
 
             timetable.addSchedules(rowSchedules);
         }
+
+        //System.out.println("\n\n");
+        timetable.getSchedulesByStation("Senhor de Matosinhos");
     }
 
     private static String extractTextFromPdf(int pageIndex, PDDocument document, PDFTextStripperByArea stripper) throws IOException

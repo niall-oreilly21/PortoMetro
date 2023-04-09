@@ -1,12 +1,9 @@
 package com.metroporto;
 
 import com.google.gson.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -82,20 +79,20 @@ public class Test2
                         JsonElement endLocation = leg.get("end_address");
                         System.out.println(endLocation);
 
-                        Route route = gson.fromJson(routeObj, Route.class);
+                        RouteTest route = gson.fromJson(routeObj, RouteTest.class);
 
                         //System.out.println(route);
 
-                        Route.Leg[] legs = route.getLegs();
+                        RouteTest.Leg[] legs = route.getLegs();
 
                         //System.out.println(legs[0]);
-                        Route.Step[] steps = legs[0].getSteps();
+                        RouteTest.Step[] steps = legs[0].getSteps();
 
-                        for (Route.Step step : steps)
+                        for (RouteTest.Step step : steps)
                         {
                             if (step.getTransit_details() != null)
                             {
-                                Route.TransitDetails transitDetails = step.getTransit_details();
+                                RouteTest.TransitDetails transitDetails = step.getTransit_details();
 //                                if (transitDetails.getDeparture_stop().getName().equalsIgnoreCase(stationsStrings.get(i)) && transitDetails.getArrival_stop().getName().equalsIgnoreCase(stationsStrings.get(i+1)))
 //                                {
                                 System.out.println(stationsStrings.get(i));
