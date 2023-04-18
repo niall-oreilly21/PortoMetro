@@ -184,10 +184,10 @@ CREATE TABLE routes
 (
     route_id INT NOT NULL AUTO_INCREMENT,
     line_id VARCHAR(1) NOT NULL,
-    station_id VARCHAR(3) NOT NULL,
+    end_station_id VARCHAR(3) NOT NULL,
     PRIMARY KEY (route_id),
     FOREIGN KEY (line_id) REFERENCES metro_lines(line_id),
-    FOREIGN KEY (station_id) REFERENCES stations(station_id)
+    FOREIGN KEY (end_station_id) REFERENCES stations(station_id)
 );
 
 /*CREATE timetable table*/
@@ -293,8 +293,8 @@ INSERT INTO stations (station_id, zone_id, station_name) VALUES
 ("MER", 4, "Mercado"),
 ("BRI", 4, "Brito Capelo"),
 ("MAT", 4, "Matosinhos Sul"),
-("CAM", 4, "Câmara De Matosinhos"),
-("PAR", 4, "Parque Real"),
+("CAM", 4, "Câmara Matosinhos"),
+("PAR", 4, "Parque de Real"),
 ("PED", 4, "Pedro Hispano"),
 ("EST", 4, "Estádio Do Mar"),
 ("VAS", 4, "Vasco Da Gama"),
@@ -317,10 +317,10 @@ INSERT INTO stations (station_id, zone_id, station_name) VALUES
 ("VRZ", 2, "Varziela"),
 ("ESN", 2, "Espaço Natureza"),
 ("MDL", 2, "Mindelo"),
-("VCO", 3, "Vc Fashion Outlet / Modivas"),
+("VCO", 3, "VC Fashion Outlet I Modivas"),
 ("MDC", 3, "Modivas Centro"),
 ("MDS", 3, "Modivas Sul"),
-("VLP", 3, "Vilar Pinheiro"),
+("VLP", 3, "Vilar de Pinheiro"),
 ("LDR", 3, "Lidador"),
 ("PDR", 3, "Pedras Rubras"),
 ("VDS", 3, "Verdes"),
@@ -339,7 +339,7 @@ INSERT INTO stations (station_id, zone_id, station_name) VALUES
 ("PIA", 6, "Pias"),
 ("CDR", 6, "Cândido Dos Reis"),
 ("FRA", 8, "Francos"),
-("C24", 8, "Campo 24 De Agosto"),
+("C24", 8, "24 De Agosto"),
 ("STO", 12, "Santo Ovídio"),
 ("DJ2", 12, "D. João II"),
 ("JDD", 12, "João De Deus"),
@@ -527,21 +527,36 @@ INSERT INTO stations (station_id, zone_id, station_name) VALUES
 
 
 /*INSERTS data INTO the trains table*/ 
--- INSERT INTO trains (train_id, line_id, train_model, carriages, capacity) VALUES
--- ("FB98", "A", "Eurotram", 2, 134),
--- ("KO52", "B", "Flexity Swift LRVs", 3, 100),
--- ("DL13", "A", "Eurotram", 2, 134),
--- ("KA66", "B", "Flexity Swift LRVs", 3, 100),
--- ("IK94", "C", "Eurotram", 2, 134),
--- ("SN37", "C", "Flexity Swift LRVs", 3, 100),
--- ("JW29", "C", "Flexity Swift LRVs", 3, 100),
--- ("UP66", "D", "Eurotram", 2, 134),
--- ("QR68", "C", "Flexity Swift LRVs", 3, 100),
--- ("GG57", "E", "Eurotram", 2, 134),
--- ("OB07", "B", "Flexity Swift LRVs", 3, 100),
--- ("KL74", "F", "Eurotram", 2, 134),
--- ("TP27", "D", "Eurotram", 2, 134),
--- ("ON09", "F", "Eurotram", 2, 134);
+INSERT INTO trains (train_id, line_id, train_model, carriages, capacity) VALUES
+("FB98", "A", "Eurotram", 2, 134),
+("KO52", "B", "Flexity Swift LRVs", 3, 100),
+("DL13", "A", "Eurotram", 2, 134),
+("KA66", "B", "Flexity Swift LRVs", 3, 100),
+("IK94", "C", "Eurotram", 2, 134),
+("SN37", "C", "Flexity Swift LRVs", 3, 100),
+("JW29", "C", "Flexity Swift LRVs", 3, 100),
+("UP66", "D", "Eurotram", 2, 134),
+("QR68", "C", "Flexity Swift LRVs", 3, 100),
+("GG57", "E", "Eurotram", 2, 134),
+("OB07", "B", "Flexity Swift LRVs", 3, 100),
+("KL74", "F", "Eurotram", 2, 134),
+("TP27", "D", "Eurotram", 2, 134),
+("ON09", "F", "Eurotram", 2, 134);
+
+-- /*INSERTS data INTO the routes table*/
+INSERT INTO routes(route_id, line_id, end_station_id) VALUES
+("A", "SEM"),
+("A", "DRG"),
+("B", "PDV"),
+("B", "DRG"),
+("C", "ISM"),
+("C", "CPH"),
+("D", "HSJ"),
+("D", "STO"),
+("E", "APO"),
+("E", "DRG"),
+("F", "SDH"),
+("F", "FNZ");
 
 
 /*INSERTS data INTO the facilities table*/
