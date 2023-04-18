@@ -14,7 +14,7 @@
             <ImageView fx:id="logo" fitHeight="100" fitWidth="100" AnchorPane.leftAnchor="20" AnchorPane.topAnchor="20"/>
         </AnchorPane>
         <AnchorPane>
-            <VBox AnchorPane.leftAnchor="105" AnchorPane.topAnchor="240">
+            <VBox AnchorPane.leftAnchor="105" AnchorPane.topAnchor="205">
                 <Label text="Student details" styleClass="header-label" textFill="#00305f" wrapText="true" />
                 <Label text="Hang on, we just need a few details before you start" textFill="#8c8c8c" wrapText="true">
                     <padding>
@@ -31,10 +31,21 @@
                 <ComboBox fx:id="universityComboBox" prefWidth="350">
                     <VBox.margin>
                         <Insets>
-                            <bottom>15</bottom>
+                            <bottom>30</bottom>
                         </Insets>
                     </VBox.margin>
                 </ComboBox>
+                <Label text="Do you want to order an Andante card?"/>
+                <HBox spacing="15">
+                    <VBox.margin>
+                        <Insets>
+                            <top>15</top>
+                            <bottom>20</bottom>
+                        </Insets>
+                    </VBox.margin>
+                    <RadioButton text="Yes, I want a card" userData="yesCard" fx:id="yesCardRadioButton" selected="true"/>
+                    <RadioButton text="No, I don't" userData="noCard" fx:id="noCardRadioButton"/>
+                </HBox>
                 <Label fx:id="errorText" textFill="#de2a1d">
                     <VBox.margin>
                         <Insets>
