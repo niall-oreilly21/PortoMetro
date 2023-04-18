@@ -20,4 +20,15 @@ public class Route
     {
         timetables.add(timetable);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Route{" +
+                "routeId=" + routeId +
+                ", timetables=" + timetables +
+                ", endStation=" + endStation +
+                '}';
+    }
+
 }

@@ -57,14 +57,6 @@ PdfReaderTimetables p = new PdfReaderTimetables(null);
     }
     }
 
-    private void createLines()
-    {
-        List<Line>lines = new ArrayList<>();
-
-        Line lineA = new Line("A", "Blue");
-        Line lineB = new Line("B", "Red");
-    }
-
     private void getSchedulesFromPdf() throws IOException
     {
         // Get the text from the specified region

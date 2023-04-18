@@ -10,6 +10,12 @@ import java.sql.Statement;
 
 public class MySqlDao
 {
+    protected Connection con;
+
+    public MySqlDao()
+    {
+        con = null;
+    }
     public Connection getConnection() throws DaoException
     {
         String driver = "com.mysql.cj.jdbc.Driver";

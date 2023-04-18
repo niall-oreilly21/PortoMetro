@@ -14,7 +14,6 @@ public class MySqlZoneDao extends MySqlDao implements ZoneDaoInterface
     @Override
     public Zone findZoneByZoneId(int zoneIdToBeFound) throws DaoException
     {
-        Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         Zone zone = null;
