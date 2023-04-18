@@ -60,10 +60,8 @@ public class SignUpController
 
     private StudentUniversityController studentUniversityController;
 
-    // Create a private instance variable for the MainApp instance
     private App app;
 
-    // Setter method to set the MainApp instance
     public void setApp(App app) {
         this.app = app;
     }
