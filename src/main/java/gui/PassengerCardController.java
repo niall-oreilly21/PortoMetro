@@ -5,12 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -64,6 +64,12 @@ public class PassengerCardController
 
     @FXML
     private VBox greyCardBox;
+
+    @FXML
+    private Label errorText;
+
+    @FXML
+    private Label cardTypeLabel;
 
     @FXML
     private ComboBox<String> startMonthComboBox;
@@ -274,6 +280,32 @@ public class PassengerCardController
 
     public void submitForm(ActionEvent event)
     {
+        String asterisk = "*";
+        String errorColour = "#de2a1d";
+
+        Text redAsterisk = new Text(asterisk);
+        redAsterisk.setFill(Color.web(errorColour));
+
+        if (cardToggleGroup.getSelectedToggle() == yesCardRadioButton)
+        {
+            if (cardTypeToggleGroup.getSelectedToggle() == null)
+            {
+                errorText.setText(asterisk + " Choose a card type");
+                cardTypeLabel.setGraphic(redAsterisk);
+                cardTypeLabel.setContentDisplay(ContentDisplay.RIGHT);
+            }
+            else
+            {
+                cardTypeLabel.setGraphic(null);
+                errorText.setText("");
+
+                // TODO: Add to database
+            }
+        }
+        else
+        {
+            // TODO: Redirect to home page
+        }
     }
 
     private void clearCardTypeSelection() {

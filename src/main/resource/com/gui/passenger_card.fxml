@@ -37,7 +37,7 @@
                     <RadioButton text="No" userData="noCard" fx:id="noCardRadioButton"/>
                 </HBox>
                 <VBox fx:id="cardBox">
-                    <Label text="What type of card do you want?">
+                    <Label text="What type of card do you want?" fx:id="cardTypeLabel">
                         <VBox.margin>
                             <Insets>
                                 <top>40</top>
@@ -141,10 +141,17 @@
                         </VBox.margin>
                     </ComboBox>
                 </VBox>
-                <Button onAction="#submitForm" text="Order card" prefWidth="370" styleClass="form-button">
+                <Label fx:id="errorText" textFill="#de2a1d">
                     <VBox.margin>
                         <Insets>
-                            <top>40</top>
+                            <top>20</top>
+                        </Insets>
+                    </VBox.margin>
+                </Label>
+                <Button onAction="#submitForm" text="Continue" prefWidth="370" styleClass="form-button">
+                    <VBox.margin>
+                        <Insets>
+                            <top>20</top>
                         </Insets>
                     </VBox.margin>
                 </Button>
