@@ -3,8 +3,8 @@ package com.metroporto.enums;
 public enum TimeTableType implements LabelInterface
 {
     MONDAY_TO_FRIDAY("Monday-Friday"),
-    SATURDAY("saturday"),
-    SUNDAY("sunday");
+    SATURDAY("Saturday"),
+    SUNDAY("Sunday");
 
     private final String label;
 

@@ -1,4 +1,4 @@
-package com.metroporto;
+package com.metroporto.import_timetables;
 
 import com.metroporto.enums.TimeTableType;
 import com.metroporto.metro.Route;
@@ -13,29 +13,45 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
-public class ExcelReader {
-    public static void main(String[] args)
+import static com.metroporto.enums.TimeTableType.*;
+
+public class ExcelReaderTimetables implements ImportTimetablesInterface
+{
+    private List<Station> stations;
+
+    public ExcelReaderTimetables(List<Station> stations)
     {
-        List<String> excelRegions = new ArrayList<>(Arrays.asList("Monday_Friday_1", "Saturday_1", "Sunday_1", "Monday-Friday_2", "Saturday_2", "Sunday_2"));
+        this.stations = stations;
+    }
+
+    @Override
+    public void start()
+    {
+        List<String> excelRegions = new ArrayList<>(Arrays.asList("Monday_Friday_1", "Saturday_1", "Sunday_1", "Monday_Friday_2", "Saturday_2", "Sunday_2"));
 
 //        Route route1 = new Route(1,null);
 //        Route route2 = new Route(2,null);
 
         List<Timetable>timetables = new ArrayList<>();
 
-//        for(String region : excelRegions)
-//        {
-            timetables.add(getTimeTable(excelRegions.get(0)));
+        for(String region : excelRegions)
+        {
+            timetables.add(getTimeTable(region));
+        }
 
-            timetables.get(0).displayTimeTable();
-        //}
+        for(Timetable timetable : timetables)
+        {
+            timetable.displayTimeTable();
+            System.out.println();
+        }
 
     }
 
-    private static Timetable getTimeTable(String region)
+    private Timetable getTimeTable(String region)
     {
-        Timetable timetable = new Timetable(1,"", TimeTableType.SUNDAY);
+        Timetable timetable = new Timetable();
 
         try {
             // Create a workbook instance from the Excel file
@@ -53,7 +69,15 @@ public class ExcelReader {
                 // Create a cell range address from the formula
                 CellRangeAddress range = CellRangeAddress.valueOf(formula);
 
-                for (int rowIndex = range.getFirstRow(); rowIndex <= range.getLastRow(); rowIndex++)
+                List<Station>stationsList = new ArrayList<>();
+
+                Row rowOne = sheet.getRow(range.getFirstRow());
+
+                TimeTableType timeTableType = getTimeTableTypeFromRegion(rowOne.getCell(0).getStringCellValue());
+
+                timetable.setTimeTableType(timeTableType);
+
+                for (int rowIndex = range.getFirstRow() + 1; rowIndex <= range.getLastRow(); rowIndex++)
                 {
                     Row row = sheet.getRow(rowIndex);
                     if (row == null)
@@ -63,6 +87,7 @@ public class ExcelReader {
 
                     List<Schedule> rowSchedules = new ArrayList<>();
 
+                    int i = 0;
                     // Loop through the cells in the row
                     for (int columnIndex = range.getFirstColumn(); columnIndex <= range.getLastColumn(); columnIndex++)
                     {
@@ -75,19 +100,26 @@ public class ExcelReader {
                         switch (cell.getCellType())
                         {
                             case STRING:
-                                //System.out.print(cell.getStringCellValue() + "\t");
+                                stationsList.add(getStation(cell.getStringCellValue()));
                                 break;
+
                             case FORMULA:
                                 switch (cell.getCachedFormulaResultType())
                                 {
                                     case NUMERIC:
-                                        rowSchedules.add(new Schedule(null, cell.getLocalDateTimeCellValue().toLocalTime()));
+                                        if(i == stationsList.size())
+                                        {
+                                            i = 0;
+                                        }
+                                        rowSchedules.add(new Schedule(stationsList.get(i), cell.getLocalDateTimeCellValue().toLocalTime()));
+                                        i++;
                                         break;
                                 }
                                 break;
                             default:
                                 break;
                         }
+
 
                     }
                     timetable.addSchedules(rowSchedules);
@@ -102,4 +134,38 @@ public class ExcelReader {
         }
         return timetable;
     }
+
+    private TimeTableType getTimeTableTypeFromRegion(String stringCellValue)
+    {
+        TimeTableType timeTableType = MONDAY_TO_FRIDAY;
+
+       if(stringCellValue.equalsIgnoreCase(MONDAY_TO_FRIDAY.getLabel()))
+       {
+           timeTableType = MONDAY_TO_FRIDAY;
+       }
+       else if(stringCellValue.equalsIgnoreCase(SATURDAY.getLabel()))
+       {
+           timeTableType = SATURDAY;
+       }
+       else
+       {
+           timeTableType = SUNDAY;
+       }
+
+        return timeTableType;
+    }
+
+    private Station getStation(String stationString)
+    {
+        Station newStation = null;
+        for (Station station : stations)
+        {
+            if (stationString.equalsIgnoreCase(station.getStationName()))
+            {
+                newStation = station;
+            }
+        }
+        return newStation;
+    }
+
 }

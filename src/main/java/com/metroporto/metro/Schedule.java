@@ -3,11 +3,13 @@ package com.metroporto.metro;
 import com.metroporto.enums.TimeTableType;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Schedule
 {
     private Station station;
     private LocalTime departureTime;
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
 
     public Schedule(Station station, LocalTime departureTime)
     {
@@ -28,7 +30,7 @@ public class Schedule
     @Override
     public String toString()
     {
-        return  departureTime.toString() + ", ";
+        return  departureTime.format(formatter) + ", ";
     }
 //    @Override
 //    public int compareTo(Schedule otherSchedule)

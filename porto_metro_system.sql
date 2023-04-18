@@ -10,7 +10,7 @@ CREATE DATABASE IF NOT EXISTS porto_metro_system DEFAULT CHARACTER SET utf8 COLL
 USE porto_metro_system;
 
 /*DROPS any of the tables that may already exists*/
-DROP TABLE IF EXISTS station_facilities, facilities, stations_in_schedules, schedules, trains, stations_in_metro_lines, metro_lines, stations_in_journey_routes, journey_routes, stations, blue_cards, timer_cards, cards_zones, cards_prices, cards, students_universities, universities, users, zones;
+DROP TABLE IF EXISTS station_facilities, facilities, schedules_times, schedules, routes, trains, stations_in_metro_lines, metro_lines, stations_in_journey_routes, journey_routes, stations, blue_cards, timer_cards, cards_zones, cards_prices, cards, students_universities, universities, users, zones;
 
 
 /*CREATE zones table*/
@@ -152,23 +152,19 @@ CREATE TABLE stations_in_journey_routes
 CREATE TABLE metro_lines
 (
     line_id VARCHAR(1) NOT NULL,
-    start_station_id VARCHAR(3) DEFAULT NULL,
-    end_station_id VARCHAR(3) DEFAULT NULL,
     line_name VARCHAR(255),
-    PRIMARY KEY (line_id),
-    FOREIGN KEY (start_station_id) REFERENCES stations(station_id),
-    FOREIGN KEY (end_station_id) REFERENCES stations(station_id)
+    PRIMARY KEY (line_id)
 );
 
 
-CREATE TABLE stations_in_metro_lines 
-(
-  station_id VARCHAR(3) NOT NULL,
-  line_id VARCHAR(1) NOT NULL,
-  PRIMARY KEY (station_id, line_id),
-  FOREIGN KEY (station_id) REFERENCES stations(station_id),
-  FOREIGN KEY (line_id) REFERENCES metro_lines(line_id)
-);
+-- CREATE TABLE stations_in_metro_lines 
+-- (
+--   station_id VARCHAR(3) NOT NULL,
+--   line_id VARCHAR(1) NOT NULL,
+--   PRIMARY KEY (station_id, line_id),
+--   FOREIGN KEY (station_id) REFERENCES stations(station_id),
+--   FOREIGN KEY (line_id) REFERENCES metro_lines(line_id)
+-- );
 
 
 /*CREATE trains table*/
@@ -183,27 +179,38 @@ CREATE TABLE trains
     FOREIGN KEY (line_id) REFERENCES metro_lines(line_id)
 );
 
+/*CREATE routes table*/
+CREATE TABLE routes
+(
+    route_id INT NOT NULL AUTO_INCREMENT,
+    line_id VARCHAR(1) NOT NULL,
+    station_id VARCHAR(3) NOT NULL,
+    PRIMARY KEY (route_id),
+    FOREIGN KEY (line_id) REFERENCES metro_lines(line_id),
+    FOREIGN KEY (station_id) REFERENCES stations(station_id)
+);
+
+/*CREATE timetable table*/
+CREATE TABLE timetables
+(
+    schedule_id INT NOT NULL AUTO_INCREMENT,
+    route_id INT NOT NULL,
+    schedule_description VARCHAR(255) NOT NULL,
+    scheduled_day_type ENUM("Monday-Friday", "Saturday","Sunday") NOT NULL,
+    PRIMARY KEY (schedule_id),
+    FOREIGN KEY (route_id) REFERENCES routes(route_id)
+);
 
 /*CREATE schedules table*/
 CREATE TABLE schedules
 (
-    schedule_id VARCHAR(7) NOT NULL,
-    train_id VARCHAR(4),
-    schedule_description VARCHAR(255),
+    schedule_id INT NOT NULL,
+    station_id VARCHAR(3),
+    departure_time TIME NOT NULL,
+    schedule_row INT NOT NULL,
     PRIMARY KEY (schedule_id),
-    FOREIGN KEY (train_id) REFERENCES trains(train_id)
-);
-
-
-/*CREATE stations_in_schedules table*/
-CREATE TABLE stations_in_schedules
-(
-    station_id VARCHAR(3) NOT NUll,
-    schedule_id VARCHAR(7) NOT NULL,
-    arrival_time DATETIME,
-    PRIMARY KEY (station_id, schedule_id),
-    FOREIGN KEY (station_id) REFERENCES stations(station_id),
-    FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id)
+    FOREIGN KEY (schedule_id) REFERENCES timetables(schedule_id),
+    FOREIGN KEY (station_id) REFERENCES stations(station_id)
 );
 
 
@@ -367,174 +374,174 @@ INSERT INTO stations (station_id, zone_id, station_name) VALUES
 
 
 /*INSERTS data INTO the metro_lines table*/    
-INSERT INTO metro_lines (line_id, start_station_id, end_station_id, line_name) VALUES
-("A", "DRG", "SEM", "Blue"),
-("B", "DRG", "PDV", "Red"),
-("C", "CPH", "ISM", "Green"),
-("D", "HSJ", "STO", "Yellow"),
-("E", "TRI", "APO", "Purple"),
-("F", "FNZ", "SDH", "Orange");
+-- INSERT INTO metro_lines (line_id, start_station_id, end_station_id, line_name) VALUES
+-- ("A", "DRG", "SEM", "Blue"),
+-- ("B", "DRG", "PDV", "Red"),
+-- ("C", "CPH", "ISM", "Green"),
+-- ("D", "HSJ", "STO", "Yellow"),
+-- ("E", "TRI", "APO", "Purple"),
+-- ("F", "FNZ", "SDH", "Orange");
 
 
-/*INSERTS data INTO the station_metro_lines table*/ 
-INSERT INTO stations_in_metro_lines(station_id, line_id) VALUES
-("SEM", "A"),
-("MER", "A"),
-("BRI", "A"),
-("MAT", "A"),
-("CAM", "A"),
-("PAR", "A"),
-("PED", "A"),
-("EST", "A"),
-("VAS", "A"),
-("SDH", "A"),
-("SEB", "A"),
-("VIS", "A"),
-("RAM", "A"),
-("FRA", "A"),
-("CDM", "A"),
-("CMS", "A"),
-("LAP", "A"),
-("TRI", "A"),
-("BOL", "A"),
-("C24", "A"),
-("HER", "A"),
-("CPH", "A"),
-("DRG", "A"),
-("PDV", "B"),
-("SBR", "B"),
-("PFR", "B"),
-("ADP", "B"),
-("VDC", "B"),
-("STC", "B"),
-("AZR", "B"),
-("ARV", "B"),
-("VRZ", "B"),
-("ESN", "B"),
-("MDL", "B"),
-("VCO", "B"),
-("MDC", "B"),
-("MDS", "B"),
-("VLP", "B"),
-("LDR", "B"),
-("PDR", "B"),
-("VDS", "B"),
-("CRT", "B"),
-("ESP", "B"),
-("CDC", "B"),
-("FDC", "B"),
-("SDH", "B"),
-("SEB", "B"),
-("VIS", "B"),
-("RAM", "B"),
-("FRA", "B"),
-("CDM", "B"),
-("CMS", "B"),
-("LAP", "B"),
-("TRI", "B"),
-("BOL", "B"),
-("C24", "B"),
-("HER", "B"),
-("CPH", "B"),
-("DRG", "B"),
-("ISM", "C"),
-("CAS", "C"),
-("MAN", "C"),
-("ZIN", "C"),
-("FMA", "C"),
-("PMA", "C"),
-("CUS", "C"),
-("ARA", "C"),
-("PIA", "C"),
-("CDR", "C"),
-("FDC", "C"),
-("SDH", "C"),
-("SEB", "C"),
-("VIS", "C"),
-("RAM", "C"),
-("FRA", "C"),
-("CDM", "C"),
-("CMS", "C"),
-("LAP", "C"),
-("TRI", "C"),
-("BOL", "C"),
-("C24", "C"),
-("HER", "C"),
-("CPH", "C"),
-("STO", "D"),
-("DJ2", "D"),
-("JDD", "D"),
-("CGV", "D"),
-("GTO", "D"),
-("JDM", "D"),
-("SBO", "D"),
-("ALD", "D"),
-("TRI", "D"),
-("FGU", "D"),
-("MRQ", "D"),
-("CTE", "D"),
-("SLG", "D"),
-("PLU", "D"),
-("IPO", "D"),
-("HSJ", "D"),
-("TRI", "E"),
-("LAP", "E"),
-("CMS", "E"),
-("CDM", "E"),
-("FRA", "E"),
-("RAM", "E"),
-("VIS", "E"),
-("SEB", "E"),
-("SDH", "E"),
-("FDC", "E"),
-("CDC", "E"),
-("ESP", "E"),
-("CRT", "E"),
-("VDS", "E"),
-("BOT", "E"),
-("APO", "E"),
-("SDH", "F"),
-("SEB", "F"),
-("VIS", "F"),
-("RAM", "F"),
-("FRA", "F"),
-("CDM", "F"),
-("CMS", "F"),
-("LAP", "F"),
-("TRI", "F"),
-("BOL", "F"),
-("C24", "F"),
-("HER", "F"),
-("CPH", "F"),
-("DRG", "F"),
-("CON", "F"), 
-("NAS", "F"), 
-("NAV", "F"), 
-("LEV", "F"), 
-("RTO", "F"), 
-("CPA", "F"), 
-("BGM", "F"), 
-("CAR", "F"), 
-("VEN", "F"), 
-("FNZ", "F");
+-- /*INSERTS data INTO the station_metro_lines table*/ 
+-- INSERT INTO stations_in_metro_lines(station_id, line_id) VALUES
+-- ("SEM", "A"),
+-- ("MER", "A"),
+-- ("BRI", "A"),
+-- ("MAT", "A"),
+-- ("CAM", "A"),
+-- ("PAR", "A"),
+-- ("PED", "A"),
+-- ("EST", "A"),
+-- ("VAS", "A"),
+-- ("SDH", "A"),
+-- ("SEB", "A"),
+-- ("VIS", "A"),
+-- ("RAM", "A"),
+-- ("FRA", "A"),
+-- ("CDM", "A"),
+-- ("CMS", "A"),
+-- ("LAP", "A"),
+-- ("TRI", "A"),
+-- ("BOL", "A"),
+-- ("C24", "A"),
+-- ("HER", "A"),
+-- ("CPH", "A"),
+-- ("DRG", "A"),
+-- ("PDV", "B"),
+-- ("SBR", "B"),
+-- ("PFR", "B"),
+-- ("ADP", "B"),
+-- ("VDC", "B"),
+-- ("STC", "B"),
+-- ("AZR", "B"),
+-- ("ARV", "B"),
+-- ("VRZ", "B"),
+-- ("ESN", "B"),
+-- ("MDL", "B"),
+-- ("VCO", "B"),
+-- ("MDC", "B"),
+-- ("MDS", "B"),
+-- ("VLP", "B"),
+-- ("LDR", "B"),
+-- ("PDR", "B"),
+-- ("VDS", "B"),
+-- ("CRT", "B"),
+-- ("ESP", "B"),
+-- ("CDC", "B"),
+-- ("FDC", "B"),
+-- ("SDH", "B"),
+-- ("SEB", "B"),
+-- ("VIS", "B"),
+-- ("RAM", "B"),
+-- ("FRA", "B"),
+-- ("CDM", "B"),
+-- ("CMS", "B"),
+-- ("LAP", "B"),
+-- ("TRI", "B"),
+-- ("BOL", "B"),
+-- ("C24", "B"),
+-- ("HER", "B"),
+-- ("CPH", "B"),
+-- ("DRG", "B"),
+-- ("ISM", "C"),
+-- ("CAS", "C"),
+-- ("MAN", "C"),
+-- ("ZIN", "C"),
+-- ("FMA", "C"),
+-- ("PMA", "C"),
+-- ("CUS", "C"),
+-- ("ARA", "C"),
+-- ("PIA", "C"),
+-- ("CDR", "C"),
+-- ("FDC", "C"),
+-- ("SDH", "C"),
+-- ("SEB", "C"),
+-- ("VIS", "C"),
+-- ("RAM", "C"),
+-- ("FRA", "C"),
+-- ("CDM", "C"),
+-- ("CMS", "C"),
+-- ("LAP", "C"),
+-- ("TRI", "C"),
+-- ("BOL", "C"),
+-- ("C24", "C"),
+-- ("HER", "C"),
+-- ("CPH", "C"),
+-- ("STO", "D"),
+-- ("DJ2", "D"),
+-- ("JDD", "D"),
+-- ("CGV", "D"),
+-- ("GTO", "D"),
+-- ("JDM", "D"),
+-- ("SBO", "D"),
+-- ("ALD", "D"),
+-- ("TRI", "D"),
+-- ("FGU", "D"),
+-- ("MRQ", "D"),
+-- ("CTE", "D"),
+-- ("SLG", "D"),
+-- ("PLU", "D"),
+-- ("IPO", "D"),
+-- ("HSJ", "D"),
+-- ("TRI", "E"),
+-- ("LAP", "E"),
+-- ("CMS", "E"),
+-- ("CDM", "E"),
+-- ("FRA", "E"),
+-- ("RAM", "E"),
+-- ("VIS", "E"),
+-- ("SEB", "E"),
+-- ("SDH", "E"),
+-- ("FDC", "E"),
+-- ("CDC", "E"),
+-- ("ESP", "E"),
+-- ("CRT", "E"),
+-- ("VDS", "E"),
+-- ("BOT", "E"),
+-- ("APO", "E"),
+-- ("SDH", "F"),
+-- ("SEB", "F"),
+-- ("VIS", "F"),
+-- ("RAM", "F"),
+-- ("FRA", "F"),
+-- ("CDM", "F"),
+-- ("CMS", "F"),
+-- ("LAP", "F"),
+-- ("TRI", "F"),
+-- ("BOL", "F"),
+-- ("C24", "F"),
+-- ("HER", "F"),
+-- ("CPH", "F"),
+-- ("DRG", "F"),
+-- ("CON", "F"), 
+-- ("NAS", "F"), 
+-- ("NAV", "F"), 
+-- ("LEV", "F"), 
+-- ("RTO", "F"), 
+-- ("CPA", "F"), 
+-- ("BGM", "F"), 
+-- ("CAR", "F"), 
+-- ("VEN", "F"), 
+-- ("FNZ", "F");
 
 
 /*INSERTS data INTO the trains table*/ 
-INSERT INTO trains (train_id, line_id, train_model, carriages, capacity) VALUES
-("FB98", "A", "Eurotram", 2, 134),
-("KO52", "B", "Flexity Swift LRVs", 3, 100),
-("DL13", "A", "Eurotram", 2, 134),
-("KA66", "B", "Flexity Swift LRVs", 3, 100),
-("IK94", "C", "Eurotram", 2, 134),
-("SN37", "C", "Flexity Swift LRVs", 3, 100),
-("JW29", "C", "Flexity Swift LRVs", 3, 100),
-("UP66", "D", "Eurotram", 2, 134),
-("QR68", "C", "Flexity Swift LRVs", 3, 100),
-("GG57", "E", "Eurotram", 2, 134),
-("OB07", "B", "Flexity Swift LRVs", 3, 100),
-("KL74", "F", "Eurotram", 2, 134),
-("TP27", "D", "Eurotram", 2, 134),
-("ON09", "F", "Eurotram", 2, 134);
+-- INSERT INTO trains (train_id, line_id, train_model, carriages, capacity) VALUES
+-- ("FB98", "A", "Eurotram", 2, 134),
+-- ("KO52", "B", "Flexity Swift LRVs", 3, 100),
+-- ("DL13", "A", "Eurotram", 2, 134),
+-- ("KA66", "B", "Flexity Swift LRVs", 3, 100),
+-- ("IK94", "C", "Eurotram", 2, 134),
+-- ("SN37", "C", "Flexity Swift LRVs", 3, 100),
+-- ("JW29", "C", "Flexity Swift LRVs", 3, 100),
+-- ("UP66", "D", "Eurotram", 2, 134),
+-- ("QR68", "C", "Flexity Swift LRVs", 3, 100),
+-- ("GG57", "E", "Eurotram", 2, 134),
+-- ("OB07", "B", "Flexity Swift LRVs", 3, 100),
+-- ("KL74", "F", "Eurotram", 2, 134),
+-- ("TP27", "D", "Eurotram", 2, 134),
+-- ("ON09", "F", "Eurotram", 2, 134);
 
 
 /*INSERTS data INTO the facilities table*/
@@ -859,12 +866,12 @@ CREATE INDEX station_facilities_index
 ON station_facilities(station_id, facility_id);
 
 
-ALTER TABLE stations_in_metro_lines  
-DROP INDEX IF EXISTS stations_in_metro_lines_index;
+-- ALTER TABLE stations_in_metro_lines  
+-- DROP INDEX IF EXISTS stations_in_metro_lines_index;
 
-/*CREATES an index called stations_in_metro_lines_index on station_id and line_id in stations_in_metro_lines*/
-CREATE INDEX stations_in_metro_lines_index
-ON stations_in_metro_lines(station_id, line_id);
+-- /*CREATES an index called stations_in_metro_lines_index on station_id and line_id in stations_in_metro_lines*/
+-- CREATE INDEX stations_in_metro_lines_index
+-- ON stations_in_metro_lines(station_id, line_id);
 
 
 /*-----------------------------------------------------------------VIEWS-------------------------------------------------------------------------------------*/

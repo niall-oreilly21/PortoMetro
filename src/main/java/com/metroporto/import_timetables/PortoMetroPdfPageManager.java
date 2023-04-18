@@ -1,14 +1,14 @@
-package com.metroporto;
+package com.metroporto.import_timetables;
 
 import com.metroporto.enums.TimeTableType;
 
-public class PortoMetroPdfPage
+public class PortoMetroPdfPageManager
 {
     private int pageIndex;
     private TimeTableType scheduleDay;
     private boolean lineC;
 
-    public PortoMetroPdfPage()
+    public PortoMetroPdfPageManager()
     {
         this.pageIndex = 0;
         this.scheduleDay = TimeTableType.MONDAY_TO_FRIDAY;

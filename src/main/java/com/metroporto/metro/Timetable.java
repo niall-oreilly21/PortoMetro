@@ -1,5 +1,6 @@
 package com.metroporto.metro;
 
+import com.metroporto.RouteTest;
 import com.metroporto.enums.TimeTableType;
 
 import java.util.ArrayList;
@@ -12,11 +13,31 @@ public class Timetable
     private TimeTableType timeTableType;
     private List<List<Schedule>> timeTableSchedules;
 
+    public void setTimeTableType(TimeTableType timeTableType)
+    {
+        this.timeTableType = timeTableType;
+    }
+
     public Timetable(int scheduleId, String scheduleDescription, TimeTableType timeTableType)
     {
         this.scheduleId = scheduleId;
         this.scheduleDescription = scheduleDescription;
         this.timeTableType = timeTableType;
+        timeTableSchedules = new ArrayList<>();
+    }
+
+    public Timetable(TimeTableType timeTableType)
+    {
+        this.scheduleId = 0;
+        this.scheduleDescription = "";
+        this.timeTableType = timeTableType;
+        timeTableSchedules = new ArrayList<>();
+    }
+    public Timetable()
+    {
+        this.scheduleId = 0;
+        this.scheduleDescription = "";
+        this.timeTableType = TimeTableType.MONDAY_TO_FRIDAY;
         timeTableSchedules = new ArrayList<>();
     }
 
