@@ -2,17 +2,17 @@ package com.metroporto.metro;
 
 public class University implements Comparable<University>
 {
-    private final int universityId;
+    private final String universityId;
     private String universityName;
 
 
-    public University(int universityID, String universityName)
+    public University(String universityId, String universityName)
     {
-        universityId = universityID;
+        this.universityId = universityId;
         this.universityName = universityName;
     }
 
-    public int getUniversityId()
+    public String getUniversityId()
     {
         return universityId;
     }
@@ -34,6 +34,6 @@ public class University implements Comparable<University>
     @Override
     public int compareTo(University otherUniversity)
     {
-        return this.universityId - otherUniversity.getUniversityId();
+        return this.universityId.compareToIgnoreCase(otherUniversity.getUniversityId());
     }
 }

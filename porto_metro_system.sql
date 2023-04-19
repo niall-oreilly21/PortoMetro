@@ -10,7 +10,7 @@ CREATE DATABASE IF NOT EXISTS porto_metro_system DEFAULT CHARACTER SET utf8 COLL
 USE porto_metro_system;
 
 /*DROPS any of the tables that may already exists*/
-DROP TABLE IF EXISTS station_facilities, facilities, schedules_times, schedules, routes, trains, stations_in_metro_lines, metro_lines, stations_in_journey_routes, journey_routes, stations, blue_cards, timer_cards, cards_zones, cards_prices, cards, students_universities, universities, users, zones;
+DROP TABLE IF EXISTS station_facilities, facilities, schedules, timetables, routes, trains,  metro_lines, stations_in_journey_routes, journey_routes, stations, blue_cards, timer_cards, cards_zones, cards_prices, passengers, cards, students_universities, universities, users, zones;
 
 
 /*CREATE zones table*/
@@ -25,7 +25,7 @@ CREATE TABLE zones
 /*CREATE users table*/
 CREATE TABLE users
 (
-    user_id INT NOT NULL,
+    user_id INT NOT NULL AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
     user_password VARCHAR(255) NOT NULL,
     user_type ENUM("passenger", "administrator", "student") NOT NULL,
@@ -55,13 +55,19 @@ CREATE TABLE students_universities
 CREATE TABLE cards
 (
     card_id INT NOT NULL,
-    user_id INT NOT NULL,
     card_type ENUM("blue card", "grey card", "student card", "tour card") NOT NULL,
     card_is_active BOOLEAN NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
     PRIMARY KEY(card_id)
 );
 
+/*CREATE users table*/
+CREATE TABLE passengers
+(
+    user_id INT NOT NULL,
+    card_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (card_id) REFERENCES cards(card_id)
+);
 
 /*CREATE table cards_prices*/
 CREATE TABLE cards_prices
@@ -671,12 +677,12 @@ CREATE INDEX student_universities_index
 ON students_universities(user_id, university_id);
 
 
-ALTER TABLE cards 
-DROP INDEX IF EXISTS cards_index;
+-- ALTER TABLE cards 
+-- DROP INDEX IF EXISTS cards_index;
 
 /*CREATES an index called cards_index on user_id in cards*/
-CREATE INDEX cards_index
-ON cards(user_id);
+-- CREATE INDEX cards_index
+-- ON cards(user_id);
 
 
 ALTER TABLE cards_prices
@@ -738,7 +744,14 @@ ON station_facilities(station_id, facility_id);
 /*-----------------------------------------------------------------VIEWS-------------------------------------------------------------------------------------*/
 
 
-DROP VIEW IF EXISTS students_details, blue_cards_details;
+DROP VIEW IF EXISTS passenger_details, students_details, blue_cards_details;
+
+-- /*CREATE A VIEW which shows passengers*/
+-- CREATE VIEW passenger_details AS
+-- SELECT users.user_id, users.email, users.password, passengers. universities.* FROM users
+-- JOIN students_universities ON users.user_id = students_universities.user_id
+-- JOIN universities ON students_universities.university_id = universities.university_id
+-- WHERE users.user_type = "student"; 
 
 /*CREATE A VIEW which shows students*/
 CREATE VIEW students_details AS
@@ -761,13 +774,25 @@ WHERE cards.card_type = "blue card";
 /*Create a procedure that gets the grey card details*/
 DROP PROCEDURE IF EXISTS get_timer_cards_details;
 
-DELIMITER //
-CREATE PROCEDURE get_timer_cards_details(IN card_type ENUM("grey card", "student card", "tour card"))
-BEGIN 
-SELECT cards.*, cards_price_id, cards_prices.access_type, cards_prices.card_price, timer_cards.start_datetime, timer_cards.end_datetime, timer_cards.timer  FROM cards
-JOIN timer_cards ON cards.card_id = timer_cards.card_id
-JOIN cards_prices ON cards.card_id = cards_prices.card_id
-WHERE cards.card_type = card_type;
-END //
+-- -- @DELIMITER //
+-- CREATE PROCEDURE get_timer_cards_details(IN card_type ENUM("grey card", "student card", "tour card"))
+-- BEGIN 
+-- SELECT cards.*, cards_price_id, cards_prices.access_type, cards_prices.card_price, timer_cards.start_datetime, timer_cards.end_datetime, timer_cards.timer  FROM cards
+-- JOIN timer_cards ON cards.card_id = timer_cards.card_id
+-- JOIN cards_prices ON cards.card_id = cards_prices.card_id
+-- WHERE cards.card_type = card_type;
+-- END //
+-- -- @DELIMITER ;
 
-DELIMITER ;
+
+INSERT INTO users (user_id, email, user_password, user_type) VALUES
+(1,"niall.blackrock@gmail.com", "12345", "student"),
+(2, "luana.blackrock@gmail.com", "123454", "administrator");
+
+INSERT INTO students_universities (user_id, university_id) VALUES
+(1,"UOP");
+
+SELECT users.*, students_universities.university_id, passengers.card_id
+                    FROM users
+                    LEFT JOIN students_universities ON users.user_id = students_universities.user_id
+                    LEFT JOIN passengers ON users.user_id = passengers.user_id;

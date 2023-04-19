@@ -1,6 +1,5 @@
 package com.metroporto.metro;
 
-import com.metroporto.RouteTest;
 import com.metroporto.enums.TimeTableType;
 
 import java.util.ArrayList;

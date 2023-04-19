@@ -7,9 +7,9 @@ public class Passenger extends User
 {
     protected Card metroCard;
 
-    public Passenger(int userID, String username, String password, Card metroCard)
+    public Passenger(int userId, String email, String password, Card metroCard)
     {
-        super(userID, username, password);
+        super(userId, email, password);
         checkMetroCard(metroCard);
     }
 
@@ -41,5 +41,13 @@ public class Passenger extends User
     public void setMetroCard(Card metroCard)
     {
         this.metroCard = metroCard;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Passenger{" +
+                "metroCard=" + metroCard +
+                "} " + super.toString();
     }
 }

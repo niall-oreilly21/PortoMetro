@@ -4,9 +4,6 @@ import com.metroporto.dao.MySqlDao;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Zone;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MySqlZoneDao extends MySqlDao implements ZoneDaoInterface
@@ -14,15 +11,13 @@ public class MySqlZoneDao extends MySqlDao implements ZoneDaoInterface
     @Override
     public Zone findZoneByZoneId(int zoneIdToBeFound) throws DaoException
     {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
         Zone zone = null;
 
         try
         {
             //Get a connection to the database
             con = this.getConnection();
-            String query = "SELECT * FROM zones WHERE zone_id = ?";
+            query = "SELECT * FROM zones WHERE zone_id = ?";
             ps = con.prepareStatement(query);
             ps.setInt(1, zoneIdToBeFound);
 
@@ -36,29 +31,14 @@ public class MySqlZoneDao extends MySqlDao implements ZoneDaoInterface
 
                 zone = new Zone(zoneId, zoneName);
             }
-        } catch (SQLException sqe)
+        }
+        catch (SQLException sqe)
         {
             throw new DaoException("findZoneByZoneId() " + sqe.getMessage());
-        } finally
+        }
+        finally
         {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (ps != null)
-                {
-                    ps.close();
-                }
-                if (con != null)
-                {
-                    freeConnection(con);
-                }
-            } catch (SQLException sqe)
-            {
-                throw new DaoException("findZoneByZoneId() " + sqe.getMessage());
-            }
+            handleFinally("findZoneByZoneId()");
         }
 
         return zone;

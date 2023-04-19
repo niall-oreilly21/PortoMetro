@@ -10,7 +10,6 @@ import com.metroporto.metro.Facility;
 import com.metroporto.metro.Station;
 import com.metroporto.metro.Zone;
 
-import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +28,13 @@ public class MySqlStationDao extends MySqlDao implements StationDaoInterface
     @Override
     public List<Station> findAllStations() throws DaoException
     {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
         List<Station> stations = new ArrayList<>();
 
         try
         {
             //Get a connection to the database
             con = this.getConnection();
-            String query = "SELECT * FROM stations";
+            query = "SELECT * FROM stations";
             ps = con.prepareStatement(query);
 
             //Use the prepared statement to execute the sql
@@ -45,31 +42,14 @@ public class MySqlStationDao extends MySqlDao implements StationDaoInterface
 
             while (rs.next())
             {
-                stations.add(createStation(rs));
+                stations.add(createStation());
             }
         } catch (SQLException sqe)
         {
             throw new DaoException("findAllStations() " + sqe.getMessage());
         } finally
         {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (ps != null)
-                {
-                    ps.close();
-                }
-                if (con != null)
-                {
-                    freeConnection(con);
-                }
-            } catch (SQLException sqe)
-            {
-                throw new DaoException("findAllStations() " + sqe.getMessage());
-            }
+            handleFinally("findAllStations()");
         }
 
         return stations;
@@ -78,15 +58,13 @@ public class MySqlStationDao extends MySqlDao implements StationDaoInterface
     @Override
     public Station findStationByStationId(String stationIdToBeFound) throws DaoException
     {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
         Station station = null;
 
         try
         {
             //Get a connection to the database
             con = this.getConnection();
-            String query = "SELECT * FROM stations WHERE station_id = ?";
+            query = "SELECT * FROM stations WHERE station_id = ?";
             ps = con.prepareStatement(query);
             ps.setString(1, stationIdToBeFound);
 
@@ -95,37 +73,20 @@ public class MySqlStationDao extends MySqlDao implements StationDaoInterface
 
             while (rs.next())
             {
-                station = createStation(rs);
+                station = createStation();
             }
         } catch (SQLException sqe)
         {
             throw new DaoException("findStationByStationId() " + sqe.getMessage());
         } finally
         {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (ps != null)
-                {
-                    ps.close();
-                }
-                if (con != null)
-                {
-                    freeConnection(con);
-                }
-            } catch (SQLException sqe)
-            {
-                throw new DaoException("findStationByStationId() " + sqe.getMessage());
-            }
+            handleFinally("findStationByStationId()");
         }
 
         return station;
     }
 
-    private Station createStation(ResultSet rs) throws SQLException
+    private Station createStation() throws SQLException
     {
         Station station = null;
 

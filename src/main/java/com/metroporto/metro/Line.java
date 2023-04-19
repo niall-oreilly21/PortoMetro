@@ -11,12 +11,12 @@ public class Line implements Comparable<Line>
     private List<Train> trains;
     private List<Station> stations;
 
-    public Line(String lineId, String lineName, List<Route> routes)
+    public Line(String lineId, String lineName, List<Route> routes, List<Train> trains)
     {
         this.lineId = lineId;
         this.lineName = lineName;
         this.routes = routes;
-        trains = new ArrayList<>();
+        this.trains = trains;
         stations = new ArrayList<>();
     }
 
@@ -47,6 +47,7 @@ public class Line implements Comparable<Line>
                 "lineId='" + lineId + '\'' +
                 ", lineName='" + lineName + '\'' +
                 ", routes=" + routes +
+                ", trains=" + trains +
                 '}';
     }
 

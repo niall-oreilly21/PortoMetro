@@ -3,16 +3,10 @@ package com.metroporto.dao.routedao;
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.stationdao.StationDaoInterface;
-import com.metroporto.dao.zonedao.MySqlZoneDao;
-import com.metroporto.dao.zonedao.ZoneDaoInterface;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Route;
 import com.metroporto.metro.Station;
-import com.metroporto.metro.Zone;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +23,13 @@ public class MySqlRouteDao extends MySqlDao implements RouteDaoInterface
     @Override
     public List<Route> findAllRoutes() throws DaoException
     {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
         List<Route> routes = new ArrayList<>();
 
         try
         {
             //Get a connection to the database
             con = this.getConnection();
-            String query = "SELECT * FROM routes";
+            query = "SELECT * FROM routes";
             ps = con.prepareStatement(query);
 
             //Use the prepared statement to execute the sql
@@ -59,24 +51,7 @@ public class MySqlRouteDao extends MySqlDao implements RouteDaoInterface
             throw new DaoException("findAllRoutes() " + sqe.getMessage());
         } finally
         {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (ps != null)
-                {
-                    ps.close();
-                }
-                if (con != null)
-                {
-                    freeConnection(con);
-                }
-            } catch (SQLException sqe)
-            {
-                throw new DaoException("findAllRoutes() " + sqe.getMessage());
-            }
+            handleFinally("findAllRoutes()");
         }
 
         return routes;
@@ -85,8 +60,6 @@ public class MySqlRouteDao extends MySqlDao implements RouteDaoInterface
     @Override
     public List<Route> findAllRoutesByLineId(String lineId) throws DaoException
     {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
         List<Route> routes = new ArrayList<>();
 
         try
@@ -94,7 +67,7 @@ public class MySqlRouteDao extends MySqlDao implements RouteDaoInterface
             //Get a connection to the database
             con = this.getConnection();
 
-            String query =
+            query =
                     "SELECT * FROM routes \n" +
                             "WHERE line_id = ?;";
 
@@ -117,27 +90,10 @@ public class MySqlRouteDao extends MySqlDao implements RouteDaoInterface
             }
         } catch (SQLException sqe)
         {
-            throw new DaoException("findAllRoutes() " + sqe.getMessage());
+            throw new DaoException("findAllRoutesByLineId() " + sqe.getMessage());
         } finally
         {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (ps != null)
-                {
-                    ps.close();
-                }
-                if (con != null)
-                {
-                    freeConnection(con);
-                }
-            } catch (SQLException sqe)
-            {
-                throw new DaoException("findAllRoutes() " + sqe.getMessage());
-            }
+            handleFinally("findAllRoutesByLineId()");
         }
 
         return routes;

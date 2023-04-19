@@ -6,10 +6,10 @@ public abstract class User
     protected final String email;
     protected String password;
 
-    public User(int userId, String username, String password)
+    public User(int userId, String email, String password)
     {
         this.userId = userId;
-        this.email = username;
+        this.email = email;
         this.password = password;
     }
 
@@ -26,5 +26,15 @@ public abstract class User
     public String getPassword()
     {
         return password;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "User{" +
+                "userId=" + userId +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

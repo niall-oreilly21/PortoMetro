@@ -3,45 +3,65 @@ package com.metroporto.dao;
 import com.metroporto.exceptions.DaoException;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
-public class MySqlDao
+public abstract class MySqlDao
 {
     protected Connection con;
+    protected PreparedStatement ps;
+    protected ResultSet rs;
+    protected String driver;
+    protected String url;
+    protected String databaseName;
+    protected String username;
+    protected String password;
+    protected String query;
 
     public MySqlDao()
     {
-        con = null;
+        this.con = null;
+        this.ps = null;
+        this.rs = null;
+        this.driver = "com.mysql.cj.jdbc.Driver";
+        this.url = "jdbc:mysql://localhost/";
+        this.databaseName = "porto_metro_system";
+        this.username = "root";
+        this.password = "";
+        this.query = "";
     }
-    public Connection getConnection() throws DaoException
-    {
-        String driver = "com.mysql.cj.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/porto_metro_system";
-        String username = "root";
-        String password = "";
-        Connection con = null;
 
+    private Connection establishConnection(String jdbcUrl)
+    {
         try
         {
             Class.forName(driver);
-            con = DriverManager.getConnection(url, username, password);
+            return DriverManager.getConnection(jdbcUrl, username, password);
         }
         catch (ClassNotFoundException cnfe)
         {
             System.out.println("Failed to find the driver class " + cnfe.getMessage());
+            return null;
         }
         catch (SQLException sqe)
         {
             System.out.println("Connection failed " + sqe.getMessage());
+            return null;
         }
-        return con;
-
     }
 
-    public void freeConnection(Connection con) throws DaoException
+    protected Connection getConnection() throws DaoException
+    {
+        Connection con = establishConnection(url + databaseName);
+        return con;
+    }
+
+    protected Connection getConnectionToServer() throws DaoException
+    {
+        Connection con = establishConnection(url);
+        return con;
+    }
+
+    protected void freeConnection(Connection con) throws DaoException
     {
         try
         {
@@ -59,63 +79,25 @@ public class MySqlDao
 
     }
 
-    public void createDatabaseIfNotExists() throws DaoException {
-        String driver = "com.mysql.cj.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/";
-        String username = "root";
-        String password = "";
-        String databaseName = "porto_metro_system";
-        String sqlFilePath = "/path/to/sqlfile.sql"; // Specify the path to your SQL file here
-
-        try {
-            Class.forName(driver);
-            Connection conn = DriverManager.getConnection(url, username, password);
-
-            // Check if the database exists
-            Statement stmt = conn.createStatement();
-            String checkDatabaseQuery = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '"
-                    + databaseName + "'";
-            boolean databaseExists = false;
-            try {
-                stmt.execute(checkDatabaseQuery);
-                databaseExists = true;
-            } catch (SQLException e) {
-                // Database does not exist
+    protected void handleFinally(String methodName) throws DaoException
+    {
+        try
+        {
+            if (rs != null)
+            {
+                rs.close();
             }
-
-            stmt.close();
-            conn.close();
-
-            if (!databaseExists) {
-                // Run SQL file to create the database
-                conn = getConnection();
-                stmt = conn.createStatement();
-
-                // Read the SQL file
-                File sqlFile = new File(sqlFilePath);
-                BufferedReader br = new BufferedReader(new FileReader(sqlFile));
-                String line;
-                StringBuilder sb = new StringBuilder();
-                while ((line = br.readLine()) != null) {
-                    sb.append(line);
-                }
-                br.close();
-
-                // Split the SQL file content into individual queries
-                String[] queries = sb.toString().split(";");
-
-                // Execute each query
-                for (String query : queries) {
-                    stmt.execute(query);
-                }
-
-                stmt.close();
-                conn.close();
+            if (ps != null)
+            {
+                ps.close();
             }
-
-        } catch (ClassNotFoundException | SQLException | IOException e) {
-            e.printStackTrace();
+            if (con != null)
+            {
+                freeConnection(con);
+            }
+        } catch (SQLException sqe)
+        {
+            throw new DaoException(methodName + " " + sqe.getMessage());
         }
     }
-
 }
