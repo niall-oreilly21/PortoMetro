@@ -1,5 +1,6 @@
 package com.metroporto.dao;
 
+import com.metroporto.enums.EnumLabelConverter;
 import com.metroporto.exceptions.DaoException;
 
 import java.io.*;
@@ -10,12 +11,13 @@ public abstract class MySqlDao
     protected Connection con;
     protected PreparedStatement ps;
     protected ResultSet rs;
-    protected String driver;
-    protected String url;
-    protected String databaseName;
-    protected String username;
-    protected String password;
+    private final String driver;
+    private final String url;
+    protected final String databaseName;
+    protected final String username;
+    private final String password;
     protected String query;
+    protected EnumLabelConverter enumLabelConverter;
 
     public MySqlDao()
     {
@@ -28,6 +30,7 @@ public abstract class MySqlDao
         this.username = "root";
         this.password = "";
         this.query = "";
+        this.enumLabelConverter = new EnumLabelConverter();
     }
 
     private Connection establishConnection(String jdbcUrl)

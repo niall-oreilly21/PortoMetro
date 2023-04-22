@@ -15,10 +15,7 @@ public class InsertPortoMetroSystemSql
 
         try
         {
-            if(!database.checkDatabaseExists())
-            {
-                database.runSqlFile("porto_metro_system.sql");
-            }
+            database.runSqlFile("porto_metro_system.sql");
         }
         catch (DaoException de)
         {

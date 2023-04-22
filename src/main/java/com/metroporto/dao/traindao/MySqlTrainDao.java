@@ -35,16 +35,7 @@ public class MySqlTrainDao extends MySqlDao implements TrainDaoInterface
             {
                 String trainId = rs.getString("train_id");
                 String trainModelString = rs.getString("train_model");
-                TrainModel trainModel;
-
-                if(trainModelString.equalsIgnoreCase(TrainModel.EURO_TRAM.getLabel()))
-                {
-                    trainModel = TrainModel.EURO_TRAM;
-                }
-                else
-                {
-                    trainModel = TrainModel.LRVs;
-                }
+                TrainModel trainModel = enumLabelConverter.fromLabel(trainModelString, TrainModel.class);
 
                 int carriages = rs.getInt("carriages");
                 int capacity = rs.getInt("capacity");

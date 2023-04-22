@@ -47,8 +47,7 @@ CREATE TABLE students_universities
     user_id INT NOT NULL,
     university_id VARCHAR(30) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (university_id) REFERENCES universities(university_id),
-    PRIMARY KEY(user_id, university_id)
+    FOREIGN KEY (university_id) REFERENCES universities(university_id)
 );
 
 /*CREATE cards table*/
@@ -56,7 +55,8 @@ CREATE TABLE cards
 (
     card_id INT NOT NULL,
     card_type ENUM("blue card", "grey card", "student card", "tour card") NOT NULL,
-    card_is_active BOOLEAN NOT NULL,
+    access_type ENUM("All zones", "3 zones") NOT NULL,
+    card_price DECIMAL(5, 2),
     PRIMARY KEY(card_id)
 );
 
@@ -69,16 +69,16 @@ CREATE TABLE passengers
     FOREIGN KEY (card_id) REFERENCES cards(card_id)
 );
 
-/*CREATE table cards_prices*/
-CREATE TABLE cards_prices
-(
-    card_price_id INT NOT NULL AUTO_INCREMENT,
-    card_id INT NOT NULL,
-    access_type ENUM("All zones", "3 zones") NOT NULL,
-    card_price DECIMAL(5, 2),
-    FOREIGN KEY (card_id) REFERENCES cards(card_id),
-    PRIMARY KEY(card_price_id)
-);
+-- /*CREATE table cards_prices*/
+-- CREATE TABLE cards_prices
+-- (
+--     card_price_id INT NOT NULL AUTO_INCREMENT,
+--     card_id INT NOT NULL,
+--     access_type ENUM("All zones", "3 zones") NOT NULL,
+--     card_price DECIMAL(5, 2),
+--     FOREIGN KEY (card_id) REFERENCES cards(card_id),
+--     PRIMARY KEY(card_price_id)
+-- );
 
 /*CREATE table card_zones*/
 CREATE TABLE cards_zones
@@ -86,31 +86,23 @@ CREATE TABLE cards_zones
     card_id INT NOT NULL,
     zone_id INT NOT NULL,
     FOREIGN KEY (card_id) REFERENCES cards(card_id),
-    FOREIGN KEY (zone_id) REFERENCES zones(zone_id),
-    PRIMARY KEY(card_id, zone_id)
+    FOREIGN KEY (zone_id) REFERENCES zones(zone_id)
 );
 
 /*CREATE blue card table*/
 CREATE TABLE timer_cards 
 (
     card_id INT NOT NULL,
-    start_datetime DATETIME NOT NULL,
     end_datetime DATETIME NOT NULL,
-    timer DATETIME,
-    PRIMARY KEY(card_id),
     FOREIGN KEY (card_id) REFERENCES cards(card_id)
 );
-
 
 /*CREATE card types table*/
 CREATE TABLE blue_cards
 (
     card_id INT NOT NULL,
-    zone_id INT NOT NULL,
     total_trips_allowed INT,
-    PRIMARY KEY(card_id),
-    FOREIGN KEY (card_id) REFERENCES cards(card_id),
-    FOREIGN KEY (zone_id) REFERENCES zones(zone_id)
+    FOREIGN KEY (card_id) REFERENCES cards(card_id)
 );
 
 
@@ -190,7 +182,6 @@ CREATE TABLE timetables
 (
     schedule_id INT NOT NULL AUTO_INCREMENT,
     route_id INT NOT NULL,
-    schedule_description VARCHAR(255) NOT NULL,
     scheduled_day_type ENUM("Monday-Friday", "Saturday","Sunday") NOT NULL,
     PRIMARY KEY (schedule_id),
     FOREIGN KEY (route_id) REFERENCES routes(route_id)
@@ -202,8 +193,6 @@ CREATE TABLE schedules
     schedule_id INT NOT NULL,
     station_id VARCHAR(3),
     departure_time TIME NOT NULL,
-    schedule_row INT NOT NULL,
-    PRIMARY KEY (schedule_id),
     FOREIGN KEY (schedule_id) REFERENCES timetables(schedule_id),
     FOREIGN KEY (station_id) REFERENCES stations(station_id)
 );
@@ -223,7 +212,6 @@ CREATE TABLE station_facilities
 (
     station_id VARCHAR(3) NOT NUll,
     facility_id INT NOT NUll,
-    PRIMARY KEY (station_id, facility_id),
     FOREIGN KEY (station_id) REFERENCES stations(station_id),
     FOREIGN KEY (facility_id) REFERENCES facilities(facility_id)
 );
@@ -685,12 +673,12 @@ ON students_universities(user_id, university_id);
 -- ON cards(user_id);
 
 
-ALTER TABLE cards_prices
-DROP INDEX IF EXISTS cards_prices_index;
+-- ALTER TABLE cards_prices
+-- DROP INDEX IF EXISTS cards_prices_index;
 
-/*CREATES an index called cards_prices_index on card_id in cards_prices*/
-CREATE INDEX cards_prices_index
-ON cards_prices(card_id);
+-- /*CREATES an index called cards_prices_index on card_id in cards_prices*/
+-- CREATE INDEX cards_prices_index
+-- ON cards_prices(card_id);
 
 
 ALTER TABLE cards_zones
@@ -709,12 +697,12 @@ CREATE INDEX timer_cards_index
 ON timer_cards(card_id);
 
 
-ALTER TABLE blue_cards
-DROP INDEX IF EXISTS blue_cards_index;
+-- ALTER TABLE blue_cards
+-- DROP INDEX IF EXISTS blue_cards_index;
 
-/*CREATES an index called blue_cards_index on card_id and zone_id in timer_cards*/
-CREATE INDEX blue_cards_index
-ON blue_cards(card_id, zone_id);
+-- /*CREATES an index called blue_cards_index on card_id and zone_id in timer_cards*/
+-- CREATE INDEX blue_cards_index
+-- ON blue_cards(card_id, zone_id);
 
 
 ALTER TABLE facilities
@@ -760,12 +748,19 @@ JOIN students_universities ON users.user_id = students_universities.user_id
 JOIN universities ON students_universities.university_id = universities.university_id
 WHERE users.user_type = "student"; 
 
+CREATE VIEW all_cards AS
+SELECT cards.*, timer_cards.end_datetime, blue_cards.total_trips_allowed,cards_zones.zone_id FROM cards
+LEFT JOIN timer_cards ON cards.card_id = timer_cards.card_id
+LEFT JOIN blue_cards ON cards.card_id = blue_cards.card_id
+LEFT JOIN cards_zones ON cards.card_id = cards_zones.card_id;
+                    
+
 /*CREATE A VIEW which shows blue_cards*/
-CREATE VIEW blue_cards_details AS
-SELECT cards.*, cards_prices.card_price_id, cards_prices.access_type, cards_prices.card_price, blue_cards.zone_id, blue_cards.total_trips_allowed  FROM cards
-JOIN blue_cards ON cards.card_id = blue_cards.card_id
-JOIN cards_prices ON cards.card_id = cards_prices.card_id
-WHERE cards.card_type = "blue card";
+-- CREATE VIEW blue_cards_details AS
+-- SELECT cards.*, cards_prices.card_price_id, cards_prices.access_type, cards_prices.card_price, blue_cards.zone_id, blue_cards.total_trips_allowed  FROM cards
+-- JOIN blue_cards ON cards.card_id = blue_cards.card_id
+-- JOIN cards_prices ON cards.card_id = cards_prices.card_id
+-- WHERE cards.card_type = "blue card";
 
 
 /*-----------------------------------------------------------------PROCEDURES-------------------------------------------------------------------------------------*/
@@ -792,7 +787,3 @@ INSERT INTO users (user_id, email, user_password, user_type) VALUES
 INSERT INTO students_universities (user_id, university_id) VALUES
 (1,"UOP");
 
-SELECT users.*, students_universities.university_id, passengers.card_id
-                    FROM users
-                    LEFT JOIN students_universities ON users.user_id = students_universities.user_id
-                    LEFT JOIN passengers ON users.user_id = passengers.user_id;

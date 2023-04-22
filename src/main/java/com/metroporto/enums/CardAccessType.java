@@ -7,7 +7,7 @@ public enum CardAccessType implements LabelInterface
 
     private final String label;
 
-    private CardAccessType(String label)
+    CardAccessType(String label)
     {
         this.label = label;
     }

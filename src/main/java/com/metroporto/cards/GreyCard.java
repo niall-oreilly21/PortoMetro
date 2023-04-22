@@ -7,13 +7,21 @@ import java.time.LocalDateTime;
 
 public class GreyCard extends Card
 {
-    private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
+    protected boolean isActive;
 
-    public GreyCard(int cardId, boolean isActive, CardAccessType accessType, double cardPrice, LocalDateTime startDateTime, LocalDateTime endDateTime)
+    public GreyCard(int cardId, CardAccessType accessType, double cardPrice, LocalDateTime endDateTime)
     {
-        super(cardId, isActive, accessType, cardPrice);
-        this.startDateTime = startDateTime;
+        super(cardId, accessType, cardPrice);
         this.endDateTime = endDateTime;
+        checkExpiration();
     }
+
+    @Override
+    protected void checkExpiration()
+    {
+        LocalDateTime now = LocalDateTime.now();
+        isActive = endDateTime.isAfter(now);
+    }
+
 }

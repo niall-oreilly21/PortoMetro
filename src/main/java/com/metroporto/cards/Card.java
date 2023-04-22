@@ -3,22 +3,22 @@ import com.metroporto.enums.CardAccessType;
 import com.metroporto.metro.Zone;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Card
 {
     private int cardId;
-    private boolean isActive;
+    protected boolean isActive;
     private CardAccessType cardAccessType;
     private double cardPrice;
     private List<Zone> zones;
     private static final int THREE_ZONES_SIZE = 3;
 
-    public Card(int cardId, boolean isActive, CardAccessType cardAccessType, double cardPrice)
+    public Card(int cardId, CardAccessType cardAccessType, double cardPrice)
     {
         this.cardId = cardId;
-        this.isActive = isActive;
         this.cardAccessType = cardAccessType;
         this.cardPrice = cardPrice;
 
@@ -75,6 +75,11 @@ public abstract class Card
     public void addZone(Zone zone)
     {
         zones.add(zone);
+    }
+
+    protected void checkExpiration()
+    {
+        this.isActive = false;
     }
 
 }

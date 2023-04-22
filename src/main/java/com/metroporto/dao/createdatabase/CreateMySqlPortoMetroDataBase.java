@@ -21,7 +21,7 @@ public class CreateMySqlPortoMetroDataBase extends MySqlDao implements CreatePor
     {
         try
         {
-            createDatabase();
+            //createDatabase();
 
             // Load the SQL script from file
             con = this.getConnection();
@@ -52,69 +52,69 @@ public class CreateMySqlPortoMetroDataBase extends MySqlDao implements CreatePor
         }
     }
 
-    @Override
-    public void createDatabase() throws DaoException
-    {
-        try
-        {
-            con = this.getConnectionToServer();
-            String query = "CREATE DATABASE IF NOT EXISTS " + databaseName;
-            ps = con.prepareStatement(query);
-
-            //Use the prepared statement to execute the sql
-            ps.executeUpdate();
-
-        }
-        catch (SQLException sqe)
-        {
-            throw new DaoException("createDatabase() " + sqe.getMessage());
-        }
-        finally
-        {
-            handleFinally("createDatabase()");
-        }
-    }
-
-    @Override
-    public boolean checkDatabaseExists() throws DaoException
-    {
-        boolean databaseExists = false;
-
-        try
-        {
-            //Get a connection to the database
-            con = this.getConnectionToServer();
-
-            String query = "SELECT SCHEMA_NAME " +
-                    "FROM INFORMATION_SCHEMA.SCHEMATA " +
-                    "WHERE SCHEMA_NAME = ?";
-
-            ps = con.prepareStatement(query);
-            ps.setString(1, databaseName);
-
-            //Use the prepared statement to execute the sql
-            rs = ps.executeQuery();
-
-            if (rs.next())
-            {
-                System.out.println("Database exists.");
-                databaseExists = true;
-            }
-            else
-            {
-                System.out.println("Database does not exist.");
-                databaseExists = false;
-            }
-        }
-        catch (SQLException sqe)
-        {
-            throw new DaoException("checkDatabaseExists() " + sqe.getMessage());
-        }
-        finally
-        {
-            handleFinally("checkDatabaseExists()");
-        }
-
-        return databaseExists;
-    }
+//    @Override
+//    public void createDatabase() throws DaoException
+//    {
+//        try
+//        {
+//            con = this.getConnectionToServer();
+//            String query = "CREATE DATABASE IF NOT EXISTS " + databaseName;
+//            ps = con.prepareStatement(query);
+//
+//            //Use the prepared statement to execute the sql
+//            ps.executeUpdate();
+//
+//        }
+//        catch (SQLException sqe)
+//        {
+//            throw new DaoException("createDatabase() " + sqe.getMessage());
+//        }
+//        finally
+//        {
+//            handleFinally("createDatabase()");
+//        }
+//    }
+//
+//    @Override
+//    public boolean checkDatabaseExists() throws DaoException
+//    {
+//        boolean databaseExists = false;
+//
+//        try
+//        {
+//            //Get a connection to the database
+//            con = this.getConnectionToServer();
+//
+//            String query = "SELECT SCHEMA_NAME " +
+//                    "FROM INFORMATION_SCHEMA.SCHEMATA " +
+//                    "WHERE SCHEMA_NAME = ?";
+//
+//            ps = con.prepareStatement(query);
+//            ps.setString(1, databaseName);
+//
+//            //Use the prepared statement to execute the sql
+//            rs = ps.executeQuery();
+//
+//            if (rs.next())
+//            {
+//                System.out.println("Database exists.");
+//                databaseExists = true;
+//            }
+//            else
+//            {
+//                System.out.println("Database does not exist.");
+//                databaseExists = false;
+//            }
+//        }
+//        catch (SQLException sqe)
+//        {
+//            throw new DaoException("checkDatabaseExists() " + sqe.getMessage());
+//        }
+//        finally
+//        {
+//            handleFinally("checkDatabaseExists()");
+//        }
+//
+//        return databaseExists;
+//    }
 }
