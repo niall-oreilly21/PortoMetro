@@ -20,7 +20,7 @@ import java.util.List;
 
 import static com.metroporto.enums.CardAccessType.*;
 
-public class MySqlCardDao extends MySqlDao implements CardDaoInterface
+public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
 {
     private ZoneDaoInterface zoneDao;
 
@@ -48,54 +48,7 @@ public class MySqlCardDao extends MySqlDao implements CardDaoInterface
 
             while (rs.next())
             {
-                int cardId = rs.getInt("card_id");
-                String cardType = rs.getString("card_type");
-
-                String accessTypeString = rs.getString("access_type");
-                CardAccessType accessType = enumLabelConverter.fromLabel(accessTypeString, CardAccessType.class);
-
-                double cardPrice = rs.getDouble("card_price");
-
-                LocalDateTime endDateTime = rs.getTimestamp("end_datetime").toLocalDateTime();
-                switch (cardType.toLowerCase())
-                {
-                    case "blue card":
-                        int numberOfTrips = rs.getInt("total_trips_allowed");
-                        card = new BlueCard(cardId, accessType, cardPrice, numberOfTrips);
-                        break;
-
-                    case "grey card":
-                        card = new GreyCard(cardId, accessType, cardPrice, endDateTime);
-                        break;
-
-                    case "student card":
-                        card = new GreyCard(cardId, accessType, cardPrice, endDateTime);
-                        break;
-
-                    case "tour card":
-                        card = new GreyCard(cardId, accessType, cardPrice, endDateTime);
-                        break;
-
-                    default:
-                        break;
-                }
-
-                List<Zone> zones;
-
-                switch (accessType)
-                {
-                    case THREE_ZONES:
-                        zones = zoneDao.findAllZonesByZoneId(cardId);
-
-                        for(Zone zone : zones)
-                        {
-                            card.addZone(zone);
-                        }
-                        break;
-
-                    case ALL_ZONES:
-                        break;
-                }
+                card = createElement();
             }
         }
         catch (SQLException sqe)
@@ -105,6 +58,63 @@ public class MySqlCardDao extends MySqlDao implements CardDaoInterface
         finally
         {
             handleFinally("findCardByCardId()");
+        }
+
+        return card;
+    }
+
+    @Override
+    protected Card createElement() throws SQLException
+    {
+        Card card = null;
+
+        int cardId = rs.getInt("card_id");
+        String cardType = rs.getString("card_type");
+
+        String accessTypeString = rs.getString("access_type");
+        CardAccessType accessType = enumLabelConverter.fromLabel(accessTypeString, CardAccessType.class);
+
+        double cardPrice = rs.getDouble("card_price");
+
+        LocalDateTime endDateTime = rs.getTimestamp("end_datetime").toLocalDateTime();
+        switch (cardType.toLowerCase())
+        {
+            case "blue card":
+                int numberOfTrips = rs.getInt("total_trips_allowed");
+                card = new BlueCard(cardId, accessType, cardPrice, numberOfTrips);
+                break;
+
+            case "grey card":
+                card = new GreyCard(cardId, accessType, cardPrice, endDateTime);
+                break;
+
+            case "student card":
+                card = new GreyCard(cardId, accessType, cardPrice, endDateTime);
+                break;
+
+            case "tour card":
+                card = new GreyCard(cardId, accessType, cardPrice, endDateTime);
+                break;
+
+            default:
+                break;
+        }
+
+        List<Zone> zones;
+
+        switch (accessType)
+        {
+            case THREE_ZONES:
+                zones = zoneDao.findAllZonesByZoneId(cardId);
+
+                for(Zone zone : zones)
+                {
+                    card.addZone(zone);
+                }
+                break;
+
+            case ALL_ZONES:
+                break;
         }
 
         return card;

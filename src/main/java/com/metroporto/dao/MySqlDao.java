@@ -2,11 +2,12 @@ package com.metroporto.dao;
 
 import com.metroporto.enums.EnumLabelConverter;
 import com.metroporto.exceptions.DaoException;
+import com.metroporto.metro.Station;
 
 import java.io.*;
 import java.sql.*;
 
-public abstract class MySqlDao
+public abstract class MySqlDao<T>
 {
     protected Connection con;
     protected PreparedStatement ps;
@@ -103,4 +104,6 @@ public abstract class MySqlDao
             throw new DaoException(methodName + " " + sqe.getMessage());
         }
     }
+
+    protected abstract T createElement() throws SQLException;
 }

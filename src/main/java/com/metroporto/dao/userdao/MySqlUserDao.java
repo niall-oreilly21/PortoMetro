@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySqlUserDao extends MySqlDao implements UserDaoInterface
+public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
 {
     private UniversityDaoInterface universityDao;
     private CardDaoInterface cardDao;
@@ -48,35 +48,7 @@ public class MySqlUserDao extends MySqlDao implements UserDaoInterface
 
             while (rs.next())
             {
-                int userId = rs.getInt("user_id");
-                String email = rs.getString("email");
-                String password = rs.getString("user_password");
-                String userType = rs.getString("user_type");
-
-                if(userType.equalsIgnoreCase("student") || userType.equalsIgnoreCase("passenger"))
-                {
-                    int cardId = rs.getInt("card_id");
-
-                    Card card = cardDao.findCardByCardId(cardId);
-
-                    if(userType.equalsIgnoreCase("student"))
-                    {
-                        String universityId = rs.getString("university_id");
-
-                        University university = universityDao.findUniversityByUniversityId(universityId);
-
-                        users.add(new Student(userId, email, password, card, university));
-                    }
-                    else
-                    {
-                        users.add(new Passenger(userId, email, password, card));
-                    }
-
-                }
-                else if(userType.equalsIgnoreCase("administrator"))
-                {
-                    users.add(new Administrator(userId, email, password));
-                }
+                users.add(createElement());
             }
         } catch (SQLException sqe)
         {
@@ -87,5 +59,42 @@ public class MySqlUserDao extends MySqlDao implements UserDaoInterface
         }
 
         return users;
+    }
+
+    @Override
+    protected User createElement() throws SQLException
+    {
+        User user = null;
+        int userId = rs.getInt("user_id");
+        String email = rs.getString("email");
+        String password = rs.getString("user_password");
+        String userType = rs.getString("user_type");
+
+        if(userType.equalsIgnoreCase("student") || userType.equalsIgnoreCase("passenger"))
+        {
+            int cardId = rs.getInt("card_id");
+
+            Card card = cardDao.findCardByCardId(cardId);
+
+            if(userType.equalsIgnoreCase("student"))
+            {
+                String universityId = rs.getString("university_id");
+
+                University university = universityDao.findUniversityByUniversityId(universityId);
+
+                user = new Student(userId, email, password, card, university);
+            }
+            else
+            {
+                user = new Passenger(userId, email, password, card);
+            }
+
+        }
+        else if(userType.equalsIgnoreCase("administrator"))
+        {
+            user = new Administrator(userId, email, password);
+        }
+
+        return user;
     }
 }

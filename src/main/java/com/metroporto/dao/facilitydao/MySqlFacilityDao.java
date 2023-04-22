@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySqlFacilityDao extends MySqlDao implements FacilityDaoInterface
+public class MySqlFacilityDao extends MySqlDao<Facility> implements FacilityDaoInterface
 {
     @Override
     public List<Facility> findAllFacilitiesByStationName(String stationName) throws DaoException
@@ -34,12 +34,7 @@ public class MySqlFacilityDao extends MySqlDao implements FacilityDaoInterface
 
             while (rs.next())
             {
-                int facilityId = rs.getInt("facility_id");
-                String facilityDescription = rs.getString("facility_description");
-
-                Facility facility = new Facility(facilityId, facilityDescription);
-
-                facilities.add(facility);
+                facilities.add(createElement());
             }
         } catch (SQLException sqe)
         {
@@ -51,5 +46,15 @@ public class MySqlFacilityDao extends MySqlDao implements FacilityDaoInterface
         }
 
         return facilities;
+    }
+
+    @Override
+    protected Facility createElement() throws SQLException
+    {
+        int facilityId = rs.getInt("facility_id");
+        String facilityDescription = rs.getString("facility_description");
+
+        return new Facility(facilityId, facilityDescription);
+
     }
 }

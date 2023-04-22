@@ -14,7 +14,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySqlStationDao extends MySqlDao implements StationDaoInterface
+public class MySqlStationDao extends MySqlDao<Station> implements StationDaoInterface
 {
     private ZoneDaoInterface zoneDao;
     private FacilityDaoInterface facilityDao;
@@ -42,9 +42,10 @@ public class MySqlStationDao extends MySqlDao implements StationDaoInterface
 
             while (rs.next())
             {
-                stations.add(createStation());
+                stations.add(createElement());
             }
-        } catch (SQLException sqe)
+        }
+        catch (SQLException sqe)
         {
             throw new DaoException("findAllStations() " + sqe.getMessage());
         } finally
@@ -73,7 +74,7 @@ public class MySqlStationDao extends MySqlDao implements StationDaoInterface
 
             while (rs.next())
             {
-                station = createStation();
+                station = createElement();
             }
         } catch (SQLException sqe)
         {
@@ -86,26 +87,18 @@ public class MySqlStationDao extends MySqlDao implements StationDaoInterface
         return station;
     }
 
-    private Station createStation() throws SQLException
+    @Override
+    protected Station createElement() throws SQLException
     {
-        Station station = null;
+        String stationId = rs.getString("station_id");
+        int zoneId = rs.getInt("zone_id");
+        String stationName = rs.getString("station_name");
 
-        try
-        {
-            String stationId = rs.getString("station_id");
-            int zoneId = rs.getInt("zone_id");
-            String stationName = rs.getString("station_name");
+        Zone zone = zoneDao.findZoneByZoneId(zoneId);
 
-            Zone zone = zoneDao.findZoneByZoneId(zoneId);
+        List<Facility>facilities = facilityDao.findAllFacilitiesByStationName(stationName);
 
-            List<Facility>facilities = facilityDao.findAllFacilitiesByStationName(stationName);
-
-            station = new Station(stationId, zone, stationName, facilities);
-        }
-        catch (SQLException sqe)
-        {
-            throw new DaoException("findStationByStationId() " + sqe.getMessage());
-        }
-        return station;
+        return new Station(stationId, zone, stationName, facilities);
     }
+
 }

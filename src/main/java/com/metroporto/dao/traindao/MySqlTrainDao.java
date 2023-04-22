@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySqlTrainDao extends MySqlDao implements TrainDaoInterface
+public class MySqlTrainDao extends MySqlDao<Train> implements TrainDaoInterface
 {
     @Override
     public List<Train> findAllTrainsByLineId(String lineId) throws DaoException
@@ -33,16 +33,7 @@ public class MySqlTrainDao extends MySqlDao implements TrainDaoInterface
 
             while (rs.next())
             {
-                String trainId = rs.getString("train_id");
-                String trainModelString = rs.getString("train_model");
-                TrainModel trainModel = enumLabelConverter.fromLabel(trainModelString, TrainModel.class);
-
-                int carriages = rs.getInt("carriages");
-                int capacity = rs.getInt("capacity");
-
-                Train train = new Train(trainId, trainModel, carriages, capacity);
-
-                trains.add(train);
+                trains.add(createElement());
             }
         } catch (SQLException sqe)
         {
@@ -53,5 +44,18 @@ public class MySqlTrainDao extends MySqlDao implements TrainDaoInterface
         }
 
         return trains;
+    }
+
+    @Override
+    protected Train createElement() throws SQLException
+    {
+        String trainId = rs.getString("train_id");
+        String trainModelString = rs.getString("train_model");
+        TrainModel trainModel = enumLabelConverter.fromLabel(trainModelString, TrainModel.class);
+
+        int carriages = rs.getInt("carriages");
+        int capacity = rs.getInt("capacity");
+
+        return new Train(trainId, trainModel, carriages, capacity);
     }
 }

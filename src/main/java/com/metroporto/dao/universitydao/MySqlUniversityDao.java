@@ -6,7 +6,7 @@ import com.metroporto.metro.University;
 
 import java.sql.SQLException;
 
-public class MySqlUniversityDao extends MySqlDao implements UniversityDaoInterface
+public class MySqlUniversityDao extends MySqlDao<University> implements UniversityDaoInterface
 {
     @Override
     public University findUniversityByUniversityId(String universityIdToBeFound) throws DaoException
@@ -26,10 +26,7 @@ public class MySqlUniversityDao extends MySqlDao implements UniversityDaoInterfa
 
             while (rs.next())
             {
-                String universityId = rs.getString("university_id");
-                String universityName = rs.getString("university_name");
-
-                university = new University(universityId, universityName);
+                university = createElement();
             }
         }
         catch (SQLException sqe)
@@ -42,5 +39,14 @@ public class MySqlUniversityDao extends MySqlDao implements UniversityDaoInterfa
         }
 
         return university;
+    }
+
+    @Override
+    protected University createElement() throws SQLException
+    {
+        String universityId = rs.getString("university_id");
+        String universityName = rs.getString("university_name");
+
+        return new University(universityId, universityName);
     }
 }

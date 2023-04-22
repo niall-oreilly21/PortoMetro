@@ -1,5 +1,6 @@
 package com.metroporto.dao.routedao;
 
+import com.metroporto.dao.FindAllDaoInterface;
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.stationdao.StationDaoInterface;
@@ -11,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySqlRouteDao extends MySqlDao implements RouteDaoInterface
+public class MySqlRouteDao extends MySqlDao<Route> implements FindAllDaoInterface<Route, String>
 {
     private StationDaoInterface stationDao;
 
@@ -21,7 +22,7 @@ public class MySqlRouteDao extends MySqlDao implements RouteDaoInterface
     }
 
     @Override
-    public List<Route> findAllRoutes() throws DaoException
+    public List<Route> findAll() throws DaoException
     {
         List<Route> routes = new ArrayList<>();
 
@@ -37,15 +38,9 @@ public class MySqlRouteDao extends MySqlDao implements RouteDaoInterface
 
             while (rs.next())
             {
-                int routeId = rs.getInt("route_id");
-                String stationId = rs.getString("end_station_id");
-
-                Station station = stationDao.findStationByStationId(stationId);
-
-                Route route = new Route(routeId, station);
-
-                routes.add(route);
+                routes.add(createElement());
             }
+
         } catch (SQLException sqe)
         {
             throw new DaoException("findAllRoutes() " + sqe.getMessage());
@@ -58,7 +53,7 @@ public class MySqlRouteDao extends MySqlDao implements RouteDaoInterface
     }
 
     @Override
-    public List<Route> findAllRoutesByLineId(String lineId) throws DaoException
+    public List<Route> findAllElementsById(String id) throws DaoException
     {
         List<Route> routes = new ArrayList<>();
 
@@ -72,21 +67,14 @@ public class MySqlRouteDao extends MySqlDao implements RouteDaoInterface
                             "WHERE line_id = ?;";
 
             ps = con.prepareStatement(query);
-            ps.setString(1, lineId);
+            ps.setString(1, id);
 
             //Use the prepared statement to execute the sql
             rs = ps.executeQuery();
 
             while (rs.next())
             {
-                int routeId = rs.getInt("route_id");
-                String stationId = rs.getString("end_station_id");
-
-                Station station = stationDao.findStationByStationId(stationId);
-
-                Route route = new Route(routeId, station);
-
-                routes.add(route);
+                routes.add(createElement());
             }
         } catch (SQLException sqe)
         {
@@ -97,5 +85,16 @@ public class MySqlRouteDao extends MySqlDao implements RouteDaoInterface
         }
 
         return routes;
+    }
+
+    @Override
+    protected Route createElement() throws SQLException
+    {
+        int routeId = rs.getInt("route_id");
+        String stationId = rs.getString("end_station_id");
+
+        Station station = stationDao.findStationByStationId(stationId);
+
+        return new Route(routeId, station);
     }
 }

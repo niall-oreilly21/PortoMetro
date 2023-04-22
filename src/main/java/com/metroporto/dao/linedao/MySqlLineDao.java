@@ -1,8 +1,8 @@
 package com.metroporto.dao.linedao;
 
+import com.metroporto.dao.FindAllDaoInterface;
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.dao.routedao.MySqlRouteDao;
-import com.metroporto.dao.routedao.RouteDaoInterface;
 import com.metroporto.dao.traindao.MySqlTrainDao;
 import com.metroporto.dao.traindao.TrainDaoInterface;
 import com.metroporto.exceptions.DaoException;
@@ -14,9 +14,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySqlLineDao extends MySqlDao implements LineDaoInterface
+public class MySqlLineDao extends MySqlDao<Line> implements LineDaoInterface
 {
-    private RouteDaoInterface routeDao;
+    private FindAllDaoInterface routeDao;
     private TrainDaoInterface trainDao;
 
     public MySqlLineDao()
@@ -42,15 +42,7 @@ public class MySqlLineDao extends MySqlDao implements LineDaoInterface
 
             while (rs.next())
             {
-                String lineId = rs.getString("line_id");
-                String lineName = rs.getString("line_name");
-
-                List<Route> routes = routeDao.findAllRoutesByLineId(lineId);
-                List<Train>trains = trainDao.findAllTrainsByLineId(lineId);
-
-                Line line = new Line(lineId, lineName, routes, trains);
-
-                lines.add(line);
+                lines.add(createElement());
             }
         } catch (SQLException sqe)
         {
@@ -61,5 +53,17 @@ public class MySqlLineDao extends MySqlDao implements LineDaoInterface
         }
 
         return lines;
+    }
+
+    @Override
+    protected Line createElement() throws SQLException
+    {
+        String lineId = rs.getString("line_id");
+        String lineName = rs.getString("line_name");
+
+        List<Route> routes = routeDao.findAllElementsById(lineId);
+        List<Train>trains = trainDao.findAllTrainsByLineId(lineId);
+
+        return new Line(lineId, lineName, routes, trains);
     }
 }

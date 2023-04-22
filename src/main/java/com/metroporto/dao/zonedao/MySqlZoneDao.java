@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySqlZoneDao extends MySqlDao implements ZoneDaoInterface
+public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
 {
     @Override
     public Zone findZoneByZoneId(int zoneIdToBeFound) throws DaoException
@@ -28,10 +28,7 @@ public class MySqlZoneDao extends MySqlDao implements ZoneDaoInterface
 
             while (rs.next())
             {
-                int zoneId = rs.getInt("zone_id");
-                String zoneName = rs.getString("zone_name");
-
-                zone = new Zone(zoneId, zoneName);
+                zone = createElement();
             }
         }
         catch (SQLException sqe)
@@ -64,10 +61,7 @@ public class MySqlZoneDao extends MySqlDao implements ZoneDaoInterface
 
             while (rs.next())
             {
-                int zoneId = rs.getInt("zone_id");
-                String zoneName = rs.getString("zone_name");
-
-                zones.add(new Zone(zoneId, zoneName));
+                zones.add(createElement());
             }
         }
         catch (SQLException sqe)
@@ -80,5 +74,14 @@ public class MySqlZoneDao extends MySqlDao implements ZoneDaoInterface
         }
 
         return zones;
+    }
+
+    @Override
+    protected Zone createElement() throws SQLException
+    {
+        int zoneId = rs.getInt("zone_id");
+        String zoneName = rs.getString("zone_name");
+
+        return new Zone(zoneId, zoneName);
     }
 }
