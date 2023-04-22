@@ -34,7 +34,7 @@ public class MySqlFacilityDao extends MySqlDao<Facility> implements FacilityDaoI
 
             while (rs.next())
             {
-                facilities.add(createElement());
+                facilities.add(createDto());
             }
         } catch (SQLException sqe)
         {
@@ -49,7 +49,7 @@ public class MySqlFacilityDao extends MySqlDao<Facility> implements FacilityDaoI
     }
 
     @Override
-    protected Facility createElement() throws SQLException
+    protected Facility createDto() throws SQLException
     {
         int facilityId = rs.getInt("facility_id");
         String facilityDescription = rs.getString("facility_description");

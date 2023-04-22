@@ -42,7 +42,7 @@ public class MySqlStationDao extends MySqlDao<Station> implements StationDaoInte
 
             while (rs.next())
             {
-                stations.add(createElement());
+                stations.add(createDto());
             }
         }
         catch (SQLException sqe)
@@ -74,7 +74,7 @@ public class MySqlStationDao extends MySqlDao<Station> implements StationDaoInte
 
             while (rs.next())
             {
-                station = createElement();
+                station = createDto();
             }
         } catch (SQLException sqe)
         {
@@ -88,7 +88,7 @@ public class MySqlStationDao extends MySqlDao<Station> implements StationDaoInte
     }
 
     @Override
-    protected Station createElement() throws SQLException
+    protected Station createDto() throws SQLException
     {
         String stationId = rs.getString("station_id");
         int zoneId = rs.getInt("zone_id");

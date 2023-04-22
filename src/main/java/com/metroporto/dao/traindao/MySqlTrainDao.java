@@ -33,7 +33,7 @@ public class MySqlTrainDao extends MySqlDao<Train> implements TrainDaoInterface
 
             while (rs.next())
             {
-                trains.add(createElement());
+                trains.add(createDto());
             }
         } catch (SQLException sqe)
         {
@@ -47,7 +47,7 @@ public class MySqlTrainDao extends MySqlDao<Train> implements TrainDaoInterface
     }
 
     @Override
-    protected Train createElement() throws SQLException
+    protected Train createDto() throws SQLException
     {
         String trainId = rs.getString("train_id");
         String trainModelString = rs.getString("train_model");

@@ -9,7 +9,7 @@ public class Schedule
 {
     private Station station;
     private LocalTime departureTime;
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
 
     public Schedule(Station station, LocalTime departureTime)
     {

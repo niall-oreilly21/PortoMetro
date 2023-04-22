@@ -8,17 +8,11 @@ import com.metroporto.dao.zonedao.MySqlZoneDao;
 import com.metroporto.dao.zonedao.ZoneDaoInterface;
 import com.metroporto.enums.CardAccessType;
 import com.metroporto.exceptions.DaoException;
-import com.metroporto.metro.University;
 import com.metroporto.metro.Zone;
-import com.metroporto.users.Administrator;
-import com.metroporto.users.Student;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.metroporto.enums.CardAccessType.*;
 
 public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
 {
@@ -48,7 +42,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
 
             while (rs.next())
             {
-                card = createElement();
+                card = createDto();
             }
         }
         catch (SQLException sqe)
@@ -64,7 +58,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
     }
 
     @Override
-    protected Card createElement() throws SQLException
+    protected Card createDto() throws SQLException
     {
         Card card = null;
 

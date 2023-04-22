@@ -26,7 +26,7 @@ public class MySqlUniversityDao extends MySqlDao<University> implements Universi
 
             while (rs.next())
             {
-                university = createElement();
+                university = createDto();
             }
         }
         catch (SQLException sqe)
@@ -42,7 +42,7 @@ public class MySqlUniversityDao extends MySqlDao<University> implements Universi
     }
 
     @Override
-    protected University createElement() throws SQLException
+    protected University createDto() throws SQLException
     {
         String universityId = rs.getString("university_id");
         String universityName = rs.getString("university_name");

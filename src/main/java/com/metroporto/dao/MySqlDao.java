@@ -105,5 +105,5 @@ public abstract class MySqlDao<T>
         }
     }
 
-    protected abstract T createElement() throws SQLException;
+    protected abstract T createDto() throws SQLException;
 }

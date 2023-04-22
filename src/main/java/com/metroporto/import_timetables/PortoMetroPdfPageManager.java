@@ -7,6 +7,7 @@ public class PortoMetroPdfPageManager
     private int pageIndex;
     private TimeTableType scheduleDay;
     private boolean lineC;
+    private String lineId;
 
     public PortoMetroPdfPageManager()
     {
@@ -14,6 +15,7 @@ public class PortoMetroPdfPageManager
         this.scheduleDay = TimeTableType.MONDAY_TO_FRIDAY;
         this.lineC = false;
         checkScheduleDayPage();
+        this.lineId = "";
     }
 
     private void checkScheduleDayPage()
@@ -66,14 +68,7 @@ public class PortoMetroPdfPageManager
 
     private void checkLineC()
     {
-        if(pageIndex >= 13 && pageIndex <= 18)
-        {
-            lineC = true;
-        }
-        else
-        {
-            lineC = false;
-        }
+        lineC = pageIndex >= 13 && pageIndex <= 18;
     }
 
     public int getPageIndex()
@@ -85,12 +80,43 @@ public class PortoMetroPdfPageManager
     {
         this.pageIndex++;
         checkScheduleDayPage();
+        checkLinePage();
         checkLineC();
+    }
+
+    private void checkLinePage()
+    {
+       switch (pageIndex)
+       {
+           case 1:
+               lineId = "A";
+               break;
+
+           case 7:
+               lineId = "B";
+               break;
+
+           case 13:
+               lineId = "C";
+               break;
+
+           case 19:
+               lineId = "E";
+               break;
+
+           case 25:
+               lineId = "F";
+       }
     }
 
     public TimeTableType getScheduleDay()
     {
         return scheduleDay;
+    }
+
+    public String getLineId()
+    {
+        return lineId;
     }
 
     private void setScheduleDay(TimeTableType scheduleDay)

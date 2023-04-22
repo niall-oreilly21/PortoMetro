@@ -42,7 +42,7 @@ public class MySqlLineDao extends MySqlDao<Line> implements LineDaoInterface
 
             while (rs.next())
             {
-                lines.add(createElement());
+                lines.add(createDto());
             }
         } catch (SQLException sqe)
         {
@@ -56,7 +56,7 @@ public class MySqlLineDao extends MySqlDao<Line> implements LineDaoInterface
     }
 
     @Override
-    protected Line createElement() throws SQLException
+    protected Line createDto() throws SQLException
     {
         String lineId = rs.getString("line_id");
         String lineName = rs.getString("line_name");

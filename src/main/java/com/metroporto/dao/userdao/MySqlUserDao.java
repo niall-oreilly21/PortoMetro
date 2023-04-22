@@ -7,10 +7,7 @@ import com.metroporto.dao.carddao.MySqlCardDao;
 import com.metroporto.dao.universitydao.MySqlUniversityDao;
 import com.metroporto.dao.universitydao.UniversityDaoInterface;
 import com.metroporto.exceptions.DaoException;
-import com.metroporto.metro.Facility;
-import com.metroporto.metro.Station;
 import com.metroporto.metro.University;
-import com.metroporto.metro.Zone;
 import com.metroporto.users.Administrator;
 import com.metroporto.users.Passenger;
 import com.metroporto.users.Student;
@@ -48,7 +45,7 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
 
             while (rs.next())
             {
-                users.add(createElement());
+                users.add(createDto());
             }
         } catch (SQLException sqe)
         {
@@ -62,7 +59,7 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
     }
 
     @Override
-    protected User createElement() throws SQLException
+    protected User createDto() throws SQLException
     {
         User user = null;
         int userId = rs.getInt("user_id");

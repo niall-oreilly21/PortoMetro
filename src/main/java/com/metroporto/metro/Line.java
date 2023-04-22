@@ -8,6 +8,7 @@ public class Line implements Comparable<Line>
     private final String lineId;
     private String lineName;
     private List<Route> routes;
+
     private List<Train> trains;
     private List<Station> stations;
 
@@ -33,6 +34,11 @@ public class Line implements Comparable<Line>
     public List<Train> getTrains()
     {
         return trains;
+    }
+
+    public List<Route> getRoutes()
+    {
+        return routes;
     }
 
     public void addTrain(Train train)

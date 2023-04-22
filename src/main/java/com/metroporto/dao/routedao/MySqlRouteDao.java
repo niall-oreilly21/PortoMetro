@@ -38,7 +38,7 @@ public class MySqlRouteDao extends MySqlDao<Route> implements FindAllDaoInterfac
 
             while (rs.next())
             {
-                routes.add(createElement());
+                routes.add(createDto());
             }
 
         } catch (SQLException sqe)
@@ -74,7 +74,7 @@ public class MySqlRouteDao extends MySqlDao<Route> implements FindAllDaoInterfac
 
             while (rs.next())
             {
-                routes.add(createElement());
+                routes.add(createDto());
             }
         } catch (SQLException sqe)
         {
@@ -88,7 +88,7 @@ public class MySqlRouteDao extends MySqlDao<Route> implements FindAllDaoInterfac
     }
 
     @Override
-    protected Route createElement() throws SQLException
+    protected Route createDto() throws SQLException
     {
         int routeId = rs.getInt("route_id");
         String stationId = rs.getString("end_station_id");

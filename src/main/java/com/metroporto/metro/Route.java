@@ -21,6 +21,21 @@ public class Route
         timetables.add(timetable);
     }
 
+    public int getRouteId()
+    {
+        return routeId;
+    }
+
+    public List<Timetable> getTimetables()
+    {
+        return timetables;
+    }
+
+    public Station getEndStation()
+    {
+        return endStation;
+    }
+
     @Override
     public String toString()
     {

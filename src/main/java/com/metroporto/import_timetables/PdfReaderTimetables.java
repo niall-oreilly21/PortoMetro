@@ -16,16 +16,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PdfReaderTimetables implements ImportTimetablesInterface
+public class PdfReaderTimetables extends ExcelReaderTimetables implements ImportTimetablesInterface
 {
-    private List<Station> stations;
     private PortoMetroPdfPageManager portoMetroPdfPageManager;
     private PDFTextStripperByArea stripper;
     private PDDocument document;
 
-    public PdfReaderTimetables(List<Station> stations)
+    public PdfReaderTimetables(List<Station> stations, List<Line> lines)
     {
-        this.stations = stations;
+        super(stations, lines);
         this.portoMetroPdfPageManager = new PortoMetroPdfPageManager();
         this.stripper = null;
         this.document = null;
@@ -35,7 +34,6 @@ public class PdfReaderTimetables implements ImportTimetablesInterface
     public void start()
     {
         String url = "https://en.metrodoporto.pt/metrodoporto/uploads/document/file/635/horarios_abril_2023.pdf";
-PdfReaderTimetables p = new PdfReaderTimetables(null);
         try
         {
             document = PDDocument.load(new URL(url).openStream());
@@ -46,10 +44,20 @@ PdfReaderTimetables p = new PdfReaderTimetables(null);
             for (int i = 1; i < document.getNumberOfPages(); i++)
             {
                 portoMetroPdfPageManager.addPageIndex();
-                getSchedulesFromPdf();
-            }
+                changeLine(portoMetroPdfPageManager.getLineId());
 
-        document.close();
+                if(useRouteOne)
+                {
+                    line.getRoutes().get(0).addTimeTable(getSchedulesFromPdf());
+                }
+                else
+                {
+                    line.getRoutes().get(1).addTimeTable(getSchedulesFromPdf());
+                }
+
+                switchRoute();
+            }
+            document.close();
     }
     catch (IOException e)
     {
@@ -57,7 +65,7 @@ PdfReaderTimetables p = new PdfReaderTimetables(null);
     }
     }
 
-    private void getSchedulesFromPdf() throws IOException
+    private Timetable getSchedulesFromPdf() throws IOException
     {
         // Get the text from the specified region
         String text = extractTextFromPdf();
@@ -84,6 +92,8 @@ PdfReaderTimetables p = new PdfReaderTimetables(null);
 
             timetable.addSchedules(rowSchedules);
         }
+
+        return timetable;
 
     }
 

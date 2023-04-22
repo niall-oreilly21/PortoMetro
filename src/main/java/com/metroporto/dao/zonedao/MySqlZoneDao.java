@@ -28,7 +28,7 @@ public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
 
             while (rs.next())
             {
-                zone = createElement();
+                zone = createDto();
             }
         }
         catch (SQLException sqe)
@@ -61,7 +61,7 @@ public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
 
             while (rs.next())
             {
-                zones.add(createElement());
+                zones.add(createDto());
             }
         }
         catch (SQLException sqe)
@@ -77,7 +77,7 @@ public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
     }
 
     @Override
-    protected Zone createElement() throws SQLException
+    protected Zone createDto() throws SQLException
     {
         int zoneId = rs.getInt("zone_id");
         String zoneName = rs.getString("zone_name");

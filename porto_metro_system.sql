@@ -185,21 +185,22 @@ CREATE TABLE routes
 /*CREATE timetable table*/
 CREATE TABLE timetables
 (
-    schedule_id INT NOT NULL AUTO_INCREMENT,
+    timetable_id INT NOT NULL AUTO_INCREMENT,
     route_id INT NOT NULL,
     scheduled_day_type ENUM("Monday-Friday", "Saturday","Sunday") NOT NULL,
-    PRIMARY KEY (schedule_id),
+    PRIMARY KEY (timetable_id),
     FOREIGN KEY (route_id) REFERENCES routes(route_id)
 );
 
 /*CREATE schedules table*/
 CREATE TABLE schedules
 (
-    schedule_id INT NOT NULL,
+    timetable_id INT NOT NULL,
     station_id VARCHAR(3),
     departure_time TIME NOT NULL,
-    FOREIGN KEY (schedule_id) REFERENCES timetables(schedule_id),
-    FOREIGN KEY (station_id) REFERENCES stations(station_id)
+    FOREIGN KEY (timetable_id) REFERENCES timetables(timetable_id),
+    FOREIGN KEY (station_id) REFERENCES stations(station_id),
+    UNIQUE(timetable_id, station_id, departure_time)
 );
 
 
@@ -753,7 +754,7 @@ LEFT JOIN students_universities ON users.user_id = students_universities.user_id
 LEFT JOIN passengers ON users.user_id = passengers.user_id;
 
 CREATE VIEW all_cards AS
-SELECT cards.*, timer_cards.end_datetime, blue_cards.total_trips_allowed,cards_zones.zone_id FROM cards
+SELECT cards.*, timer_cards.end_datetime, blue_cards.total_trips_allowed FROM cards
 LEFT JOIN timer_cards ON cards.card_id = timer_cards.card_id
 LEFT JOIN blue_cards ON cards.card_id = blue_cards.card_id
 LEFT JOIN cards_zones ON cards.card_id = cards_zones.card_id;

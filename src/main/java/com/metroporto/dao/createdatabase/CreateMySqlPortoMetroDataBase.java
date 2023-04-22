@@ -13,7 +13,7 @@ import java.sql.*;
 
 /*Run this file to create database*/
 
-public class CreateMySqlPortoMetroDataBase extends MySqlDao implements CreatePortoMetroDataBaseInterface
+public class CreateMySqlPortoMetroDataBase extends MySqlDao<String> implements CreatePortoMetroDataBaseInterface
 {
 
     @Override
@@ -50,6 +50,12 @@ public class CreateMySqlPortoMetroDataBase extends MySqlDao implements CreatePor
         {
             handleFinally("runSqlFile()");
         }
+    }
+
+    @Override
+    protected String createDto() throws SQLException
+    {
+        return null;
     }
 
 //    @Override

@@ -2,10 +2,7 @@ package com.metroporto.import_timetables;
 
 import com.metroporto.enums.EnumLabelConverter;
 import com.metroporto.enums.TimeTableType;
-import com.metroporto.metro.Route;
-import com.metroporto.metro.Schedule;
-import com.metroporto.metro.Station;
-import com.metroporto.metro.Timetable;
+import com.metroporto.metro.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 
@@ -14,17 +11,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
-import static com.metroporto.enums.TimeTableType.*;
-
-public class ExcelReaderTimetables implements ImportTimetablesInterface
+public class ExcelReaderTimetables extends ImportReaderLinesStations implements ImportTimetablesInterface
 {
-    private List<Station> stations;
-
-    public ExcelReaderTimetables(List<Station> stations)
+    public ExcelReaderTimetables(List<Station> stations, List<Line> lines)
     {
-        this.stations = stations;
+        super(stations, lines);
     }
 
     @Override
@@ -32,22 +24,19 @@ public class ExcelReaderTimetables implements ImportTimetablesInterface
     {
         List<String> excelRegions = new ArrayList<>(Arrays.asList("Monday_Friday_1", "Saturday_1", "Sunday_1", "Monday_Friday_2", "Saturday_2", "Sunday_2"));
 
-//        Route route1 = new Route(1,null);
-//        Route route2 = new Route(2,null);
-
-        List<Timetable>timetables = new ArrayList<>();
+        changeLine("D");
 
         for(String region : excelRegions)
         {
-            timetables.add(getTimeTable(region));
+            if(region.contains("1"))
+            {
+                line.getRoutes().get(0).addTimeTable(getTimeTable(region));
+            }
+            else
+            {
+                line.getRoutes().get(1).addTimeTable(getTimeTable(region));
+            }
         }
-
-        for(Timetable timetable : timetables)
-        {
-            timetable.displayTimeTable();
-            System.out.println();
-        }
-
     }
 
     private Timetable getTimeTable(String region)
@@ -105,16 +94,14 @@ public class ExcelReaderTimetables implements ImportTimetablesInterface
                                 break;
 
                             case FORMULA:
-                                switch (cell.getCachedFormulaResultType())
+                                if (cell.getCachedFormulaResultType() == CellType.NUMERIC)
                                 {
-                                    case NUMERIC:
-                                        if(i == stationsList.size())
-                                        {
-                                            i = 0;
-                                        }
-                                        rowSchedules.add(new Schedule(stationsList.get(i), cell.getLocalDateTimeCellValue().toLocalTime()));
-                                        i++;
-                                        break;
+                                    if (i == stationsList.size())
+                                    {
+                                        i = 0;
+                                    }
+                                    rowSchedules.add(new Schedule(stationsList.get(i), cell.getLocalDateTimeCellValue().toLocalTime()));
+                                    i++;
                                 }
                                 break;
                             default:
@@ -131,6 +118,7 @@ public class ExcelReaderTimetables implements ImportTimetablesInterface
             workbook.close();
         } catch (IOException e)
         {
+            System.out.println("HERE");
             e.printStackTrace();
         }
         return timetable;
@@ -139,10 +127,7 @@ public class ExcelReaderTimetables implements ImportTimetablesInterface
     private TimeTableType getTimeTableTypeFromRegion(String stringCellValue)
     {
         EnumLabelConverter enumLabelConverter = new EnumLabelConverter();
-
-        TimeTableType timeTableType = enumLabelConverter.fromLabel(stringCellValue, TimeTableType.class);
-
-        return timeTableType;
+        return enumLabelConverter.fromLabel(stringCellValue, TimeTableType.class);
     }
 
     private Station getStation(String stationString)

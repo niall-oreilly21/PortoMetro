@@ -7,19 +7,14 @@ import java.util.List;
 
 public class Timetable
 {
-    private final int scheduleId;
+    private final int timetableId;
     private String scheduleDescription;
     private TimeTableType timeTableType;
     private List<List<Schedule>> timeTableSchedules;
 
-    public void setTimeTableType(TimeTableType timeTableType)
-    {
-        this.timeTableType = timeTableType;
-    }
-
     public Timetable(int scheduleId, String scheduleDescription, TimeTableType timeTableType)
     {
-        this.scheduleId = scheduleId;
+        this.timetableId = scheduleId;
         this.scheduleDescription = scheduleDescription;
         this.timeTableType = timeTableType;
         timeTableSchedules = new ArrayList<>();
@@ -27,14 +22,14 @@ public class Timetable
 
     public Timetable(TimeTableType timeTableType)
     {
-        this.scheduleId = 0;
+        this.timetableId = 0;
         this.scheduleDescription = "";
         this.timeTableType = timeTableType;
         timeTableSchedules = new ArrayList<>();
     }
     public Timetable()
     {
-        this.scheduleId = 0;
+        this.timetableId = 0;
         this.scheduleDescription = "";
         this.timeTableType = TimeTableType.MONDAY_TO_FRIDAY;
         timeTableSchedules = new ArrayList<>();
@@ -45,11 +40,31 @@ public class Timetable
         timeTableSchedules.add(schedules);
     }
 
+    public int getTimetableId()
+    {
+        return timetableId;
+    }
+
+    public String getScheduleDescription()
+    {
+        return scheduleDescription;
+    }
+
+    public TimeTableType getTimeTableType()
+    {
+        return timeTableType;
+    }
+
+    public void setTimeTableType(TimeTableType timeTableType)
+    {
+        this.timeTableType = timeTableType;
+    }
+
     @Override
     public String toString()
     {
         return "Timetable{" +
-                "scheduleId=" + scheduleId +
+                "scheduleId=" + timetableId +
                 ", scheduleDescription='" + scheduleDescription + '\'' +
                 ", timeTableType=" + timeTableType +
                 '}';
@@ -57,7 +72,6 @@ public class Timetable
 
     public void displayTimeTable()
     {
-        System.out.println(toString());
         for(List<Schedule> schedules : timeTableSchedules)
         {
             for (Schedule schedule : schedules)
