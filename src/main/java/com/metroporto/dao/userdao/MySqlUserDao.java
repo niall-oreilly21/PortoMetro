@@ -40,10 +40,7 @@ public class MySqlUserDao extends MySqlDao implements UserDaoInterface
         {
             //Get a connection to the database
             con = this.getConnection();
-            query = "SELECT users.*, passengers.card_id, students_universities.university_id, \n" +
-                    "FROM users\n" +
-                    "LEFT JOIN students_universities ON users.user_id = students_universities.user_id," +
-                    "LEFT JOIN passengers ON users.user_id = passengers.user_id;";
+            query = "SELECT * from all_users";
             ps = con.prepareStatement(query);
 
             //Use the prepared statement to execute the sql
@@ -58,17 +55,21 @@ public class MySqlUserDao extends MySqlDao implements UserDaoInterface
 
                 if(userType.equalsIgnoreCase("student") || userType.equalsIgnoreCase("passenger"))
                 {
-                    int cardId = rs.getInt(" passengers.card_id");
+                    int cardId = rs.getInt("card_id");
 
                     Card card = cardDao.findCardByCardId(cardId);
 
                     if(userType.equalsIgnoreCase("student"))
                     {
-                        String universityId = rs.getString("students_universities.university_id");
+                        String universityId = rs.getString("university_id");
 
                         University university = universityDao.findUniversityByUniversityId(universityId);
 
                         users.add(new Student(userId, email, password, card, university));
+                    }
+                    else
+                    {
+                        users.add(new Passenger(userId, email, password, card));
                     }
 
                 }
@@ -79,10 +80,10 @@ public class MySqlUserDao extends MySqlDao implements UserDaoInterface
             }
         } catch (SQLException sqe)
         {
-            throw new DaoException("findAllStations() " + sqe.getMessage());
+            throw new DaoException("findAllUsers() " + sqe.getMessage());
         } finally
         {
-            handleFinally("findAllStations()");
+            handleFinally("findAllUsers()");
         }
 
         return users;

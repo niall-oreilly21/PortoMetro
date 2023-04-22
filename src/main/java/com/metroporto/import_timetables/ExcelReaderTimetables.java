@@ -1,5 +1,6 @@
 package com.metroporto.import_timetables;
 
+import com.metroporto.enums.EnumLabelConverter;
 import com.metroporto.enums.TimeTableType;
 import com.metroporto.metro.Route;
 import com.metroporto.metro.Schedule;
@@ -137,20 +138,9 @@ public class ExcelReaderTimetables implements ImportTimetablesInterface
 
     private TimeTableType getTimeTableTypeFromRegion(String stringCellValue)
     {
-        TimeTableType timeTableType = MONDAY_TO_FRIDAY;
+        EnumLabelConverter enumLabelConverter = new EnumLabelConverter();
 
-       if(stringCellValue.equalsIgnoreCase(MONDAY_TO_FRIDAY.getLabel()))
-       {
-           timeTableType = MONDAY_TO_FRIDAY;
-       }
-       else if(stringCellValue.equalsIgnoreCase(SATURDAY.getLabel()))
-       {
-           timeTableType = SATURDAY;
-       }
-       else
-       {
-           timeTableType = SUNDAY;
-       }
+        TimeTableType timeTableType = enumLabelConverter.fromLabel(stringCellValue, TimeTableType.class);
 
         return timeTableType;
     }

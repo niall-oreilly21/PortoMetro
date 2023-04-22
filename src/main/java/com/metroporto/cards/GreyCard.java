@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 public class GreyCard extends Card
 {
     private LocalDateTime endDateTime;
-    protected boolean isActive;
 
     public GreyCard(int cardId, CardAccessType accessType, double cardPrice, LocalDateTime endDateTime)
     {
@@ -24,4 +23,11 @@ public class GreyCard extends Card
         isActive = endDateTime.isAfter(now);
     }
 
+    @Override
+    public String toString()
+    {
+        return "GreyCard{" +
+                "endDateTime=" + endDateTime +
+                "} " + super.toString();
+    }
 }

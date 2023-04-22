@@ -13,6 +13,7 @@ public class BlueCard extends Card
     {
         super(cardId, cardAccessType, cardPrice);
         this.numberOfTrips = numberOfTrips;
+        checkExpiration();
     }
 
     public int getNumberOfTrips()
@@ -29,5 +30,13 @@ public class BlueCard extends Card
     protected void checkExpiration()
     {
         isActive = numberOfTrips > 0;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "BlueCard{" +
+                "numberOfTrips=" + numberOfTrips +
+                "} " + super.toString();
     }
 }

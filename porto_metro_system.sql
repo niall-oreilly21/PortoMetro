@@ -47,7 +47,8 @@ CREATE TABLE students_universities
     user_id INT NOT NULL,
     university_id VARCHAR(30) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (university_id) REFERENCES universities(university_id)
+    FOREIGN KEY (university_id) REFERENCES universities(university_id),
+    UNIQUE (user_id)
 );
 
 /*CREATE cards table*/
@@ -66,7 +67,8 @@ CREATE TABLE passengers
     user_id INT NOT NULL,
     card_id INT,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (card_id) REFERENCES cards(card_id)
+    FOREIGN KEY (card_id) REFERENCES cards(card_id),
+    UNIQUE (user_id, card_id)
 );
 
 -- /*CREATE table cards_prices*/
@@ -86,7 +88,8 @@ CREATE TABLE cards_zones
     card_id INT NOT NULL,
     zone_id INT NOT NULL,
     FOREIGN KEY (card_id) REFERENCES cards(card_id),
-    FOREIGN KEY (zone_id) REFERENCES zones(zone_id)
+    FOREIGN KEY (zone_id) REFERENCES zones(zone_id),
+    UNIQUE (card_id, zone_id)
 );
 
 /*CREATE blue card table*/
@@ -94,7 +97,8 @@ CREATE TABLE timer_cards
 (
     card_id INT NOT NULL,
     end_datetime DATETIME NOT NULL,
-    FOREIGN KEY (card_id) REFERENCES cards(card_id)
+    FOREIGN KEY (card_id) REFERENCES cards(card_id),
+    UNIQUE(card_id)
 );
 
 /*CREATE card types table*/
@@ -102,7 +106,8 @@ CREATE TABLE blue_cards
 (
     card_id INT NOT NULL,
     total_trips_allowed INT,
-    FOREIGN KEY (card_id) REFERENCES cards(card_id)
+    FOREIGN KEY (card_id) REFERENCES cards(card_id),
+    UNIQUE(card_id)
 );
 
 
@@ -732,7 +737,7 @@ ON station_facilities(station_id, facility_id);
 /*-----------------------------------------------------------------VIEWS-------------------------------------------------------------------------------------*/
 
 
-DROP VIEW IF EXISTS passenger_details, students_details, blue_cards_details;
+DROP VIEW IF EXISTS all_users, all_cards;
 
 -- /*CREATE A VIEW which shows passengers*/
 -- CREATE VIEW passenger_details AS
@@ -742,11 +747,10 @@ DROP VIEW IF EXISTS passenger_details, students_details, blue_cards_details;
 -- WHERE users.user_type = "student"; 
 
 /*CREATE A VIEW which shows students*/
-CREATE VIEW students_details AS
-SELECT users.*, universities.* FROM users
-JOIN students_universities ON users.user_id = students_universities.user_id
-JOIN universities ON students_universities.university_id = universities.university_id
-WHERE users.user_type = "student"; 
+CREATE VIEW all_users AS
+SELECT users.*, passengers.card_id, students_universities.university_id FROM users
+LEFT JOIN students_universities ON users.user_id = students_universities.user_id
+LEFT JOIN passengers ON users.user_id = passengers.user_id;
 
 CREATE VIEW all_cards AS
 SELECT cards.*, timer_cards.end_datetime, blue_cards.total_trips_allowed,cards_zones.zone_id FROM cards
@@ -779,11 +783,56 @@ DROP PROCEDURE IF EXISTS get_timer_cards_details;
 -- END //
 -- -- @DELIMITER ;
 
+-- @DELIMITER //
+CREATE TRIGGER limit_card_id_rows
+BEFORE INSERT ON cards_zones FOR EACH ROW
+BEGIN
+  DECLARE card_count INT;
+  SELECT COUNT(*) INTO card_count FROM cards_zones WHERE card_id = NEW.card_id;
+  IF card_count >= 3 THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'Exceeded limit for card_id in cards_zones table';
+  END IF;
+END// 
+-- @DELIMITER ;
 
 INSERT INTO users (user_id, email, user_password, user_type) VALUES
 (1,"niall.blackrock@gmail.com", "12345", "student"),
-(2, "luana.blackrock@gmail.com", "123454", "administrator");
+(2, "luana.blackrock@gmail.com", "123454", "administrator"),
+(3, "johndoe@gmail.com", "abcdef", "passenger"),
+(4, "janedoe@gmail.com", "ghijkl", "passenger");
 
 INSERT INTO students_universities (user_id, university_id) VALUES
 (1,"UOP");
 
+
+/* Insert sample data into cards table */
+INSERT INTO cards (card_id, card_type, access_type, card_price) VALUES
+(1, 'blue card', 'All zones', 10.00),
+(2, 'grey card', '3 zones', 15.00),
+(3, 'student card', '3 zones', 5.00),
+(4, 'tour card', 'All zones', 20.00);
+
+/* Insert sample data into passengers table */
+INSERT INTO passengers (user_id, card_id) VALUES
+(1, 1),
+(3, 2),
+(4, 4);
+
+/* Insert sample data into cards_zones table */
+INSERT INTO cards_zones (card_id, zone_id) VALUES
+(2, 1),
+(2, 2),
+(2, 3);
+
+/* Insert sample data into timer_cards table */
+INSERT INTO timer_cards (card_id, end_datetime) VALUES
+(1, '2023-04-30 23:59:59'),
+(2, '2023-05-31 23:59:59'),
+(3, '2023-06-30 23:59:59'),
+(4, '2023-07-31 23:59:59');
+
+/* Insert sample data into blue_cards table */
+INSERT INTO blue_cards (card_id, total_trips_allowed) VALUES
+(1, 10),
+(2, 5);

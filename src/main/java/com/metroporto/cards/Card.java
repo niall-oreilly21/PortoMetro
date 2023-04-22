@@ -28,7 +28,7 @@ public abstract class Card
         }
         else
         {
-            this.zones = new ArrayList<>();
+            this.zones = null;
         }
     }
 
@@ -82,4 +82,15 @@ public abstract class Card
         this.isActive = false;
     }
 
+    @Override
+    public String toString()
+    {
+        return "Card{" +
+                "cardId=" + cardId +
+                ", isActive=" + isActive +
+                ", cardAccessType=" + cardAccessType +
+                ", cardPrice=" + cardPrice +
+                ", zones=" + zones +
+                '}';
+    }
 }
