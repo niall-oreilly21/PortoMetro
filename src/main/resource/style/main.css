@@ -55,6 +55,11 @@
     -fx-text-fill: white;
 }
 
+.form-button-yellow {
+    -fx-background-color: #fdc300;
+    -fx-text-fill: #00305f;
+}
+
 .hyperlink {
     -fx-text-fill: #00305f;
 }
@@ -89,4 +94,16 @@
     -fx-font-size: 15px;
     -fx-text-fill: #333;
     -fx-alignment: CENTER;
+}
+
+.navbar {
+    -fx-background-color: #fdc300;
+}
+
+.nav-active {
+    -fx-underline: true;
+}
+
+.vbox-background {
+    -fx-background-color: rgba(0, 48, 95, 0.4);
 }
