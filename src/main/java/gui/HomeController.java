@@ -8,6 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -74,75 +75,89 @@ public class HomeController
         optionsComboBox.getSelectionModel().selectFirst();
     }
 
-    // TODO: Add redirects using the ControllersUtil class to the corresponding classes
-    public void redirectToSchedule(MouseEvent mouseEvent)
+    @FXML
+    public void redirectToSchedule(MouseEvent event) throws IOException
     {
-        System.out.println("Schedule");
+        ControllersUtil<ScheduleController> util = new ControllersUtil<>();
+        util.redirectToPage("com/gui/schedule.fxml", event, ScheduleController.class);
     }
 
-    public void redirectToJourneyRoute(MouseEvent mouseEvent)
+    @FXML
+    public void redirectToJourneyRoute(MouseEvent event) throws IOException
     {
-        System.out.println("Journey Route");
+        ControllersUtil<JourneyRouteController> util = new ControllersUtil<>();
+        util.redirectToPage("com/gui/journey_route.fxml", event, JourneyRouteController.class);
     }
 
-    public void redirectToStation(MouseEvent mouseEvent)
+    @FXML
+    public void redirectToStation(MouseEvent event) throws IOException
     {
-        System.out.println("Station");
+        ControllersUtil<StationController> util = new ControllersUtil<>();
+        util.redirectToPage("com/gui/station.fxml", event, StationController.class);
     }
 
-    public void redirectToProfile(MouseEvent mouseEvent)
+    @FXML
+    public void redirectToProfile(MouseEvent event) throws IOException
     {
-        System.out.println("Profile");
+        ControllersUtil<ProfileController> util = new ControllersUtil<>();
+        util.redirectToPage("com/gui/profile.fxml", event, ProfileController.class);
     }
 
-    public void redirectToCard(MouseEvent mouseEvent)
+    @FXML
+    public void redirectToCard(MouseEvent event) throws IOException
     {
-        System.out.println("Card");
+        ControllersUtil<CardController> util = new ControllersUtil<>();
+        util.redirectToPage("com/gui/card.fxml", event, CardController.class);
     }
 
-    public void redirectToSchedule()
+    public void redirectToSchedule(ActionEvent event) throws IOException
     {
-        System.out.println("Schedule");
+        ControllersUtil<ScheduleController> util = new ControllersUtil<>();
+        util.redirectToPage("com/gui/schedule.fxml", event, ScheduleController.class);
     }
 
-    public void redirectToJourneyRoute()
+    public void redirectToJourneyRoute(ActionEvent event) throws IOException
     {
-        System.out.println("Journey Route");
+        ControllersUtil<JourneyRouteController> util = new ControllersUtil<>();
+        util.redirectToPage("com/gui/journey_route.fxml", event, JourneyRouteController.class);
     }
 
-    public void redirectToStation()
+    public void redirectToStation(ActionEvent event) throws IOException
     {
-        System.out.println("Station");
+        ControllersUtil<StationController> util = new ControllersUtil<>();
+        util.redirectToPage("com/gui/station.fxml", event, StationController.class);
     }
 
-    public void redirectToProfile()
+    public void redirectToProfile(ActionEvent event) throws IOException
     {
-        System.out.println("Profile");
+        ControllersUtil<ProfileController> util = new ControllersUtil<>();
+        util.redirectToPage("com/gui/profile.fxml", event, ProfileController.class);
     }
 
-    public void redirectToCard()
+    public void redirectToCard(ActionEvent event) throws IOException
     {
-        System.out.println("Card");
+        ControllersUtil<CardController> util = new ControllersUtil<>();
+        util.redirectToPage("com/gui/card.fxml", event, CardController.class);
     }
 
-    public void submitForm(ActionEvent event)
+    public void submitForm(ActionEvent event) throws IOException
     {
         String selectedItem = optionsComboBox.getSelectionModel().getSelectedItem();
         switch(selectedItem) {
             case "Look up Metro schedules by line":
-                redirectToSchedule();
+                redirectToSchedule(event);
                 break;
             case "Look up journey route from one stop to another":
-                redirectToJourneyRoute();
+                redirectToJourneyRoute(event);
                 break;
             case "Look up station(s) information":
-                redirectToStation();
+                redirectToStation(event);
                 break;
             case "Edit my profile":
-                redirectToProfile();
+                redirectToProfile(event);
                 break;
             case "View my card details":
-                redirectToCard();
+                redirectToCard(event);
                 break;
             default:
                 break;
