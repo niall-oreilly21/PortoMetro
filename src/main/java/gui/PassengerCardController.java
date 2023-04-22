@@ -299,7 +299,7 @@ public class PassengerCardController
                 cardTypeLabel.setGraphic(null);
                 errorText.setText("");
 
-                // TODO: Add to database
+                // TODO: Add to database and redirect to card zones page
             }
         }
         else

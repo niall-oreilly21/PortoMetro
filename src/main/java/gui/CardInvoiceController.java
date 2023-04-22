@@ -60,7 +60,7 @@ public class CardInvoiceController
         // Set the items of the table
         ObservableList<InvoiceItem> data = FXCollections.observableArrayList();
         data.add(new InvoiceItem("Andante Grey Card", 1, 3));
-        data.add(new InvoiceItem("Monthly top up", 3, 30));
+        data.add(new InvoiceItem("Monthly top up - 3 zones", 3, 30));
         invoiceTable.setItems(data);
 
         invoiceTable.setFixedCellSize(40);

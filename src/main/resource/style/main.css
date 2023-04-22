@@ -43,6 +43,13 @@
     -fx-border-radius: 100%;
 }
 
+.check-box .box {
+    -fx-focus-color: #00305f;
+    -fx-faint-focus-color: #00305f22;
+    -fx-background-color: white;
+    -fx-border-color: #cfcfcf;
+}
+
 .form-button {
     -fx-background-color: #00305f;
     -fx-text-fill: white;
