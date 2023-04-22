@@ -22,6 +22,8 @@ import java.util.regex.Pattern;
 
 public class SignUpController
 {
+    private final ControllersUtil util = new ControllersUtil();
+
     @FXML
     private ImageView metro1;
 
@@ -143,15 +145,13 @@ public class SignUpController
 
             if (passengerType.equals("student"))
             {
-                ControllersUtil<StudentUniversityController> util = new ControllersUtil<>();
-                util.redirectToPage("com/gui/student_university.fxml", event, StudentUniversityController.class);}
-
+                util.redirectToStudentUniversity(event);
+            }
         }
     }
 
     public void redirectToSignIn(ActionEvent event) throws IOException
     {
-        ControllersUtil<SignInController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/sign_in.fxml", event, SignInController.class);
+        util.redirectToSignIn(event);
     }
 }

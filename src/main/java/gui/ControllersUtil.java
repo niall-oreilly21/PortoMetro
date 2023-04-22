@@ -13,15 +13,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-public class ControllersUtil<T>
+public class ControllersUtil
 {
-    public void redirectToPage(String resourceName, ActionEvent event, Class<T> controllerClass) throws IOException
+    public void redirectToSignUp(ActionEvent event) throws IOException
     {
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource(resourceName)));
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/sign_up.fxml")));
 
         Parent root = loader.load();
 
-        T controller = loader.getController();
+        SignUpController controller = loader.getController();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setTitle("Porto Metro");
@@ -29,30 +30,18 @@ public class ControllersUtil<T>
         stage.setScene(scene);
         stage.show();
 
-        // Call the setScene method of the controller if it exists
-        if (controller != null)
-        {
-            try
-            {
-                Method setSceneMethod = controllerClass.getMethod("setScene", Scene.class);
-                setSceneMethod.invoke(controller, scene);
-
-                Method setMainAppMethod = controllerClass.getMethod("setMainApp", App.class);
-                setMainAppMethod.invoke(controller, App.getApplication());
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
-            {
-                // The setScene method is not defined in the controller, do nothing
-            }
-        }
+        controller.setScene(scene);
+        controller.setApp(App.getApplication());
     }
 
-    public void redirectToPage(String resourceName, MouseEvent event, Class<T> controllerClass) throws IOException
+    public void redirectToSignIn(ActionEvent event) throws IOException
     {
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource(resourceName)));
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/sign_in.fxml")));
 
         Parent root = loader.load();
 
-        T controller = loader.getController();
+        SignInController controller = loader.getController();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setTitle("Porto Metro");
@@ -60,20 +49,221 @@ public class ControllersUtil<T>
         stage.setScene(scene);
         stage.show();
 
-        // Call the setScene method of the controller if it exists
-        if (controller != null)
-        {
-            try
-            {
-                Method setSceneMethod = controllerClass.getMethod("setScene", Scene.class);
-                setSceneMethod.invoke(controller, scene);
+        controller.setScene(scene);
+    }
 
-                Method setMainAppMethod = controllerClass.getMethod("setMainApp", App.class);
-                setMainAppMethod.invoke(controller, App.getApplication());
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
-            {
-                // The setScene method is not defined in the controller, do nothing
-            }
-        }
+    public void redirectToStudentUniversity(ActionEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/student_university.fxml")));
+
+        Parent root = loader.load();
+
+        StudentUniversityController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+
+        controller.setScene(scene);
+        controller.setApp(App.getApplication());
+    }
+
+    public void redirectToHome(ActionEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/home.fxml")));
+
+        Parent root = loader.load();
+
+        HomeController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+
+        controller.setApp(App.getApplication());
+    }
+
+    public void redirectToSchedule(ActionEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/schedule.fxml")));
+
+        Parent root = loader.load();
+
+        ScheduleController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void redirectToJourneyRoute(ActionEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/journey_route.fxml")));
+
+        Parent root = loader.load();
+
+        JourneyRouteController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void redirectToStation(ActionEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/station.fxml")));
+
+        Parent root = loader.load();
+
+        StationController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void redirectToProfile(ActionEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/profile.fxml")));
+
+        Parent root = loader.load();
+
+        ProfileController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void redirectToCard(ActionEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/card.fxml")));
+
+        Parent root = loader.load();
+
+        CardController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void redirectToHome(MouseEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/home.fxml")));
+
+        Parent root = loader.load();
+
+        HomeController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+
+        controller.setApp(App.getApplication());
+    }
+
+    public void redirectToSchedule(MouseEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/schedule.fxml")));
+
+        Parent root = loader.load();
+
+        ScheduleController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void redirectToJourneyRoute(MouseEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/journey_route.fxml")));
+
+        Parent root = loader.load();
+
+        JourneyRouteController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void redirectToStation(MouseEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/station.fxml")));
+
+        Parent root = loader.load();
+
+        StationController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void redirectToProfile(MouseEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/profile.fxml")));
+
+        Parent root = loader.load();
+
+        ProfileController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void redirectToCard(MouseEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/card.fxml")));
+
+        Parent root = loader.load();
+
+        CardController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
     }
 }

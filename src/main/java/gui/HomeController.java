@@ -14,6 +14,8 @@ import java.util.Objects;
 
 public class HomeController
 {
+    private final ControllersUtil util = new ControllersUtil();
+
     @FXML
     private ImageView logo;
 
@@ -78,66 +80,27 @@ public class HomeController
     @FXML
     public void redirectToSchedule(MouseEvent event) throws IOException
     {
-        ControllersUtil<ScheduleController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/schedule.fxml", event, ScheduleController.class);
+        util.redirectToSchedule(event);
     }
 
-    @FXML
     public void redirectToJourneyRoute(MouseEvent event) throws IOException
     {
-        ControllersUtil<JourneyRouteController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/journey_route.fxml", event, JourneyRouteController.class);
+        util.redirectToJourneyRoute(event);
     }
 
-    @FXML
     public void redirectToStation(MouseEvent event) throws IOException
     {
-        ControllersUtil<StationController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/station.fxml", event, StationController.class);
+        util.redirectToStation(event);
     }
 
-    @FXML
     public void redirectToProfile(MouseEvent event) throws IOException
     {
-        ControllersUtil<ProfileController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/profile.fxml", event, ProfileController.class);
+        util.redirectToProfile(event);
     }
 
-    @FXML
     public void redirectToCard(MouseEvent event) throws IOException
     {
-        ControllersUtil<CardController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/card.fxml", event, CardController.class);
-    }
-
-    public void redirectToSchedule(ActionEvent event) throws IOException
-    {
-        ControllersUtil<ScheduleController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/schedule.fxml", event, ScheduleController.class);
-    }
-
-    public void redirectToJourneyRoute(ActionEvent event) throws IOException
-    {
-        ControllersUtil<JourneyRouteController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/journey_route.fxml", event, JourneyRouteController.class);
-    }
-
-    public void redirectToStation(ActionEvent event) throws IOException
-    {
-        ControllersUtil<StationController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/station.fxml", event, StationController.class);
-    }
-
-    public void redirectToProfile(ActionEvent event) throws IOException
-    {
-        ControllersUtil<ProfileController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/profile.fxml", event, ProfileController.class);
-    }
-
-    public void redirectToCard(ActionEvent event) throws IOException
-    {
-        ControllersUtil<CardController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/card.fxml", event, CardController.class);
+        util.redirectToCard(event);
     }
 
     public void submitForm(ActionEvent event) throws IOException
@@ -145,19 +108,19 @@ public class HomeController
         String selectedItem = optionsComboBox.getSelectionModel().getSelectedItem();
         switch(selectedItem) {
             case "Look up Metro schedules by line":
-                redirectToSchedule(event);
+                util.redirectToSchedule(event);
                 break;
             case "Look up journey route from one stop to another":
-                redirectToJourneyRoute(event);
+                util.redirectToJourneyRoute(event);
                 break;
             case "Look up station(s) information":
-                redirectToStation(event);
+                util.redirectToStation(event);
                 break;
             case "Edit my profile":
-                redirectToProfile(event);
+                util.redirectToProfile(event);
                 break;
             case "View my card details":
-                redirectToCard(event);
+                util.redirectToCard(event);
                 break;
             default:
                 break;

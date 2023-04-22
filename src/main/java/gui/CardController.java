@@ -11,6 +11,8 @@ import java.util.Objects;
 
 public class CardController
 {
+    private final ControllersUtil util = new ControllersUtil();
+
     @FXML
     private ImageView logo;
 
@@ -34,32 +36,27 @@ public class CardController
 
     public void redirectToHome(MouseEvent event) throws IOException
     {
-        ControllersUtil<HomeController > util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/home.fxml", event, HomeController.class);
+        util.redirectToHome(event);
     }
 
     public void redirectToSchedule(MouseEvent event) throws IOException
     {
-        ControllersUtil<ScheduleController > util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/schedule.fxml", event, ScheduleController.class);
+        util.redirectToSchedule(event);
     }
 
     public void redirectToJourneyRoute(MouseEvent event) throws IOException
     {
-        ControllersUtil<JourneyRouteController > util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/journey_route.fxml", event, JourneyRouteController.class);
+        util.redirectToJourneyRoute(event);
     }
 
     public void redirectToStation(MouseEvent event) throws IOException
     {
-        ControllersUtil<StationController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/station.fxml", event, StationController.class);
+        util.redirectToStation(event);
     }
 
     public void redirectToProfile(MouseEvent event) throws IOException
     {
-        ControllersUtil<ProfileController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/profile.fxml", event, ProfileController.class);
+        util.redirectToProfile(event);
     }
 }
 

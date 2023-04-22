@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 
 public class SignInController
 {
+    private final ControllersUtil util = new ControllersUtil();
+
     @FXML
     private ImageView metro1;
 
@@ -56,7 +58,7 @@ public class SignInController
         });
     }
 
-    public void submitForm(ActionEvent event)
+    public void submitForm(ActionEvent event) throws IOException
     {
         String email = emailText.getText();
         String emailPattern = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
@@ -91,12 +93,13 @@ public class SignInController
             errorText.setText("");
 
             // TODO: implement sign in authentication using MySQL + set user in App
+
+            util.redirectToHome(event);
         }
     }
 
     public void redirectToSignUp(ActionEvent event) throws IOException
     {
-        ControllersUtil<SignUpController> util = new ControllersUtil<>();
-        util.redirectToPage("com/gui/sign_up.fxml", event, SignUpController.class);
+        util.redirectToSignUp(event);
     }
 }

@@ -9,11 +9,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class StudentUniversityController
 {
+    private final ControllersUtil util = new ControllersUtil();
+
     @FXML
     private Label universityLabel;
 
@@ -28,6 +32,9 @@ public class StudentUniversityController
 
     @FXML
     private Label errorText;
+
+    @FXML
+    private RadioButton yesCardRadioButton;
 
     private App app;
 
@@ -44,7 +51,7 @@ public class StudentUniversityController
         logo.setImage(logoImage);
 
         // TODO: this should be an ArrayList of universities fetched from the database
-        ArrayList<String> universities = new ArrayList<>();
+        List<String> universities = new ArrayList<>();
         universities.add("Option 1");
         universities.add("Option 2");
         universities.add("Option 3");
@@ -54,7 +61,8 @@ public class StudentUniversityController
         universityComboBox.getItems().add(0, "Choose university...");
         universityComboBox.getSelectionModel().selectFirst();
 
-        universityComboBox.setCellFactory(param -> new ListCell<String>()
+        // Make first item (Choose university...) grey & disabled
+        universityComboBox.setCellFactory(param -> new ListCell<>()
         {
             @Override
             protected void updateItem(String item, boolean empty)
@@ -85,7 +93,7 @@ public class StudentUniversityController
     }
 
     @FXML
-    private void submitForm(ActionEvent event)
+    private void submitForm(ActionEvent event) throws IOException
     {
         String university = universityComboBox.getValue();
         String asterisk = "*";
@@ -101,6 +109,11 @@ public class StudentUniversityController
 
             // TODO: add the student university data to database
             System.out.println(university);
+
+            if (yesCardRadioButton.isSelected())
+            {
+                util.redirectToHome(event);
+            }
         }
         else
         {
@@ -109,4 +122,10 @@ public class StudentUniversityController
             universityLabel.setContentDisplay(ContentDisplay.RIGHT);
         }
     }
+
+//    public void redirectToHome(ActionEvent event) throws IOException
+//    {
+//        ControllersUtil<HomeController> util = new ControllersUtil<>();
+//        util.redirectToPage("com/gui/home.fxml", event, HomeController.class);
+//    }
 }
