@@ -9,8 +9,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Objects;
 
 public class ControllersUtil
@@ -52,6 +50,25 @@ public class ControllersUtil
         controller.setScene(scene);
     }
 
+    public void redirectToPassengerCard(ActionEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/passenger_card.fxml")));
+
+        Parent root = loader.load();
+
+        PassengerCardController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+
+        controller.setScene(scene);
+        controller.setApp(App.getApplication());
+    }
+
     public void redirectToStudentUniversity(ActionEvent event) throws IOException
     {
         FXMLLoader loader = new FXMLLoader(
@@ -60,6 +77,44 @@ public class ControllersUtil
         Parent root = loader.load();
 
         StudentUniversityController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+
+        controller.setScene(scene);
+        controller.setApp(App.getApplication());
+    }
+
+    public void redirectToCardZone(ActionEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/card_zone.fxml")));
+
+        Parent root = loader.load();
+
+        CardZoneController controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Porto Metro");
+        Scene scene = new Scene(root, 1200, 768);
+        stage.setScene(scene);
+        stage.show();
+
+        controller.setScene(scene);
+        controller.setApp(App.getApplication());
+    }
+
+    public void redirectToCardInvoice(ActionEvent event) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(ControllersUtil.class.getClassLoader().getResource("com/gui/card_invoice.fxml")));
+
+        Parent root = loader.load();
+
+        CardInvoiceController controller = loader.getController();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setTitle("Porto Metro");
@@ -103,6 +158,8 @@ public class ControllersUtil
         Scene scene = new Scene(root, 1200, 768);
         stage.setScene(scene);
         stage.show();
+
+        controller.setScene(scene);
     }
 
     public void redirectToJourneyRoute(ActionEvent event) throws IOException

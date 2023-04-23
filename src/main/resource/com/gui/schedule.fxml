@@ -5,6 +5,8 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Line?>
+
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="gui.ScheduleController"
@@ -44,4 +46,25 @@
             <Insets left="20" />
         </padding>
     </HBox>
+
+    <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+          AnchorPane.topAnchor="90" AnchorPane.bottomAnchor="0" alignment="TOP_CENTER">
+        <HBox fx:id="linesBox" alignment="CENTER" spacing="20">
+            <VBox.margin>
+                <Insets>
+                    <top>30</top>
+                </Insets>
+            </VBox.margin>
+        </HBox>
+        <Pane fx:id="stationsPane" prefWidth="1200">
+            <Line fx:id="stationsLine" startY="80" endY="80" stroke="black" strokeWidth="3" />
+            <VBox.margin>
+                <Insets>
+                    <top>20</top>
+                    <bottom>30</bottom>
+                </Insets>
+            </VBox.margin>
+        </Pane>
+        <TableView fx:id="timetable" />
+    </VBox>
 </AnchorPane>
