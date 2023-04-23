@@ -6,10 +6,17 @@ import com.metroporto.metro.Facility;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MySqlFacilityDao extends MySqlDao<Facility> implements FacilityDaoInterface
 {
+    private HashMap<Integer, Facility>facilities;
+
+    public MySqlFacilityDao()
+    {
+        facilities = new HashMap<>();
+    }
     @Override
     public List<Facility> findAllFacilitiesByStationName(String stationName) throws DaoException
     {
@@ -54,7 +61,20 @@ public class MySqlFacilityDao extends MySqlDao<Facility> implements FacilityDaoI
         int facilityId = rs.getInt("facility_id");
         String facilityDescription = rs.getString("facility_description");
 
-        return new Facility(facilityId, facilityDescription);
+        Facility facility;
+
+        if (facilities.containsKey(facilityId))
+        {
+            facility = facilities.get(facilityId);
+        }
+        else
+        {
+            facility = new Facility(facilityId, facilityDescription);
+            facilities.put(facilityId, facility);
+        }
+
+        return facility;
 
     }
+
 }

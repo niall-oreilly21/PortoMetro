@@ -3,6 +3,7 @@ package com.metroporto.dao;
 import com.metroporto.enums.EnumLabelConverter;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Station;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.*;
 import java.sql.*;
@@ -12,11 +13,11 @@ public abstract class MySqlDao<T>
     protected Connection con;
     protected PreparedStatement ps;
     protected ResultSet rs;
-    private final String driver;
-    private final String url;
-    protected final String databaseName;
-    protected final String username;
-    private final String password;
+    private static final String driver = "com.mysql.cj.jdbc.Driver";
+    private static final String url = "jdbc:mysql://localhost/";
+    protected static final String databaseName = "porto_metro_system";
+    protected static final String username = "root";
+    private static final String password = "";
     protected String query;
     protected EnumLabelConverter enumLabelConverter;
 
@@ -25,11 +26,11 @@ public abstract class MySqlDao<T>
         this.con = null;
         this.ps = null;
         this.rs = null;
-        this.driver = "com.mysql.cj.jdbc.Driver";
-        this.url = "jdbc:mysql://localhost/";
-        this.databaseName = "porto_metro_system";
-        this.username = "root";
-        this.password = "";
+//        this.driver = ;
+//        this.url = ;
+//        this.databaseName ;
+//        this.username ;
+//        this.password = "";
         this.query = "";
         this.enumLabelConverter = new EnumLabelConverter();
     }
@@ -53,10 +54,29 @@ public abstract class MySqlDao<T>
         }
     }
 
+    private static BasicDataSource dataSource = new BasicDataSource();
+
+    static
+    {
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(url + databaseName);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        dataSource.setMaxTotal(1000); // maximum number of connections
+        dataSource.setMinIdle(5); // minimum number of idle connections
+    }
+
     protected Connection getConnection() throws DaoException
     {
-        Connection con = establishConnection(url + databaseName);
-        return con;
+        try
+        {
+            return dataSource.getConnection();
+        }
+        catch (SQLException e)
+        {
+            throw new DaoException("Failed to get a database connection: " + e.getMessage());
+        }
+
     }
 
     protected Connection getConnectionToServer() throws DaoException

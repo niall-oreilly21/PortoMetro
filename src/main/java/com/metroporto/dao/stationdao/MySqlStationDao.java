@@ -7,22 +7,30 @@ import com.metroporto.dao.zonedao.MySqlZoneDao;
 import com.metroporto.dao.zonedao.ZoneDaoInterface;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Facility;
+import com.metroporto.metro.Schedule;
 import com.metroporto.metro.Station;
 import com.metroporto.metro.Zone;
 
 import java.sql.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MySqlStationDao extends MySqlDao<Station> implements StationDaoInterface
 {
     private ZoneDaoInterface zoneDao;
     private FacilityDaoInterface facilityDao;
+    private Map<Integer, Zone> zones;
+    private Map<String, Facility> facilities;
 
     public MySqlStationDao()
     {
         zoneDao = new MySqlZoneDao();
         facilityDao = new MySqlFacilityDao();
+        zones = new HashMap<>();
+        facilities = new HashMap<>();
     }
 
     @Override
@@ -94,11 +102,25 @@ public class MySqlStationDao extends MySqlDao<Station> implements StationDaoInte
         int zoneId = rs.getInt("zone_id");
         String stationName = rs.getString("station_name");
 
-        Zone zone = zoneDao.findZoneByZoneId(zoneId);
+        Zone zone;
+
+        if (zones.containsKey(zoneId))
+        {
+            zone = zones.get(zoneId);
+        }
+        else
+        {
+            zone = fetchZoneDto(zoneId);
+            zones.put(zoneId, zone);
+        }
 
         List<Facility>facilities = facilityDao.findAllFacilitiesByStationName(stationName);
 
         return new Station(stationId, zone, stationName, facilities);
     }
 
+    private Zone fetchZoneDto(int zoneId) throws SQLException
+    {
+        return zoneDao.findZoneByZoneId(zoneId);
+    }
 }

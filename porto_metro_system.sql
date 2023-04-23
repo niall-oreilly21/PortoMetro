@@ -197,10 +197,11 @@ CREATE TABLE schedules
 (
     timetable_id INT NOT NULL,
     station_id VARCHAR(3),
+    row_number INT NOT NULL, 
     departure_time TIME NOT NULL,
     FOREIGN KEY (timetable_id) REFERENCES timetables(timetable_id),
     FOREIGN KEY (station_id) REFERENCES stations(station_id),
-    UNIQUE(timetable_id, station_id, departure_time)
+    UNIQUE(timetable_id, row_number, station_id, departure_time)
 );
 
 
@@ -314,7 +315,7 @@ INSERT INTO stations (station_id, zone_id, station_name) VALUES
 ("PDR", 3, "Pedras Rubras"),
 ("VDS", 3, "Verdes"),
 ("CRT", 3, "Crestins"),
-("CDC", 5, "Custóias"),
+("CTS", 5, "Custóias"),
 ("FDC", 6, "Fonte Do Cuco"),
 ("CDM", 8, "Casa Da Música"),
 ("ISM", 5, "ISMAI"),
@@ -332,7 +333,7 @@ INSERT INTO stations (station_id, zone_id, station_name) VALUES
 ("STO", 12, "Santo Ovídio"),
 ("DJ2", 12, "D. João II"),
 ("JDD", 12, "João De Deus"),
-("CGV", 12, "Câmara De Gaia"),
+("CDG", 12, "Câmara De Gaia"),
 ("GTO", 12, "General Torres"),
 ("JDM", 12, "Jardim Do Morro"),
 ("SBO", 8, "São Bento"),
@@ -417,7 +418,7 @@ INSERT INTO facilities (facility_description) VALUES
 ("airport"),
 ("parking"),
 ("hospital"),
-("Grocery shop");
+("grocery shop");
 
 
 /*INSERTS data INTO the station_facilities table*/
@@ -519,8 +520,8 @@ INSERT INTO station_facilities (station_id, facility_id) VALUES
 ("DJ2", 7),
 ("JDD", 7), 
 ("JDD", 9),
-("CGV", 7),
-("CGV", 9),
+("CDG", 7),
+("CDG", 9),
 ("GTO", 1),
 ("GTO", 6), 
 ("GTO", 7),
@@ -563,8 +564,8 @@ INSERT INTO station_facilities (station_id, facility_id) VALUES
 ("FDC", 11),
 ("CMS", 1),
 ("CMS", 10),
-("CDC", 2),
-("CDC", 7),
+("CTS", 2),
+("CTS", 7),
 ("ESP", 5),
 ("ESP", 7),
 ("CRT", 3),
@@ -734,6 +735,12 @@ ON station_facilities(station_id, facility_id);
 -- CREATE INDEX stations_in_metro_lines_index
 -- ON stations_in_metro_lines(station_id, line_id);
 
+ALTER TABLE schedules
+DROP INDEX IF EXISTS schedules_index;
+
+/*CREATES an index called facilities_index on facility_id in facilities*/
+CREATE INDEX schedules_index
+ON schedules(timetable_id, row_number);
 
 /*-----------------------------------------------------------------VIEWS-------------------------------------------------------------------------------------*/
 

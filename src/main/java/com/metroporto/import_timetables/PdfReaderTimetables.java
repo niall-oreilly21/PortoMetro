@@ -48,11 +48,11 @@ public class PdfReaderTimetables extends ExcelReaderTimetables implements Import
 
                 if(useRouteOne)
                 {
-                    line.getRoutes().get(0).addTimeTable(getSchedulesFromPdf());
+                    line.getRoutes().get(1).addTimeTable(getSchedulesFromPdf());
                 }
                 else
                 {
-                    line.getRoutes().get(1).addTimeTable(getSchedulesFromPdf());
+                    line.getRoutes().get(0).addTimeTable(getSchedulesFromPdf());
                 }
 
                 switchRoute();
@@ -77,10 +77,8 @@ public class PdfReaderTimetables extends ExcelReaderTimetables implements Import
 
         Timetable timetable = new Timetable(portoMetroPdfPageManager.getScheduleDay());
 
-        for (int i = 0; i < times.size(); i++)
+        for (List<LocalTime> departureTimes : times)
         {
-            List<LocalTime> departureTimes = times.get(i);
-
             List<Schedule> rowSchedules = new ArrayList<>();
 
             for (int j = 0; j < departureTimes.size(); j++)
@@ -121,7 +119,7 @@ public class PdfReaderTimetables extends ExcelReaderTimetables implements Import
     {
         String output = text.replaceAll("\\d{1,2}:\\d{2}\\s+", "");
 
-        List<String> onlyText = Arrays.asList(output.split("\n"));
+        String[] onlyText = output.split("\n");
 
         List<Station>stationList = new ArrayList<>();
 

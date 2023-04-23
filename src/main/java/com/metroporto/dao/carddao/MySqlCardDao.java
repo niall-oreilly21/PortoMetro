@@ -64,10 +64,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
 
         int cardId = rs.getInt("card_id");
         String cardType = rs.getString("card_type");
-
-        String accessTypeString = rs.getString("access_type");
-        CardAccessType accessType = enumLabelConverter.fromLabel(accessTypeString, CardAccessType.class);
-
+        CardAccessType accessType = enumLabelConverter.fromLabel(rs.getString("access_type"), CardAccessType.class);
         double cardPrice = rs.getDouble("card_price");
 
         LocalDateTime endDateTime = rs.getTimestamp("end_datetime").toLocalDateTime();
@@ -103,7 +100,10 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
 
                 for(Zone zone : zones)
                 {
-                    card.addZone(zone);
+                    if (card != null)
+                    {
+                        card.addZone(zone);
+                    }
                 }
                 break;
 

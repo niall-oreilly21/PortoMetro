@@ -50,8 +50,7 @@ public class MySqlTrainDao extends MySqlDao<Train> implements TrainDaoInterface
     protected Train createDto() throws SQLException
     {
         String trainId = rs.getString("train_id");
-        String trainModelString = rs.getString("train_model");
-        TrainModel trainModel = enumLabelConverter.fromLabel(trainModelString, TrainModel.class);
+        TrainModel trainModel = enumLabelConverter.fromLabel(rs.getString("train_model"), TrainModel.class);
 
         int carriages = rs.getInt("carriages");
         int capacity = rs.getInt("capacity");

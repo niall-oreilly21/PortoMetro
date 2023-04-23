@@ -4,9 +4,12 @@ import com.metroporto.dao.FindAllDaoInterface;
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.stationdao.StationDaoInterface;
+import com.metroporto.dao.timetabledao.MySqlTimetableDao;
+import com.metroporto.dao.timetabledao.TimetableDaoInterface;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Route;
 import com.metroporto.metro.Station;
+import com.metroporto.metro.Timetable;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,10 +18,12 @@ import java.util.List;
 public class MySqlRouteDao extends MySqlDao<Route> implements FindAllDaoInterface<Route, String>
 {
     private StationDaoInterface stationDao;
+    private TimetableDaoInterface timetableDao;
 
     public MySqlRouteDao()
     {
         stationDao = new MySqlStationDao();
+        timetableDao = new MySqlTimetableDao();
     }
 
     @Override
@@ -94,7 +99,8 @@ public class MySqlRouteDao extends MySqlDao<Route> implements FindAllDaoInterfac
         String stationId = rs.getString("end_station_id");
 
         Station station = stationDao.findStationByStationId(stationId);
+        List<Timetable> timetables = timetableDao.findAllTimetablesByRouteId(routeId);
 
-        return new Route(routeId, station);
+        return new Route(routeId, station, timetables);
     }
 }

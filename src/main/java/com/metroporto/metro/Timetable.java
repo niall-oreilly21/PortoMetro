@@ -7,17 +7,18 @@ import java.util.List;
 
 public class Timetable
 {
-    private final int timetableId;
+    private int timetableId;
+
     private String scheduleDescription;
     private TimeTableType timeTableType;
-    private List<List<Schedule>> timeTableSchedules;
+    private List<List<Schedule>> timetableSchedules;
 
-    public Timetable(int scheduleId, String scheduleDescription, TimeTableType timeTableType)
+    public Timetable(int timetableId, TimeTableType timeTableType, List<List<Schedule>> timetableSchedules)
     {
-        this.timetableId = scheduleId;
-        this.scheduleDescription = scheduleDescription;
+        this.timetableId = timetableId;
+        this.scheduleDescription = "";
         this.timeTableType = timeTableType;
-        timeTableSchedules = new ArrayList<>();
+        this.timetableSchedules = timetableSchedules;
     }
 
     public Timetable(TimeTableType timeTableType)
@@ -25,24 +26,38 @@ public class Timetable
         this.timetableId = 0;
         this.scheduleDescription = "";
         this.timeTableType = timeTableType;
-        timeTableSchedules = new ArrayList<>();
+        timetableSchedules = new ArrayList<>();
     }
+
+    public Timetable(int timetableId, TimeTableType timeTableType)
+    {
+        this.timetableId = timetableId;
+        this.scheduleDescription = "";
+        this.timeTableType = timeTableType;
+        timetableSchedules = new ArrayList<>();
+    }
+
     public Timetable()
     {
         this.timetableId = 0;
         this.scheduleDescription = "";
         this.timeTableType = TimeTableType.MONDAY_TO_FRIDAY;
-        timeTableSchedules = new ArrayList<>();
+        timetableSchedules = new ArrayList<>();
     }
 
     public void addSchedules(List<Schedule> schedules)
     {
-        timeTableSchedules.add(schedules);
+        timetableSchedules.add(schedules);
     }
 
     public int getTimetableId()
     {
         return timetableId;
+    }
+
+    public List<List<Schedule>> getTimetableSchedules()
+    {
+        return timetableSchedules;
     }
 
     public String getScheduleDescription()
@@ -60,6 +75,11 @@ public class Timetable
         this.timeTableType = timeTableType;
     }
 
+    public void setTimetableId(int timetableId)
+    {
+        this.timetableId = timetableId;
+    }
+
     @Override
     public String toString()
     {
@@ -72,7 +92,8 @@ public class Timetable
 
     public void displayTimeTable()
     {
-        for(List<Schedule> schedules : timeTableSchedules)
+        System.out.println("-----" + timeTableType.getLabel()+ "-----");
+        for(List<Schedule> schedules : timetableSchedules)
         {
             for (Schedule schedule : schedules)
             {
@@ -94,7 +115,7 @@ public class Timetable
 
        List<Schedule>scheduleList = new ArrayList<>();
 
-        for (List<Schedule> schedules : timeTableSchedules)
+        for (List<Schedule> schedules : timetableSchedules)
         {
             scheduleList.add(schedules.get(index));
         }
@@ -109,7 +130,7 @@ public class Timetable
     private int getIndex(String station)
     {
         int index = -1;
-        List<Schedule> row = timeTableSchedules.get(0);
+        List<Schedule> row = timetableSchedules.get(0);
 
         for (int i = 0; i < row.size(); i++)
         {

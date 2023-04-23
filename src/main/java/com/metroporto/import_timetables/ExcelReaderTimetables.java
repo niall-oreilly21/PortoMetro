@@ -118,7 +118,6 @@ public class ExcelReaderTimetables extends ImportReaderLinesStations implements 
             workbook.close();
         } catch (IOException e)
         {
-            System.out.println("HERE");
             e.printStackTrace();
         }
         return timetable;

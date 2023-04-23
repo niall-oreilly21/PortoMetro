@@ -9,7 +9,8 @@ public class Schedule
 {
     private Station station;
     private LocalTime departureTime;
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+
+    //private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Schedule(Station station, LocalTime departureTime)
     {
@@ -30,7 +31,7 @@ public class Schedule
     @Override
     public String toString()
     {
-        return  departureTime.format(formatter) + ", ";
+        return  departureTime + ", ";
     }
 //    @Override
 //    public int compareTo(Schedule otherSchedule)
