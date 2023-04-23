@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
@@ -20,6 +21,8 @@ import java.util.Objects;
 
 public class PassengerCardController
 {
+    private final ControllersUtil util = new ControllersUtil();
+
     @FXML
     private ImageView metro1;
 
@@ -278,7 +281,7 @@ public class PassengerCardController
         });
     }
 
-    public void submitForm(ActionEvent event)
+    public void submitForm(ActionEvent event) throws IOException
     {
         String asterisk = "*";
         String errorColour = "#de2a1d";
@@ -299,12 +302,14 @@ public class PassengerCardController
                 cardTypeLabel.setGraphic(null);
                 errorText.setText("");
 
-                // TODO: Add to database and redirect to card zones page
+                // TODO: Add to database
+
+                util.redirectToCardZone(event);
             }
         }
         else
         {
-            // TODO: Redirect to home page
+            util.redirectToHome(event);
         }
     }
 

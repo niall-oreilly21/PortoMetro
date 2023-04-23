@@ -14,11 +14,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class CardInvoiceController
 {
+    private final ControllersUtil util = new ControllersUtil();
+
     @FXML
     private ImageView metro1;
 
@@ -74,7 +77,7 @@ public class CardInvoiceController
         String formattedPrice = String.format("€ %.2f", total);
         totalInvoicePrice.setText(formattedPrice);
 
-        priceColumn.setCellFactory(tc -> new TableCell<InvoiceItem, Double>() {
+        priceColumn.setCellFactory(tc -> new TableCell<>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
                 super.updateItem(price, empty);
@@ -87,7 +90,7 @@ public class CardInvoiceController
             }
         });
 
-        totalPriceColumn.setCellFactory(tc -> new TableCell<InvoiceItem, Double>() {
+        totalPriceColumn.setCellFactory(tc -> new TableCell<>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
                 super.updateItem(price, empty);
@@ -109,7 +112,8 @@ public class CardInvoiceController
         });
     }
 
-    public void submitForm(ActionEvent event)
+    public void submitForm(ActionEvent event) throws IOException
     {
+        util.redirectToHome(event);
     }
 }

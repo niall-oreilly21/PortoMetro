@@ -147,6 +147,10 @@ public class SignUpController
             {
                 util.redirectToStudentUniversity(event);
             }
+            else
+            {
+                util.redirectToPassengerCard(event);
+            }
         }
     }
 

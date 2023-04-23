@@ -34,7 +34,13 @@ public class StudentUniversityController
     private Label errorText;
 
     @FXML
+    private ToggleGroup cardToggleGroup;
+
+    @FXML
     private RadioButton yesCardRadioButton;
+
+    @FXML
+    private RadioButton noCardRadioButton;
 
     private App app;
 
@@ -82,6 +88,9 @@ public class StudentUniversityController
             }
         });
 
+        cardToggleGroup = new ToggleGroup();
+        yesCardRadioButton.setToggleGroup(cardToggleGroup);
+        noCardRadioButton.setToggleGroup(cardToggleGroup);
     }
 
     public void setScene(Scene scene)
@@ -110,7 +119,11 @@ public class StudentUniversityController
             // TODO: add the student university data to database
             System.out.println(university);
 
-            if (yesCardRadioButton.isSelected())
+            if (cardToggleGroup.getSelectedToggle() == yesCardRadioButton)
+            {
+                util.redirectToCardZone(event);
+            }
+            else
             {
                 util.redirectToHome(event);
             }
@@ -122,10 +135,4 @@ public class StudentUniversityController
             universityLabel.setContentDisplay(ContentDisplay.RIGHT);
         }
     }
-
-//    public void redirectToHome(ActionEvent event) throws IOException
-//    {
-//        ControllersUtil<HomeController> util = new ControllersUtil<>();
-//        util.redirectToPage("com/gui/home.fxml", event, HomeController.class);
-//    }
 }

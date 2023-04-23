@@ -14,12 +14,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class CardZoneController
 {
+    private final ControllersUtil util = new ControllersUtil();
+
     @FXML
     private ImageView metro1;
 
@@ -166,7 +169,7 @@ public class CardZoneController
                 {
                     if (checkBox instanceof CheckBox)
                     {
-                        ((CheckBox) checkBox).setDisable(false);
+                        checkBox.setDisable(false);
                     }
                 }
             }
@@ -199,7 +202,7 @@ public class CardZoneController
         });
     }
 
-    public void submitForm(ActionEvent event)
+    public void submitForm(ActionEvent event) throws IOException
     {
         String asterisk = "*";
         String errorColour = "#de2a1d";
@@ -225,7 +228,9 @@ public class CardZoneController
                 System.out.println(checkBox.getText());
             }
 
-            // TODO: Add to database and redirect to card invoice page
+            // TODO: Add to database
+
+            util.redirectToCardInvoice(event);
         }
     }
 }
