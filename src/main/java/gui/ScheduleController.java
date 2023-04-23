@@ -93,7 +93,7 @@ public class ScheduleController
             lineImageView.setFitHeight(70);
             Image lineImage = new Image(
                     Objects.requireNonNull(
-                            getClass().getResourceAsStream("/img/" + lineId + "_line.png")));
+                            getClass().getResourceAsStream("/img/lines/" + lineId + "_line.png")));
             lineImageView.setImage(lineImage);
             lineImageView.setOpacity(unselectedOpacity);
 
