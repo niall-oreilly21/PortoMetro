@@ -215,23 +215,23 @@ public class ScheduleController
             if (i == 0)
             {
                 drawStationNode(group, circleX, 10, currentLineStationsId.get(i),
-                        currentLineStationsName.get(i), textX, colours[0]);
+                        currentLineStationsName.get(i), textX, colours[0], true);
             }
             else if (i == numStations - 1)
             {
                 drawStationNode(group, circleX += increment, 10, currentLineStationsId.get(i),
-                        currentLineStationsName.get(i), textX += increment, colours[0]);
+                        currentLineStationsName.get(i), textX += increment, colours[0], true);
             }
             else
             {
                 drawStationNode(group, circleX += increment, 6, currentLineStationsId.get(i),
-                        currentLineStationsName.get(i), textX += increment, colours[1]);
+                        currentLineStationsName.get(i), textX += increment, colours[1], false);
             }
         }
     }
 
     public void drawStationNode(Group group, double circleX, double radius, String textValue,
-                                String tooltipText, double textX, Paint colour)
+                                String tooltipText, double textX, Paint colour, boolean bold)
     {
         Circle circle = new Circle();
         circle.setCenterX(circleX);
@@ -245,7 +245,11 @@ public class ScheduleController
         text.setTextAlignment(TextAlignment.LEFT);
         text.setRotate(-90);
         text.setText(textValue);
-        text.setFont(Font.font("HarmoniaSansProCyr-Regular", 14));
+
+        if (bold)
+            text.setFont(Font.font("HarmoniaSansProCyr-Bold", 18));
+        else
+            text.setFont(Font.font("HarmoniaSansProCyr-Regular", 14));
 
         Tooltip tooltip = new Tooltip(tooltipText);
         Tooltip.install(text, tooltip);

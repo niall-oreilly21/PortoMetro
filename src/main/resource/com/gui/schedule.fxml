@@ -49,20 +49,25 @@
 
     <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
           AnchorPane.topAnchor="90" AnchorPane.bottomAnchor="0" alignment="TOP_CENTER">
-        <HBox fx:id="linesBox" alignment="CENTER" spacing="20">
-            <VBox.margin>
-                <Insets>
-                    <top>30</top>
-                </Insets>
-            </VBox.margin>
+        <HBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets left="50" top="30" right="50"/>
+            </padding>
+            <HBox fx:id="linesBox" spacing="20"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <HBox alignment="CENTER">
+                <padding>
+                    <Insets right="15"/>
+                </padding>
+                <Label text="Direction:  "/>
+                <Label fx:id="endStation" styleClass="subheader-label" text="Santo Ovidio" textFill="#00305f"/>
+            </HBox>
+            <ComboBox />
         </HBox>
         <Pane fx:id="stationsPane" prefWidth="1200">
             <Line fx:id="stationsLine" startY="80" endY="80" stroke="black" strokeWidth="3" />
             <VBox.margin>
-                <Insets>
-                    <top>20</top>
-                    <bottom>30</bottom>
-                </Insets>
+                <Insets top="20" bottom="20"/>
             </VBox.margin>
         </Pane>
         <TableView fx:id="timetable" />
