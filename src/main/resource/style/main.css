@@ -24,7 +24,7 @@
 }
 
 .form-text-field {
-    -fx-max-width: 300px;
+    -fx-max-width: 400px;
 }
 
 .text-field, .combo-box, .menu-button {

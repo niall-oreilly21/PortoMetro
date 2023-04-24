@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
@@ -18,13 +15,35 @@
             <ImageView fx:id="logo" fitHeight="100" fitWidth="100" AnchorPane.leftAnchor="20" AnchorPane.topAnchor="20"/>
         </AnchorPane>
         <AnchorPane>
-            <VBox AnchorPane.topAnchor="95" AnchorPane.leftAnchor="140" maxWidth="300">
+            <VBox fx:id="formBox" AnchorPane.topAnchor="65" AnchorPane.leftAnchor="100" maxWidth="500">
                 <Label text="Hello there" styleClass="header-label" textFill="#00305f" wrapText="true" />
                 <Label text="Sign up for your personalised Porto Metro experience!" textFill="#8c8c8c" wrapText="true">
                     <padding>
                         <Insets bottom="35"/>
                     </padding>
                 </Label>
+                <HBox spacing="10">
+                    <VBox>
+                        <Label text="First name" fx:id="firstNameLabel"/>
+                        <TextField fx:id="firstNameText" styleClass="form-text-field">
+                            <VBox.margin>
+                                <Insets>
+                                    <bottom>20</bottom>
+                                </Insets>
+                            </VBox.margin>
+                        </TextField>
+                    </VBox>
+                    <VBox>
+                        <Label text="Surname" fx:id="surnameLabel"/>
+                        <TextField fx:id="surnameText" styleClass="form-text-field">
+                            <VBox.margin>
+                                <Insets>
+                                    <bottom>20</bottom>
+                                </Insets>
+                            </VBox.margin>
+                        </TextField>
+                    </VBox>
+                </HBox>
                 <Label text="E-mail" fx:id="emailLabel"/>
                 <TextField fx:id="emailText" styleClass="form-text-field" promptText="name@mail.com">
                     <VBox.margin>
@@ -67,14 +86,14 @@
                         </Insets>
                     </VBox.margin>
                 </Label>
-                <Button onAction="#submitForm" text="Create account" prefWidth="300" styleClass="form-button">
+                <Button onAction="#submitForm" text="Create account" prefWidth="400" styleClass="form-button">
                     <VBox.margin>
                         <Insets>
                             <bottom>20</bottom>
                         </Insets>
                     </VBox.margin>
                 </Button>
-                <HBox prefWidth="300" alignment="CENTER">
+                <HBox prefWidth="${formBox.width}" alignment="CENTER">
                     <Hyperlink text="I have an account already" underline="true" onAction="#redirectToSignIn"/>
                 </HBox>
             </VBox>

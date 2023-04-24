@@ -31,6 +31,12 @@ public class SignUpController
     private ImageView logo;
 
     @FXML
+    private Label firstNameLabel;
+
+    @FXML
+    private Label surnameLabel;
+
+    @FXML
     private Label emailLabel;
 
     @FXML
@@ -38,6 +44,12 @@ public class SignUpController
 
     @FXML
     private Label confirmPasswordLabel;
+
+    @FXML
+    private TextField firstNameText;
+
+    @FXML
+    private TextField surnameText;
 
     @FXML
     private TextField emailText;
@@ -92,6 +104,9 @@ public class SignUpController
 
     public void submitForm(ActionEvent event) throws IOException
     {
+        String firstName = firstNameText.getText();
+        String surname = surnameText.getText();
+
         String email = emailText.getText();
         String emailPattern = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
         Pattern pattern = Pattern.compile(emailPattern);
@@ -108,8 +123,22 @@ public class SignUpController
         Text redAsterisk = new Text(asterisk);
         redAsterisk.setFill(Color.web(errorColour));
 
-        if (email.isEmpty() || !emailMatcher.matches())
+        if (firstName.isEmpty())
         {
+            errorText.setText(asterisk + " Invalid first name");
+            firstNameLabel.setGraphic(redAsterisk);
+            firstNameLabel.setContentDisplay(ContentDisplay.RIGHT);
+        }
+        else if (surname.isEmpty())
+        {
+            firstNameLabel.setGraphic(null);
+            errorText.setText(asterisk + " Invalid surname");
+            surnameLabel.setGraphic(redAsterisk);
+            surnameLabel.setContentDisplay(ContentDisplay.RIGHT);
+        }
+        else if (email.isEmpty() || !emailMatcher.matches())
+        {
+            surnameLabel.setGraphic(null);
             errorText.setText(asterisk + " Invalid email address");
             emailLabel.setGraphic(redAsterisk);
             emailLabel.setContentDisplay(ContentDisplay.RIGHT);
