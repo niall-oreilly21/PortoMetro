@@ -9,6 +9,7 @@ import com.metroporto.dao.zonedao.ZoneDaoInterface;
 import com.metroporto.enums.CardAccessType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Zone;
+import com.metroporto.users.User;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -55,6 +56,12 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
         }
 
         return card;
+    }
+
+    @Override
+    public void insertCardForPassenger(User user) throws DaoException
+    {
+
     }
 
     @Override

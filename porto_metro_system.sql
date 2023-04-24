@@ -28,6 +28,8 @@ CREATE TABLE users
     user_id INT NOT NULL AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
     user_password VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
     user_type ENUM("passenger", "administrator", "student") NOT NULL,
     PRIMARY KEY (user_id),
     UNIQUE (user_id, email, user_password)

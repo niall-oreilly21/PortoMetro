@@ -5,7 +5,7 @@ import com.metroporto.cards.StudentCard;
 
 public class Passenger extends User
 {
-    protected Card metroCard;
+    private Card metroCard;
 
     public Passenger(int userId, String email, String password, Card metroCard)
     {

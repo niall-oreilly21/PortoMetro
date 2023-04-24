@@ -2,9 +2,11 @@ package com.metroporto.users;
 
 public abstract class User
 {
-    protected int userId;
-    protected final String email;
-    protected String password;
+    private int userId;
+    private final String email;
+    private String password;
+    private String firstName;
+    private String lastName;
 
     public User(int userId, String email, String password)
     {
@@ -26,6 +28,16 @@ public abstract class User
     public String getPassword()
     {
         return password;
+    }
+
+    public String getFirstName()
+    {
+        return firstName;
+    }
+
+    public String getLastName()
+    {
+        return lastName;
     }
 
     @Override

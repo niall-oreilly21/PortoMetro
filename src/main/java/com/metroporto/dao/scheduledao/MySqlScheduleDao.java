@@ -3,6 +3,7 @@ package com.metroporto.dao.scheduledao;
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.stationdao.StationDaoInterface;
+import com.metroporto.enums.TimeTableType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.*;
 
@@ -24,7 +25,8 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
     @Override
     public void insertSchedulesByRow(List<Schedule> schedules, int timetableId, int rowNumber) throws DaoException
     {
-        try {
+        try
+        {
             // Get a connection to the database
             con = this.getConnection();
             query = "INSERT INTO schedules (timetable_id, station_id, row_number, departure_time) VALUES (?, ?, ?, ?)";

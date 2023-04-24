@@ -26,11 +26,6 @@ public abstract class MySqlDao<T>
         this.con = null;
         this.ps = null;
         this.rs = null;
-//        this.driver = ;
-//        this.url = ;
-//        this.databaseName ;
-//        this.username ;
-//        this.password = "";
         this.query = "";
         this.enumLabelConverter = new EnumLabelConverter();
     }

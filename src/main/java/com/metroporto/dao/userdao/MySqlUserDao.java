@@ -8,11 +8,14 @@ import com.metroporto.dao.universitydao.MySqlUniversityDao;
 import com.metroporto.dao.universitydao.UniversityDaoInterface;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.University;
+import com.metroporto.metro.Zone;
 import com.metroporto.users.Administrator;
 import com.metroporto.users.Passenger;
 import com.metroporto.users.Student;
 import com.metroporto.users.User;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,5 +96,108 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         }
 
         return user;
+    }
+
+    @Override
+    public User findUserByEmail(String email) throws DaoException
+    {
+        User user = null;
+
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "SELECT * FROM users WHERE email = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, email);
+
+            //Use the prepared statement to execute the sql
+            rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                user = createDto();
+            }
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("findUserByEmail() in MySqlUserDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("findUserByEmail() in MySqlUserDao");
+        }
+
+        return user;
+    }
+
+    @Override
+    public void insertUser(User user) throws DaoException
+    {
+
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "INSERT INTO users (user_id, email, user_password, first_name, last_name, user_type) VALUES\n" +
+                    "(?, ?, ?, ?, ?, ?)";
+
+            ps = con.prepareStatement(query);
+            ps.setInt(1, user.getUserId());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+            ps.setString(4, user.getFirstName());
+            ps.setString(5, user.getLastName());
+
+            String userType;
+
+
+            if(user instanceof Passenger)
+            {
+                if(user instanceof Student)
+                {
+                    userType = "student";
+                }
+                else
+                {
+                    userType = "passenger";
+                }
+            }
+            else
+            {
+                userType = "administrator";
+            }
+
+            ps.setString(4, userType);
+
+
+            //Use the prepared statement to execute the sql
+            ps.executeUpdate();
+
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("insertUser() in MySqlUserDao " + sqe.getMessage());
+        }
+        finally
+        {
+           handleFinally("insertUser() in MySqlUserDao");
+        }
+
+        if(user instanceof Passenger)
+        {
+            if(((Passenger) user).getMetroCard() != null)
+            {
+                cardDao.insertCardForPassenger(user);
+            }
+
+            if(user instanceof Student)
+            {
+                if(((Passenger) user).getMetroCard() != null)
+                {
+                    universityDao.insertUniversityForStudent(user);
+                }
+            }
+        }
     }
 }
