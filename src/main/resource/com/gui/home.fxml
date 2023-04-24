@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -49,7 +46,7 @@
     </HBox>
     <VBox alignment="CENTER" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
           AnchorPane.topAnchor="90" AnchorPane.bottomAnchor="0">
-        <VBox styleClass="vbox-background" alignment="CENTER">
+        <VBox styleClass="transparent-blue-background" alignment="CENTER">
             <Label text="Welcome to the Porto Metro app!" styleClass="header-label" textFill="#fdc300"/>
             <Label text="What can we do for you today?" textFill="white" style="-fx-font-size: 22px;"/>
             <ComboBox fx:id="optionsComboBox" prefWidth="435">

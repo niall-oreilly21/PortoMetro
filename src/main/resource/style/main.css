@@ -104,6 +104,6 @@
     -fx-underline: true;
 }
 
-.vbox-background {
+.transparent-blue-background {
     -fx-background-color: rgba(0, 48, 95, 0.4);
 }
