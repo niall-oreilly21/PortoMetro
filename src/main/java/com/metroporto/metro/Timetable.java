@@ -1,9 +1,9 @@
 package com.metroporto.metro;
 
+import com.metroporto.ComparatorSchedules;
 import com.metroporto.enums.TimeTableType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Timetable
 {
@@ -12,6 +12,7 @@ public class Timetable
     private String scheduleDescription;
     private TimeTableType timeTableType;
     private List<List<Schedule>> timetableSchedules;
+    private Set<Station> stationSet;
 
     public Timetable(int timetableId, TimeTableType timeTableType, List<List<Schedule>> timetableSchedules)
     {
@@ -19,6 +20,21 @@ public class Timetable
         this.scheduleDescription = "";
         this.timeTableType = timeTableType;
         this.timetableSchedules = timetableSchedules;
+
+        stationSet = new LinkedHashSet<>();
+
+        Collections.sort(this.timetableSchedules.get(0));
+
+        for(Schedule schedules : this.timetableSchedules.get(0))
+        {
+            stationSet.add(schedules.getStation());
+        }
+
+        for(List<Schedule> schedules : this.timetableSchedules)
+        {
+            schedules.sort(new ComparatorSchedules(stationSet));
+        }
+
     }
 
     public Timetable(TimeTableType timeTableType)

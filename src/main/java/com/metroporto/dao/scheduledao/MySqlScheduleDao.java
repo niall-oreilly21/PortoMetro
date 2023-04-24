@@ -25,7 +25,8 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
     }
 
     @Override
-    public void insert(List<Schedule> schedules, int timetableId, int rowColumn) throws DaoException {
+    public void insert(List<Schedule> schedules, int timetableId, int rowColumn) throws DaoException
+    {
         try {
             // Get a connection to the database
             con = this.getConnection();
@@ -37,7 +38,8 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
             ps = con.prepareStatement(query);
 
             // Set the parameters for each schedule in the batch
-            for (Schedule schedule : schedules) {
+            for (Schedule schedule : schedules)
+            {
                 ps.setInt(1, timetableId);
                 ps.setString(2, schedule.getStation().getStationId());
                 ps.setInt(3, rowColumn);
@@ -60,7 +62,9 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
 
             // Enable auto-commit after the transaction is completed
             con.setAutoCommit(true);
-        } catch (SQLException sqe) {
+        }
+        catch (SQLException sqe)
+        {
             // Rollback the transaction on error
             if (con != null) {
                 try {
@@ -71,7 +75,9 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
                 }
             }
             throw new DaoException("insert() " + sqe.getMessage());
-        } finally {
+        }
+        finally
+        {
             handleFinally("insert()");
         }
     }
@@ -81,7 +87,6 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
     {
         long startTime = System.nanoTime();
         HashMap<Integer, List<Schedule>> scheduleMap = new HashMap<>();
-        List<List<Schedule>> timetableSchedules = new ArrayList<>();
 
         try
         {
@@ -122,14 +127,14 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
             handleFinally("findAll()");
         }
 
-        timetableSchedules.addAll(scheduleMap.values());
+        List<List<Schedule>> timetableSchedules = new ArrayList<>(scheduleMap.values());
 
         long endTime = System.nanoTime();
 
         // Calculate time taken in milliseconds
         long timeTakenInMillis = (endTime - startTime) / 1_000_000;
 
-        System.out.println("Time taken: " + timeTakenInMillis + " ms");
+        //System.out.println("Time taken: " + timeTakenInMillis + " ms");
 
         return timetableSchedules;
     }
@@ -139,6 +144,7 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
     {
         String stationId = rs.getString("station_id");
         LocalTime departureTime = rs.getTime("departure_time").toLocalTime();
+
 
         Station station;
 

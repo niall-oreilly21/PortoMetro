@@ -8,10 +8,14 @@ import com.metroporto.dao.stationdao.StationDaoInterface;
 import com.metroporto.dao.timetabledao.MySqlTimetableDao;
 import com.metroporto.dao.userdao.MySqlUserDao;
 import com.metroporto.dao.userdao.UserDaoInterface;
+import com.metroporto.enums.TimeTableType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.*;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+//Run this class to insert Timetables to database
 
 public class ImportTimetables implements ImportTimetablesInterface
 {
@@ -20,9 +24,28 @@ public class ImportTimetables implements ImportTimetablesInterface
 
     public static void main(String[] args)
     {
+        ImportTimetables importTimetables = new ImportTimetables();
+        importTimetables.start();
+    }
+
+    @Override
+    public void start()
+    {
+        setUpStationsLines();
+
+        retrieveTimetables();
+
+       insertSchedulesTimetablesToDatabase();
+
+       //Used to test
+        displayTimetables();
+    }
+
+    private void setUpStationsLines()
+    {
         StationDaoInterface stationDao = new MySqlStationDao();
         LineDaoInterface routeDao = new MySqlLineDao();
-        UserDaoInterface userDao = new MySqlUserDao();
+
         try
         {
             stations = stationDao.findAllStations();
@@ -32,67 +55,75 @@ public class ImportTimetables implements ImportTimetablesInterface
         {
             System.out.println(de.getMessage());
         }
-        ImportTimetables importTimetables = new ImportTimetables();
-
-
-        for (Line line : lines)
-        {
-            System.out.println("------" + line.getLineName() + "-----");
-
-            for (Route route : line.getRoutes())
-            {
-                System.out.println("------" + route.getEndStation().getStationName() + "-----");
-                for (Timetable timetable : route.getTimetables())
-                {
-                    timetable.displayTimeTable();
-                }
-            }
-
-        }
-
-        //importTimetables.start();
     }
 
-
-        @Override
-        public void start()
-        {
-            MySqlTimetableDao mySqlTimetableDao = new MySqlTimetableDao();
-            MySqlScheduleDao mySqlScheduleDao = new MySqlScheduleDao();
-
+    private void retrieveTimetables()
+    {
         PdfReaderTimetables pdfReaderTimetables  = new PdfReaderTimetables(stations, lines);
         pdfReaderTimetables.start();
 
-            ExcelReaderTimetables excelReaderTimetables = new ExcelReaderTimetables(stations, lines);
-            excelReaderTimetables.start();
+        ExcelReaderTimetables excelReaderTimetables = new ExcelReaderTimetables(stations, lines);
+        excelReaderTimetables.start();
+    }
 
-            int i;
-            try
+    private void displayTimetables()
+    {
+        for (Line line : lines)
+        {
+            if (line.getLineId().equalsIgnoreCase("D"))
             {
-                for (Line line : lines)
+                System.out.println("------" + line.getLineName() + "-----");
+
+                for (Route route : line.getRoutes())
                 {
-                    for (Route route : line.getRoutes())
+                    System.out.println("------" + route.getEndStation().getStationName() + "-----");
+                    for (Timetable timetable : route.getTimetables())
                     {
-
-                        for (Timetable timetable : route.getTimetables())
+                        if(timetable.getTimeTableType().equals(TimeTableType.MONDAY_TO_FRIDAY))
                         {
-                            mySqlTimetableDao.insert(timetable, route.getRouteId());
+                            timetable.displayTimeTable();
+                            System.out.println(timetable.getTimetableSchedules().size());
+                        }
 
-                            System.out.println(timetable.getTimetableId());
+                    }
+                }
+            }
 
-                            i = 1;
-                            for (List<Schedule> schedules : timetable.getTimetableSchedules())
-                            {
-                                mySqlScheduleDao.insert(schedules, timetable.getTimetableId(), i);
-                                i++;
-                            }
+        }
+    }
+
+    private void insertSchedulesTimetablesToDatabase()
+    {
+        MySqlTimetableDao mySqlTimetableDao = new MySqlTimetableDao();
+        MySqlScheduleDao mySqlScheduleDao = new MySqlScheduleDao();
+
+        int i;
+
+        try
+        {
+            for (Line line : lines)
+            {
+                for (Route route : line.getRoutes())
+                {
+                    for (Timetable timetable : route.getTimetables())
+                    {
+                        mySqlTimetableDao.insert(timetable, route.getRouteId());
+
+                        i = 0;
+
+                        for (List<Schedule> schedules : timetable.getTimetableSchedules())
+                        {
+                            i++;
+                            mySqlScheduleDao.insert(schedules, timetable.getTimetableId(), i);
                         }
                     }
                 }
-            } catch (DaoException de)
-            {
-                System.out.println(de.getMessage());
             }
+
+        } catch (DaoException de)
+        {
+            System.out.println(de.getMessage());
         }
+    }
 }
 

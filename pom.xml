@@ -46,11 +46,11 @@
 <!--      <version>2.6.3</version>-->
 <!--    </dependency>-->
 
-<!--    <dependency>-->
-<!--      <groupId>org.mybatis</groupId>-->
-<!--      <artifactId>mybatis</artifactId>-->
-<!--      <version>3.5.8</version>-->
-<!--    </dependency>-->
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+      <version>3.5.8</version>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.poi</groupId>

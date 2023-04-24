@@ -103,4 +103,5 @@ public class MySqlRouteDao extends MySqlDao<Route> implements FindAllDaoInterfac
 
         return new Route(routeId, station, timetables);
     }
+
 }

@@ -26,6 +26,7 @@ public class ExcelReaderTimetables extends ImportReaderLinesStations implements 
 
         changeLine("D");
 
+        int i = 0;
         for(String region : excelRegions)
         {
             if(region.contains("1"))
@@ -36,6 +37,7 @@ public class ExcelReaderTimetables extends ImportReaderLinesStations implements 
             {
                 line.getRoutes().get(1).addTimeTable(getTimeTable(region));
             }
+            i++;
         }
     }
 
@@ -110,7 +112,11 @@ public class ExcelReaderTimetables extends ImportReaderLinesStations implements 
 
 
                     }
-                    timetable.addSchedules(rowSchedules);
+                    if (!rowSchedules.isEmpty())
+                    {
+                        timetable.addSchedules(rowSchedules);
+                    }
+
                 }
             }
 

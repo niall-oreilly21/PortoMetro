@@ -75,7 +75,8 @@ public class MySqlTimetableDao extends MySqlDao<Timetable> implements TimetableD
             //Use the prepared statement to execute the sql
             int rowsAffected = ps.executeUpdate();
 
-            if (rowsAffected > 0) {
+            if (rowsAffected > 0)
+            {
                 // Retrieve the generated keys
                 rs = ps.getGeneratedKeys();
 
@@ -84,12 +85,6 @@ public class MySqlTimetableDao extends MySqlDao<Timetable> implements TimetableD
                     int timetableId = rs.getInt(1); // Retrieve the generated timetableid
                     timetable.setTimetableId(timetableId); // Set the timetableid in the Timetable object
                 }
-            }
-
-            if (rs.next())
-            {
-                int timetableId = rs.getInt(1); // assuming the timetableId column is the first column in the generated keys result set
-                timetable.setTimetableId(timetableId); // set the retrieved timetableId to the timetable object
             }
 
         }
