@@ -323,4 +323,9 @@ public class ControllersUtil
         stage.setScene(scene);
         stage.show();
     }
+
+    public String capitalise(String text)
+    {
+        return text.substring(0, 1).toUpperCase() + text.substring(1);
+    }
 }

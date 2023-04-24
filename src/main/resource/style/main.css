@@ -27,7 +27,7 @@
     -fx-max-width: 300px;
 }
 
-.text-field, .combo-box {
+.text-field, .combo-box, .menu-button {
     -fx-focus-color: #00305f;
     -fx-faint-focus-color: #00305f22;
     -fx-background-color: white;
@@ -107,3 +107,9 @@
 .transparent-blue-background {
     -fx-background-color: rgba(0, 48, 95, 0.4);
 }
+
+.stations-box {
+    -fx-border-color: #00305f;
+    -fx-border-width: 2px;
+}
+
