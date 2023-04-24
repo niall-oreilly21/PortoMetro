@@ -1,13 +1,28 @@
 package com.metroporto;
 
-/**
- * Hello world!
- *
- */
-public class App 
+
+import com.metroporto.cards.GreyCard;
+import com.metroporto.enums.CardAccessType;
+
+import java.time.LocalDateTime;
+
+public class App
 {
-    public static void main( String[] args )
+    public static void main(String[] args)
     {
-        System.out.println( "Hello World!" );
+        GreyCard card = new GreyCard(1, CardAccessType.ALL_ZONES, 12, LocalDateTime.of(2025, 12,12,12,12,12));
+
+        System.out.println(card.isActive());
     }
 }
+
+
+
+
+
+
+
+
+
+
+
