@@ -1,0 +1,19 @@
+{
+   "available_travel_modes" : [ "DRIVING", "WALKING", "BICYCLING" ],
+   "geocoded_waypoints" : [
+      {
+         "geocoder_status" : "OK",
+         "partial_match" : true,
+         "place_id" : "ChIJZ6fWsBNlJA0RG6aAf2XOv38",
+         "types" : [ "establishment", "health", "hospital", "point_of_interest" ]
+      },
+      {
+         "geocoder_status" : "OK",
+         "partial_match" : true,
+         "place_id" : "ChIJZ6fWsBNlJA0RG6aAf2XOv38",
+         "types" : [ "establishment", "health", "hospital", "point_of_interest" ]
+      }
+   ],
+   "routes" : [],
+   "status" : "ZERO_RESULTS"
+}
