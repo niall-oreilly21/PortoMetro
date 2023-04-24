@@ -1,7 +1,5 @@
 package com.metroporto.dao.scheduledao;
 
-import com.metroporto.dao.FindAllDaoInterface;
-import com.metroporto.dao.InsertDaoInterface;
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.stationdao.StationDaoInterface;
@@ -9,7 +7,6 @@ import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.*;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -25,7 +22,7 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
     }
 
     @Override
-    public void insert(List<Schedule> schedules, int timetableId, int rowColumn) throws DaoException
+    public void insertSchedulesByRow(List<Schedule> schedules, int timetableId, int rowNumber) throws DaoException
     {
         try {
             // Get a connection to the database
@@ -42,7 +39,7 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
             {
                 ps.setInt(1, timetableId);
                 ps.setString(2, schedule.getStation().getStationId());
-                ps.setInt(3, rowColumn);
+                ps.setInt(3, rowNumber);
                 ps.setTime(4, Time.valueOf(schedule.getDepartureTime()));
                 ps.addBatch(); // Add the current set of parameter values to the batch
             }
@@ -74,18 +71,17 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
                     e.printStackTrace();
                 }
             }
-            throw new DaoException("insert() " + sqe.getMessage());
+            throw new DaoException("insert() in MySqlScheduleDao " + sqe.getMessage());
         }
         finally
         {
-            handleFinally("insert()");
+            handleFinally("insert() in MySqlScheduleDao");
         }
     }
 
     @Override
-    public List<List<Schedule>> findAll(int timetableId) throws DaoException
+    public List<List<Schedule>> findAllSchedulesByTimetableId(int timetableId) throws DaoException
     {
-        long startTime = System.nanoTime();
         HashMap<Integer, List<Schedule>> scheduleMap = new HashMap<>();
 
         try
@@ -120,23 +116,14 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
         }
         catch (SQLException sqe)
         {
-            throw new DaoException("findAll() " + sqe.getMessage());
+            throw new DaoException("findAllSchedulesByTimetableId() in MySqlScheduleDao " + sqe.getMessage());
         }
         finally
         {
-            handleFinally("findAll()");
+            handleFinally("findAllSchedulesByTimetableId() in MySqlScheduleDao");
         }
 
-        List<List<Schedule>> timetableSchedules = new ArrayList<>(scheduleMap.values());
-
-        long endTime = System.nanoTime();
-
-        // Calculate time taken in milliseconds
-        long timeTakenInMillis = (endTime - startTime) / 1_000_000;
-
-        //System.out.println("Time taken: " + timeTakenInMillis + " ms");
-
-        return timetableSchedules;
+        return new ArrayList<>(scheduleMap.values());
     }
 
     @Override

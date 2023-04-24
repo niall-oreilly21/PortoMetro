@@ -5,9 +5,43 @@ import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.University;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MySqlUniversityDao extends MySqlDao<University> implements UniversityDaoInterface
 {
+    @Override
+    public List<University> findAll() throws DaoException
+    {
+        List<University> universities = new ArrayList<>();
+
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "SELECT * FROM universities";
+            ps = con.prepareStatement(query);
+
+            //Use the prepared statement to execute the sql
+            rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                universities.add(createDto());
+            }
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("findAll() in MySqlUniversityDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("findAll() in MySqlUniversityDao");
+        }
+
+        return universities;
+    }
+
     @Override
     public University findUniversityByUniversityId(String universityIdToBeFound) throws DaoException
     {
@@ -31,11 +65,11 @@ public class MySqlUniversityDao extends MySqlDao<University> implements Universi
         }
         catch (SQLException sqe)
         {
-            throw new DaoException("findUniversityByUniversityId() " + sqe.getMessage());
+            throw new DaoException("findUniversityByUniversityId() in MySqlUniversityDao " + sqe.getMessage());
         }
         finally
         {
-            handleFinally("findUniversityByUniversityId()");
+            handleFinally("findUniversityByUniversityId() in MySqlUniversityDao()");
         }
 
         return university;

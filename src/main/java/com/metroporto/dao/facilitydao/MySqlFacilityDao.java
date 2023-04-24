@@ -17,6 +17,40 @@ public class MySqlFacilityDao extends MySqlDao<Facility> implements FacilityDaoI
     {
         facilities = new HashMap<>();
     }
+
+    @Override
+    public List<Facility> findAll() throws DaoException
+    {
+        List<Facility> facilities = new ArrayList<>();
+
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query =
+                    "SELECT * FROM facilities;";
+
+            ps = con.prepareStatement(query);
+
+            //Use the prepared statement to execute the sql
+            rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                facilities.add(createDto());
+            }
+        } catch (SQLException sqe)
+        {
+            throw new DaoException("findAll() in MySqlFacilityDao" + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("findAll() in MySqlFacilityDao");
+        }
+
+        return facilities;
+    }
+
     @Override
     public List<Facility> findAllFacilitiesByStationName(String stationName) throws DaoException
     {
@@ -45,11 +79,11 @@ public class MySqlFacilityDao extends MySqlDao<Facility> implements FacilityDaoI
             }
         } catch (SQLException sqe)
         {
-            throw new DaoException("findAllFacilitiesByStationName() " + sqe.getMessage());
+            throw new DaoException("findAllFacilitiesByStationName() in MySqlFacilityDao " + sqe.getMessage());
         }
         finally
         {
-            handleFinally("findAllFacilitiesByStationName()");
+            handleFinally("findAllFacilitiesByStationName() in MySqlFacilityDao");
         }
 
         return facilities;
@@ -76,5 +110,4 @@ public class MySqlFacilityDao extends MySqlDao<Facility> implements FacilityDaoI
         return facility;
 
     }
-
 }

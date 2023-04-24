@@ -1,6 +1,5 @@
 package com.metroporto.dao.routedao;
 
-import com.metroporto.dao.FindAllDaoInterface;
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.stationdao.StationDaoInterface;
@@ -15,7 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySqlRouteDao extends MySqlDao<Route> implements FindAllDaoInterface<Route, String>
+public class MySqlRouteDao extends MySqlDao<Route> implements RouteDaoInterface
 {
     private StationDaoInterface stationDao;
     private TimetableDaoInterface timetableDao;
@@ -46,19 +45,53 @@ public class MySqlRouteDao extends MySqlDao<Route> implements FindAllDaoInterfac
                 routes.add(createDto());
             }
 
-        } catch (SQLException sqe)
+        }
+        catch (SQLException sqe)
         {
-            throw new DaoException("findAllRoutes() " + sqe.getMessage());
-        } finally
+            throw new DaoException("findAllRoutes() in MySqlRouteDao " + sqe.getMessage());
+        }
+        finally
         {
-            handleFinally("findAllRoutes()");
+            handleFinally("findAllRoutes() in MySqlRouteDao");
         }
 
         return routes;
     }
 
     @Override
-    public List<Route> findAllElementsById(String id) throws DaoException
+    public Route findRouteByEndStationId(String endStationId) throws DaoException
+    {
+        Route route = null;
+
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "SELECT * FROM routes WHERE end_station_id = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, endStationId);
+
+            //Use the prepared statement to execute the sql
+            rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                route = createDto();
+            }
+        } catch (SQLException sqe)
+        {
+            throw new DaoException("findRouteByEndStationId() in MySqlRouteDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("findRouteByEndStationId() in MySqlRouteDao");
+        }
+
+        return route;
+    }
+
+    @Override
+    public List<Route> findAllRoutesByLineId(String lineId) throws DaoException
     {
         List<Route> routes = new ArrayList<>();
 
@@ -72,7 +105,7 @@ public class MySqlRouteDao extends MySqlDao<Route> implements FindAllDaoInterfac
                             "WHERE line_id = ?;";
 
             ps = con.prepareStatement(query);
-            ps.setString(1, id);
+            ps.setString(1, lineId);
 
             //Use the prepared statement to execute the sql
             rs = ps.executeQuery();
@@ -81,12 +114,14 @@ public class MySqlRouteDao extends MySqlDao<Route> implements FindAllDaoInterfac
             {
                 routes.add(createDto());
             }
-        } catch (SQLException sqe)
+        }
+        catch (SQLException sqe)
         {
-            throw new DaoException("findAllRoutesByLineId() " + sqe.getMessage());
-        } finally
+            throw new DaoException("findAllRoutesByLineId() in MySqlRouteDao " + sqe.getMessage());
+        }
+        finally
         {
-            handleFinally("findAllRoutesByLineId()");
+            handleFinally("findAllRoutesByLineId() in MySqlRouteDao");
         }
 
         return routes;

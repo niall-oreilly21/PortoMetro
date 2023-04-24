@@ -29,7 +29,7 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
     }
 
     @Override
-    public List<User> findAllUsers() throws DaoException
+    public List<User> findAll() throws DaoException
     {
         List<User> users = new ArrayList<>();
 
@@ -49,10 +49,10 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             }
         } catch (SQLException sqe)
         {
-            throw new DaoException("findAllUsers() " + sqe.getMessage());
+            throw new DaoException("findAll() in MySqlUserDao " + sqe.getMessage());
         } finally
         {
-            handleFinally("findAllUsers()");
+            handleFinally("findAll() in MySqlUserDao");
         }
 
         return users;

@@ -1,6 +1,5 @@
 package com.metroporto.dao.timetabledao;
 
-import com.metroporto.dao.InsertDaoInterface;
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.dao.routedao.MySqlRouteDao;
 import com.metroporto.dao.scheduledao.MySqlScheduleDao;
@@ -46,18 +45,18 @@ public class MySqlTimetableDao extends MySqlDao<Timetable> implements TimetableD
             }
         } catch (SQLException sqe)
         {
-            throw new DaoException("findAllTimetablesByRouteId() " + sqe.getMessage());
+            throw new DaoException("findAllTimetablesByRouteId() in MySqlTimetableDao " + sqe.getMessage());
         }
         finally
         {
-            handleFinally("findAllTimetablesByRouteId()");
+            handleFinally("findAllTimetablesByRouteId() in MySqlTimetableDao");
         }
 
         return timetables;
     }
 
     @Override
-    public void insert(Timetable timetable, int routeId) throws DaoException
+    public void insertTimetableByRouteId(Timetable timetable, int routeId) throws DaoException
     {
         try
         {
@@ -90,11 +89,11 @@ public class MySqlTimetableDao extends MySqlDao<Timetable> implements TimetableD
         }
         catch (SQLException sqe)
         {
-            throw new DaoException("insert() " + sqe.getMessage());
+            throw new DaoException("insert() in MySqlTimetableDao " + sqe.getMessage());
         }
         finally
         {
-            handleFinally("insert()");
+            handleFinally("insert() in MySqlTimetableDao");
         }
     }
 
@@ -103,7 +102,7 @@ public class MySqlTimetableDao extends MySqlDao<Timetable> implements TimetableD
     {
         int timetableId = rs.getInt("timetable_id");
         TimeTableType TimetableType = enumLabelConverter.fromLabel(rs.getString("scheduled_day_type"), TimeTableType.class);
-        List<List<Schedule>> timetableSchedules = scheduleDao.findAll(timetableId);
+        List<List<Schedule>> timetableSchedules = scheduleDao.findAllSchedulesByTimetableId(timetableId);
         return new Timetable(timetableId, TimetableType, timetableSchedules);
     }
 }

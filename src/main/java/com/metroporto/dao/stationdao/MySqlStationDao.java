@@ -7,12 +7,10 @@ import com.metroporto.dao.zonedao.MySqlZoneDao;
 import com.metroporto.dao.zonedao.ZoneDaoInterface;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Facility;
-import com.metroporto.metro.Schedule;
 import com.metroporto.metro.Station;
 import com.metroporto.metro.Zone;
 
 import java.sql.*;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +32,7 @@ public class MySqlStationDao extends MySqlDao<Station> implements StationDaoInte
     }
 
     @Override
-    public List<Station> findAllStations() throws DaoException
+    public List<Station> findAll() throws DaoException
     {
         List<Station> stations = new ArrayList<>();
 
@@ -55,17 +53,17 @@ public class MySqlStationDao extends MySqlDao<Station> implements StationDaoInte
         }
         catch (SQLException sqe)
         {
-            throw new DaoException("findAllStations() " + sqe.getMessage());
+            throw new DaoException("findAll() in MySqlStationDao " + sqe.getMessage());
         } finally
         {
-            handleFinally("findAllStations()");
+            handleFinally("findAll() in MySqlStationDao");
         }
 
         return stations;
     }
 
     @Override
-    public Station findStationByStationId(String stationIdToBeFound) throws DaoException
+    public Station findStationByStationId(String stationId) throws DaoException
     {
         Station station = null;
 
@@ -75,7 +73,7 @@ public class MySqlStationDao extends MySqlDao<Station> implements StationDaoInte
             con = this.getConnection();
             query = "SELECT * FROM stations WHERE station_id = ?";
             ps = con.prepareStatement(query);
-            ps.setString(1, stationIdToBeFound);
+            ps.setString(1, stationId);
 
             //Use the prepared statement to execute the sql
             rs = ps.executeQuery();
@@ -86,10 +84,10 @@ public class MySqlStationDao extends MySqlDao<Station> implements StationDaoInte
             }
         } catch (SQLException sqe)
         {
-            throw new DaoException("findStationByStationId() " + sqe.getMessage());
+            throw new DaoException("findStationByStationId() in MySqlStationDao " + sqe.getMessage());
         } finally
         {
-            handleFinally("findStationByStationId()");
+            handleFinally("findStationByStationId() in MySqlStationDao");
         }
 
         return station;

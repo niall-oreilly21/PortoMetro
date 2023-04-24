@@ -5,8 +5,7 @@ import com.metroporto.metro.Route;
 
 import java.util.List;
 
-public interface FindAllDaoInterface<T, E>
+public interface FindAllDaoInterface<T>
 {
     List<T> findAll() throws DaoException;
-    List<T> findAllElementsById(E id) throws DaoException;
 }

@@ -8,5 +8,5 @@ import java.util.List;
 public interface TimetableDaoInterface
 {
     List<Timetable> findAllTimetablesByRouteId(int routeId) throws DaoException;
-    void insert(Timetable element, int timetableId) throws DaoException;
+    void insertTimetableByRouteId(Timetable timetable, int routeId) throws DaoException;
 }

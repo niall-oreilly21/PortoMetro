@@ -11,40 +11,7 @@ import java.util.List;
 public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
 {
     @Override
-    public Zone findZoneByZoneId(int zoneIdToBeFound) throws DaoException
-    {
-        Zone zone = null;
-
-        try
-        {
-            //Get a connection to the database
-            con = this.getConnection();
-            query = "SELECT * FROM zones WHERE zone_id = ?";
-            ps = con.prepareStatement(query);
-            ps.setInt(1, zoneIdToBeFound);
-
-            //Use the prepared statement to execute the sql
-            rs = ps.executeQuery();
-
-            while (rs.next())
-            {
-                zone = createDto();
-            }
-        }
-        catch (SQLException sqe)
-        {
-            throw new DaoException("findZoneByZoneId() " + sqe.getMessage());
-        }
-        finally
-        {
-            handleFinally("findZoneByZoneId()");
-        }
-
-        return zone;
-    }
-
-    @Override
-    public List<Zone> findAllZonesByZoneId(int zoneIdToBeFound) throws DaoException
+    public List<Zone> findAll() throws DaoException
     {
         List<Zone> zones = new ArrayList<>();
 
@@ -52,9 +19,8 @@ public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
         {
             //Get a connection to the database
             con = this.getConnection();
-            query = "SELECT * FROM zones JOIN cards_zones ON zones.zone_id = cards_zones.zone_id WHERE cards_zones.card_id = ?";
+            query = "SELECT * FROM zones";
             ps = con.prepareStatement(query);
-            ps.setInt(1, zoneIdToBeFound);
 
             //Use the prepared statement to execute the sql
             rs = ps.executeQuery();
@@ -66,11 +32,77 @@ public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
         }
         catch (SQLException sqe)
         {
-            throw new DaoException("findAllZonesByZoneId() " + sqe.getMessage());
+            throw new DaoException("findAll() in MySqlZoneDao " + sqe.getMessage());
         }
         finally
         {
-            handleFinally("findAllZonesByZoneId()");
+            handleFinally("findAll() in MySqlZoneDao");
+        }
+
+        return zones;
+    }
+
+    @Override
+    public Zone findZoneByZoneId(int zoneId) throws DaoException
+    {
+        Zone zone = null;
+
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "SELECT * FROM zones WHERE zone_id = ?";
+            ps = con.prepareStatement(query);
+            ps.setInt(1, zoneId);
+
+            //Use the prepared statement to execute the sql
+            rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                zone = createDto();
+            }
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("findElementsById() in MySqlZoneDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("findElementsById() in MySqlZoneDao");
+        }
+
+        return zone;
+    }
+
+    @Override
+    public List<Zone> findAllZonesByZoneId(int cardId) throws DaoException
+    {
+        List<Zone> zones = new ArrayList<>();
+
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "SELECT * FROM zones JOIN cards_zones ON zones.zone_id = cards_zones.zone_id WHERE cards_zones.card_id = ?";
+            ps = con.prepareStatement(query);
+            ps.setInt(1, cardId);
+
+            //Use the prepared statement to execute the sql
+            rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                zones.add(createDto());
+            }
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("findAllElementsById() in ZonesDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("findAllElementsById() in ZonesDao()");
         }
 
         return zones;

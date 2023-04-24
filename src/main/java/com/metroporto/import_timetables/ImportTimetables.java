@@ -6,13 +6,11 @@ import com.metroporto.dao.scheduledao.MySqlScheduleDao;
 import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.stationdao.StationDaoInterface;
 import com.metroporto.dao.timetabledao.MySqlTimetableDao;
-import com.metroporto.dao.userdao.MySqlUserDao;
-import com.metroporto.dao.userdao.UserDaoInterface;
+import com.metroporto.dao.timetabledao.TimetableDaoInterface;
 import com.metroporto.enums.TimeTableType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.*;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 //Run this class to insert Timetables to database
@@ -44,12 +42,12 @@ public class ImportTimetables implements ImportTimetablesInterface
     private void setUpStationsLines()
     {
         StationDaoInterface stationDao = new MySqlStationDao();
-        LineDaoInterface routeDao = new MySqlLineDao();
+        LineDaoInterface lineDao = new MySqlLineDao();
 
         try
         {
-            stations = stationDao.findAllStations();
-            lines = routeDao.findAllLines();
+            stations = stationDao.findAll();
+            lines = lineDao.findAll();
 
         } catch (DaoException de)
         {
@@ -94,7 +92,7 @@ public class ImportTimetables implements ImportTimetablesInterface
 
     private void insertSchedulesTimetablesToDatabase()
     {
-        MySqlTimetableDao mySqlTimetableDao = new MySqlTimetableDao();
+        TimetableDaoInterface mySqlTimetableDao = new MySqlTimetableDao();
         MySqlScheduleDao mySqlScheduleDao = new MySqlScheduleDao();
 
         int i;
@@ -107,14 +105,14 @@ public class ImportTimetables implements ImportTimetablesInterface
                 {
                     for (Timetable timetable : route.getTimetables())
                     {
-                        mySqlTimetableDao.insert(timetable, route.getRouteId());
+                        mySqlTimetableDao.insertTimetableByRouteId(timetable, route.getRouteId());
 
                         i = 0;
 
                         for (List<Schedule> schedules : timetable.getTimetableSchedules())
                         {
                             i++;
-                            mySqlScheduleDao.insert(schedules, timetable.getTimetableId(), i);
+                            mySqlScheduleDao.insertSchedulesByRow(schedules, timetable.getTimetableId(), i);
                         }
                     }
                 }

@@ -1,8 +1,8 @@
 package com.metroporto.dao.linedao;
 
-import com.metroporto.dao.FindAllDaoInterface;
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.dao.routedao.MySqlRouteDao;
+import com.metroporto.dao.routedao.RouteDaoInterface;
 import com.metroporto.dao.traindao.MySqlTrainDao;
 import com.metroporto.dao.traindao.TrainDaoInterface;
 import com.metroporto.exceptions.DaoException;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class MySqlLineDao extends MySqlDao<Line> implements LineDaoInterface
 {
-    private FindAllDaoInterface routeDao;
+    private RouteDaoInterface routeDao;
     private TrainDaoInterface trainDao;
 
     public MySqlLineDao()
@@ -26,7 +26,7 @@ public class MySqlLineDao extends MySqlDao<Line> implements LineDaoInterface
     }
 
     @Override
-    public List<Line> findAllLines() throws DaoException
+    public List<Line> findAll() throws DaoException
     {
         List<Line> lines = new ArrayList<>();
 
@@ -46,13 +46,46 @@ public class MySqlLineDao extends MySqlDao<Line> implements LineDaoInterface
             }
         } catch (SQLException sqe)
         {
-            throw new DaoException("findAllRoutes() " + sqe.getMessage());
+            throw new DaoException("findAll() in MySqlLineDao " + sqe.getMessage());
         } finally
         {
-            handleFinally("findAllRoutes()");
+            handleFinally("findAll() in MySqlLineDao");
         }
 
         return lines;
+    }
+
+    @Override
+    public Line findLineByLineId(String lineId) throws DaoException
+    {
+        Line line = null;
+
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "SELECT * FROM metro_lines WHERE line_id = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, lineId);
+
+            //Use the prepared statement to execute the sql
+            rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                line = createDto();
+            }
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("findLineByLineId() in MySqlLineDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("findLineByLineId() in MySqlLineDao");
+        }
+
+        return line;
     }
 
     @Override
@@ -61,7 +94,7 @@ public class MySqlLineDao extends MySqlDao<Line> implements LineDaoInterface
         String lineId = rs.getString("line_id");
         String lineName = rs.getString("line_name");
 
-        List<Route> routes = routeDao.findAllElementsById(lineId);
+        List<Route> routes = routeDao.findAllRoutesByLineId(lineId);
         List<Train>trains = trainDao.findAllTrainsByLineId(lineId);
 
         return new Line(lineId, lineName, routes, trains);

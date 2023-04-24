@@ -47,11 +47,11 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
         }
         catch (SQLException sqe)
         {
-            throw new DaoException("findCardByCardId() " + sqe.getMessage());
+            throw new DaoException("findCardByCardId() in MySqlCardDao " + sqe.getMessage());
         }
         finally
         {
-            handleFinally("findCardByCardId()");
+            handleFinally("findCardByCardId() in MySqlCardDao");
         }
 
         return card;

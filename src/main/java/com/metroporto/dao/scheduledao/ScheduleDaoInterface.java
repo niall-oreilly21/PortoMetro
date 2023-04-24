@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ScheduleDaoInterface
 {
-    void insert(List<Schedule> element, int timetableId, int rowColumn) throws DaoException;
-    List<List<Schedule>> findAll(int timetableId) throws DaoException;
+    void insertSchedulesByRow(List<Schedule> element, int timetableId, int rowNumber) throws DaoException;
+    List<List<Schedule>> findAllSchedulesByTimetableId(int timetableId) throws DaoException;
 }

@@ -1,11 +1,10 @@
 package com.metroporto.dao.linedao;
 
+import com.metroporto.dao.FindAllDaoInterface;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Line;
 
-import java.util.List;
-
-public interface LineDaoInterface
+public interface LineDaoInterface extends FindAllDaoInterface<Line>
 {
-    List<Line> findAllLines() throws DaoException;
+    Line findLineByLineId(String lineId) throws DaoException;
 }
