@@ -19,6 +19,7 @@ import com.metroporto.users.Passenger;
 import com.metroporto.users.Student;
 import com.metroporto.users.User;
 
+import java.time.LocalTime;
 import java.util.*;
 
 public class Test
@@ -31,47 +32,40 @@ public class Test
 
         StationDaoInterface stationDao = new MySqlStationDao();
         List<Station>daoStations = stationDao.findAll();
-        Station startStation = stationDao.findStationByStationId("HSJ");
-        Station endStation = stationDao.findStationByStationId("FNZ");
+        Station startStation = stationDao.findStationByStationId("APO");
+        Station endStation = stationDao.findStationByStationId("SEM");
 
 
         Set<Station> stationSet = new LinkedHashSet<>();
         //System.out.println(line.getRoutes().get(0));
 
         int i;
-        for(Line line : lines)
-        {
-//            if(line.getLineId().equalsIgnoreCase("C"))
-//            {
-                //System.out.println(line.getLineName());
-                List<Station> stations = line.getRoutes().get(0).getTimetables().get(0).getStations();
-                line.setStations(stations);
 
-                i = 0;
-                for(Station station : stations)
-                {
-                    i++;
-                    //System.out.println(i + " " + station.getStationName());
-                    stationSet.add(station);
-                }
-        }
+        Line l = new Line(lines.get(0));
 
-//        System.out.println("DAO " + daoStations.size());
-//
-//        System.out.println("SET " + stationSet.size());
+        List<Line>lines1 = new ArrayList<>();
 
-        //System.out.println(i);
+        lines1.add(l);
 
-
-//        for (Station station : daoStations)
+//        if(lines1.contains(lines.get(0)))
 //        {
-//            if (!stationSet.contains(station))
-//            {
-//                System.out.println(station.getStationName());
-//            }
+//            System.out.println("jhjjjjjjh");
 //        }
 
 
+        for(Line line : lines)
+        {
+//            if(line.getLineId().equalsIgnoreCase("D"))
+//            {
+            //System.out.println(line.getLineName());
+            Set<Station> stations = line.getRoutes().get(0).getTimetables().get(0).getStations();
+
+            for (Station station : stations)
+            {
+                line.getStations().add(station);
+            }
+        //}
+        }
 
         MetroSystem metroSystem = new MetroSystem(lines);
 
@@ -82,6 +76,8 @@ public class Test
         {
             System.out.print(station.getStationName() + " -> ");
         }
+
+        metroSystem.findShortestPath(previousStations, LocalTime.MAX);
 
     }
 }

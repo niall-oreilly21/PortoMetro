@@ -4,6 +4,7 @@ import com.metroporto.enums.TimeTableType;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class Schedule implements Comparable<Schedule>
 {
@@ -37,5 +38,20 @@ public class Schedule implements Comparable<Schedule>
     public int compareTo(Schedule otherSchedule)
     {
         return departureTime.compareTo(otherSchedule.getDepartureTime());
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Schedule schedule = (Schedule) o;
+        return Objects.equals(station, schedule.station) && Objects.equals(departureTime, schedule.departureTime);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(station, departureTime);
     }
 }

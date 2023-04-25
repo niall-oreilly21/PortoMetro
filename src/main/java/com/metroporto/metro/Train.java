@@ -2,6 +2,8 @@ package com.metroporto.metro;
 
 import com.metroporto.enums.TrainModel;
 
+import java.util.Objects;
+
 public class Train implements Comparable<Train>
 {
     private String trainId;
@@ -56,5 +58,20 @@ public class Train implements Comparable<Train>
             return this.trainId.compareToIgnoreCase(otherTrain.getTrainId());
         }
         return this.trainModel.getLabel().compareTo(otherTrain.getTrainModel().getLabel());
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Train train = (Train) o;
+        return carriages == train.carriages && capacity == train.capacity && Objects.equals(trainId, train.trainId) && trainModel == train.trainModel;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(trainId, trainModel, carriages, capacity);
     }
 }

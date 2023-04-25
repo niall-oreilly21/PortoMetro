@@ -14,9 +14,9 @@ public class Timetable
     private TimeTableType timeTableType;
     private List<List<Schedule>> timetableSchedules;
     private Set<Station> stationSet;
-    private List<Station>stations;
+    private Set<Station>stations;
 
-    public List<Station> getStations()
+    public Set<Station> getStations()
     {
         return stations;
     }
@@ -29,7 +29,7 @@ public class Timetable
         this.timetableSchedules = timetableSchedules;
 
         stationSet = new LinkedHashSet<>();
-        stations = new ArrayList<>();
+        stations = new LinkedHashSet<>();
 
         List<Schedule> uniqueScheduleList = null; // Initialize with null to indicate no unique schedule list found
 
@@ -211,5 +211,20 @@ public class Timetable
         }
 
         return index;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Timetable timetable = (Timetable) o;
+        return timetableId == timetable.timetableId && Objects.equals(scheduleDescription, timetable.scheduleDescription) && timeTableType == timetable.timeTableType && Objects.equals(timetableSchedules, timetable.timetableSchedules) && Objects.equals(stationSet, timetable.stationSet) && Objects.equals(stations, timetable.stations);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(timetableId, scheduleDescription, timeTableType, timetableSchedules, stationSet, stations);
     }
 }

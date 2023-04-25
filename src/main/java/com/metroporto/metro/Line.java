@@ -1,7 +1,6 @@
 package com.metroporto.metro;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Line implements Comparable<Line>
 {
@@ -21,6 +20,14 @@ public class Line implements Comparable<Line>
         return stations;
     }
 
+    public Line(Line line)
+    {
+        this.lineId = line.getLineId();
+        this.lineName = line.getLineName();
+        this.routes = line.getRoutes();
+        this.trains = line.getTrains();
+        stations = line.getStations();
+    }
     public Line(String lineId, String lineName, List<Route> routes, List<Train> trains)
     {
         this.lineId = lineId;
@@ -70,5 +77,20 @@ public class Line implements Comparable<Line>
     public int compareTo(Line otherLine)
     {
         return this.lineId.compareToIgnoreCase(otherLine.getLineId());
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Line line = (Line) o;
+        return Objects.equals(lineId, line.lineId) && Objects.equals(lineName, line.lineName) && Objects.equals(routes, line.routes) && Objects.equals(trains, line.trains) && Objects.equals(stations, line.stations);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(lineId, lineName, routes, trains, stations);
     }
 }
