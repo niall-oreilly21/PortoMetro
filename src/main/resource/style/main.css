@@ -113,3 +113,11 @@
     -fx-border-width: 2px;
 }
 
+.circle-button {
+    -fx-background-color: #00305f;
+    -fx-background-radius: 20px;
+}
+
+.text-underline:hover {
+    -fx-underline: true;
+}

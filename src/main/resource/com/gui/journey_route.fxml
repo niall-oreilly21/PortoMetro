@@ -18,10 +18,10 @@
             </padding>
         </Label>
         <HBox alignment="CENTER_LEFT" spacing="20">
-            <Label text="Home" textFill="#0253a3" onMouseClicked="#redirectToHome"/>
-            <Label text="Schedule" textFill="#0253a3" onMouseClicked="#redirectToSchedule"/>
+            <Label text="Home" textFill="#0253a3" onMouseClicked="#redirectToHome" styleClass="text-underline"/>
+            <Label text="Schedule" textFill="#0253a3" onMouseClicked="#redirectToSchedule" styleClass="text-underline"/>
             <Label text="Journey Route" styleClass="nav-active" textFill="#0253a3"/>
-            <Label text="Stations" textFill="#0253a3" onMouseClicked="#redirectToStation"/>
+            <Label text="Stations" textFill="#0253a3" onMouseClicked="#redirectToStation" styleClass="text-underline"/>
             <padding>
                 <Insets right="20"/>
             </padding>
@@ -30,11 +30,11 @@
         <HBox alignment="CENTER_RIGHT" spacing="20">
             <HBox spacing="10" alignment="CENTER_RIGHT">
                 <ImageView fx:id="profile" fitHeight="25" fitWidth="25" onMouseClicked="#redirectToProfile"/>
-                <Label text="My Profile" textFill="#0253a3" onMouseClicked="#redirectToProfile"/>
+                <Label text="My Profile" textFill="#0253a3" onMouseClicked="#redirectToProfile" styleClass="text-underline"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER_RIGHT">
                 <ImageView fx:id="card" fitHeight="25" fitWidth="25" onMouseClicked="#redirectToCard"/>
-                <Label text="Card Details" textFill="#0253a3" onMouseClicked="#redirectToCard"/>
+                <Label text="Card Details" textFill="#0253a3" onMouseClicked="#redirectToCard" styleClass="text-underline"/>
             </HBox>
             <padding>
                 <Insets right="20" />
