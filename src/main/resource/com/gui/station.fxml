@@ -47,16 +47,28 @@
     <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
           AnchorPane.topAnchor="90" AnchorPane.bottomAnchor="0" fx:id="pageContainer">
         <HBox styleClass="transparent-blue-background">
-            <MenuButton fx:id="filterByFacilities" text="Filter stations by facilities"/>
+            <MenuButton fx:id="filterByFacilities" text="Facilities"/>
             <HBox alignment="CENTER" fx:id="selectedFacilitiesIconBox" spacing="5">
                 <padding>
                     <Insets left="5" right="5"/>
                 </padding>
             </HBox>
-            <Button text="Clear" styleClass="form-button" onAction="#clearFilter"/>
+            <Button text="Clear" styleClass="form-button" onAction="#clearFacilitiesFilter"/>
+            <HBox>
+                <padding>
+                    <Insets left="15"/>
+                </padding>
+            </HBox>
+            <MenuButton fx:id="filterByZones" text="Zones"/>
+            <HBox>
+                <padding>
+                    <Insets left="5"/>
+                </padding>
+            </HBox>
+            <Button text="Clear" styleClass="form-button" onAction="#clearZonesFilter"/>
             <Region HBox.hgrow="ALWAYS"/>
             <HBox alignment="CENTER_LEFT">
-                <TextField fx:id="searchField" promptText="Search for a station" prefWidth="275"/>
+                <TextField fx:id="searchField" promptText="Search for a station" prefWidth="200"/>
                 <Button styleClass="form-button" text="Search" onAction="#handleSearch" />
                 <padding>
                     <Insets right="5"/>

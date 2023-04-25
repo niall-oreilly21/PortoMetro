@@ -1,5 +1,12 @@
 package gui;
 
+import com.metroporto.dao.facilitydao.MySqlFacilityDao;
+import com.metroporto.dao.stationdao.MySqlStationDao;
+import com.metroporto.dao.zonedao.MySqlZoneDao;
+import com.metroporto.exceptions.DaoException;
+import com.metroporto.metro.Facility;
+import com.metroporto.metro.Station;
+import com.metroporto.metro.Zone;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,12 +21,19 @@ import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class StationController extends Controller
 {
+    private MySqlStationDao stationDao;
+
+    private MySqlFacilityDao facilityDao;
+
+    private MySqlZoneDao zoneDao;
+
     @FXML
     private VBox stationsBox;
 
@@ -27,24 +41,59 @@ public class StationController extends Controller
     private MenuButton filterByFacilities;
 
     @FXML
+    private MenuButton filterByZones;
+
+    @FXML
     private TextField searchField;
 
     @FXML
     private HBox selectedFacilitiesIconBox;
 
-    private final List<String> stations = List.of("DJ2", "STO", "IPO", "ARA", "ARV", "AZR", "BGM",
-            "BOL", "BOT", "BRI", "C24", "CAM", "CAR", "CAS", "CDM", "CDG");
+    private List<Station> stations;
 
-    private final List<String> facilities = List.of("airport", "bus stop", "café", "grocery shop", "hospital", "lift",
-            "lockers", "parking", "taxi", "toilets", "wheelchair accessible");
+    private List<Facility> facilities;
 
-    private List<String> selectedFacilities = new ArrayList<>();
+    private List<Zone> zones;
 
-    private List<String> searchedStations = new ArrayList<>();
+    private List<String> selectedFacilities;
 
-    private List<String> filteredStations = new ArrayList<>();
+    private String selectedZone;
 
-    private List<String> searchedFilteredStations = new ArrayList<>();
+    private List<Station> searchedStations;
+
+    private List<Station> filteredByFacilitiesStations;
+
+    private List<Station> filteredByZoneStations;
+
+    private List<Station> searchedFilteredStations;
+
+    private String query;
+
+    public StationController()
+    {
+        stationDao = new MySqlStationDao();
+        facilityDao = new MySqlFacilityDao();
+        zoneDao = new MySqlZoneDao();
+
+        selectedFacilities = new ArrayList<>();
+        searchedStations = new ArrayList<>();
+        filteredByFacilitiesStations = new ArrayList<>();
+        filteredByZoneStations = new ArrayList<>();
+        searchedFilteredStations = new ArrayList<>();
+        query = "";
+        selectedZone = "";
+
+        try
+        {
+            stations = stationDao.findAll();
+            facilities = facilityDao.findAll();
+            zones = zoneDao.findAll();
+
+        } catch (DaoException de)
+        {
+            System.out.println(de.getMessage());
+        }
+    }
 
     public void initialize()
     {
@@ -59,32 +108,9 @@ public class StationController extends Controller
 
         drawStationsBox(stations);
 
-        List<CheckMenuItem> checkMenuItems = new ArrayList<>();
-        for (String facility : facilities)
-        {
-            CheckMenuItem checkMenuItem = new CheckMenuItem(capitalise(facility));
-            checkMenuItems.add(checkMenuItem);
-        }
+        initialiseFilterByFacilities();
 
-        filterByFacilities.getItems().addAll(checkMenuItems);
-
-        // Filter by facilities every time checkbox is selected
-        for (CheckMenuItem checkMenuItem : checkMenuItems)
-        {
-            checkMenuItem.setOnAction(event ->
-            {
-                if (!selectedFacilities.contains(checkMenuItem.getText().toLowerCase()))
-                {
-                    selectedFacilities.add(checkMenuItem.getText().toLowerCase());
-                } else
-                {
-                    selectedFacilities.remove(checkMenuItem.getText().toLowerCase());
-                }
-
-                drawSelectedFacilitiesIcon();
-                handleFilterFacilities();
-            });
-        }
+        initialiseFilterByZones();
     }
 
     public void redirectToHome(MouseEvent event) throws IOException
@@ -112,7 +138,7 @@ public class StationController extends Controller
         redirectToPage(event, Page.CARD);
     }
 
-    public void drawStationsBox(List<String> stations)
+    private void drawStationsBox(List<Station> stations)
     {
         if (!stationsBox.getChildren().isEmpty())
         {
@@ -135,28 +161,28 @@ public class StationController extends Controller
         int row = 0;
         int col = 0;
 
-        for (String station : stations)
+        for (Station station : stations)
         {
             VBox vbox = new VBox();
             vbox.getStyleClass().add("stations-box");
-            vbox.setAlignment(Pos.CENTER);
+            vbox.setAlignment(Pos.TOP_CENTER);
 
             Pane pane = new Pane();
             pane.prefWidthProperty().bind(vbox.widthProperty());
             pane.setPrefHeight(280);
-            String bgImage = "url('/img/stations/" + station + ".jpg');";
+            String bgImage = "url('/img/stations/" + station.getStationId() + ".jpg');";
             pane.setStyle("-fx-background-image:" + bgImage + "-fx-background-size: cover");
 
             Label title = new Label();
             title.setPadding(new Insets(10, 0, 0, 0));
-            title.setText(station);
+            title.setText(station.getStationName());
             title.setTextFill(Color.web("#00305f"));
             title.setWrapText(true);
             title.getStyleClass().add("subheader-label");
 
             Label desc = new Label();
             desc.setWrapText(true);
-            desc.setText("Line A | Zone PRT3");
+            desc.setText(station.getStationId() + " | Zone " + station.getZone().getZoneName());
 
             vbox.getChildren().addAll(pane, title, desc);
 
@@ -166,15 +192,15 @@ public class StationController extends Controller
             int iconCount = 0;
             vbox.getChildren().add(facilitiesBox);
 
-            List<String> facilitiesInStation = getFacilitiesForStation(station);
-            for (String facility : facilitiesInStation)
+            List<Facility> facilitiesInStation = station.getFacilities();
+            for (Facility facility : facilitiesInStation)
             {
                 ImageView icon = new ImageView(new Image("/img/facilities/"
-                        + facility.replace(' ', '-') + ".png"));
+                        + facility.getFacilitiesDescription().replace(' ', '-') + ".png"));
                 icon.setFitHeight(50);
                 icon.setFitWidth(50);
 
-                Tooltip tooltip = new Tooltip(capitalise(facility));
+                Tooltip tooltip = new Tooltip(capitalise(facility.getFacilitiesDescription()));
                 Tooltip.install(icon, tooltip);
 
                 facilitiesBox.getChildren().add(icon);
@@ -184,7 +210,7 @@ public class StationController extends Controller
                 {
                     facilitiesBox = new HBox(10); // 10px spacing between icons
                     facilitiesBox.setAlignment(Pos.CENTER);
-                    facilitiesBox.paddingProperty().setValue(new Insets(0, 0, 5, 0));
+                    facilitiesBox.paddingProperty().setValue(new Insets(0, 0, 10, 0));
                     iconCount = 0;
                     vbox.getChildren().add(facilitiesBox);
                 }
@@ -203,23 +229,7 @@ public class StationController extends Controller
         stationsBox.getChildren().add(grid);
     }
 
-    // Temp function for testing purposes
-    public List<String> getFacilitiesForStation(String station)
-    {
-        List<String> facilitiesInStation;
-
-        if (station.equalsIgnoreCase("DJ2"))
-        {
-            facilitiesInStation = List.of("lockers");
-        } else
-        {
-            facilitiesInStation = List.of("bus stop", "café", "toilets");
-        }
-
-        return facilitiesInStation;
-    }
-
-    public void drawSelectedFacilitiesIcon()
+    private void drawSelectedFacilitiesIcon()
     {
         if (!selectedFacilitiesIconBox.getChildren().isEmpty())
         {
@@ -232,7 +242,7 @@ public class StationController extends Controller
             icon.setFitHeight(30);
             icon.setFitWidth(30);
             icon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(
-                            "/img/facilities/" + facility.replace(' ', '-') + ".png"))));
+                    "/img/facilities/" + facility.replace(' ', '-') + ".png"))));
 
             Tooltip tooltip = new Tooltip(capitalise(facility));
             Tooltip.install(icon, tooltip);
@@ -241,28 +251,88 @@ public class StationController extends Controller
         }
     }
 
-    public void handleFilterFacilities()
+    private void handleFacilitiesFilter()
     {
-        String query = searchField.getText().toLowerCase();
-        filteredStations = new ArrayList<>();
-        searchedStations = new ArrayList<>();
-
-        for (String station : stations)
+        filteredByFacilitiesStations = new ArrayList<>();
+        searchedFilteredStations = new ArrayList<>();
+        for (Station station : stations)
         {
-            List<String> facilitiesInStation = getFacilitiesForStation(station);
+            List<String> facilitiesInStation = new ArrayList<>();
+            for (Facility facility : station.getFacilities())
+            {
+                facilitiesInStation.add(facility.getFacilitiesDescription());
+            }
 
             if (facilitiesInStation.containsAll(selectedFacilities))
             {
-                filteredStations.add(station);
+                filteredByFacilitiesStations.add(station);
             }
+        }
 
-            if (station.toLowerCase().contains(query))
+        searchedFilteredStations.addAll(filteredByFacilitiesStations);
+        drawStationsBox(searchedFilteredStations);
+    }
+
+    private void handleZoneFilter()
+    {
+        filteredByZoneStations = new ArrayList<>();
+        searchedFilteredStations = new ArrayList<>();
+
+        for (Station station : stations)
+        {
+            if (station.getZone().getZoneName().equals(selectedZone))
+            {
+                filteredByZoneStations.add(station);
+            }
+        }
+
+        searchedFilteredStations.addAll(filteredByZoneStations);
+        drawStationsBox(searchedFilteredStations);
+    }
+
+    private void handleSearchStation()
+    {
+        searchedStations = new ArrayList<>();
+        searchedFilteredStations = new ArrayList<>();
+
+        for (Station station : stations)
+        {
+            if (station.getStationName().toLowerCase().contains(query))
             {
                 searchedStations.add(station);
             }
         }
 
-        searchedFilteredStations = filteredStations.stream()
+        searchedFilteredStations.addAll(searchedStations);
+        drawStationsBox(searchedFilteredStations);
+    }
+
+    private void handleFacilitiesFilterSearch()
+    {
+        filteredByFacilitiesStations = new ArrayList<>();
+        searchedStations = new ArrayList<>();
+        searchedFilteredStations = new ArrayList<>();
+
+        for (Station station : stations)
+        {
+            List<String> facilitiesInStation = new ArrayList<>();
+            for (Facility facility : station.getFacilities())
+            {
+                facilitiesInStation.add(facility.getFacilitiesDescription());
+            }
+
+            if (facilitiesInStation.containsAll(selectedFacilities))
+            {
+                filteredByFacilitiesStations.add(station);
+            }
+
+            if (station.getStationName().toLowerCase().contains(query))
+            {
+                searchedStations.add(station);
+            }
+        }
+
+        searchedFilteredStations = filteredByFacilitiesStations.stream()
                 .filter(searchedStations::contains)
                 .collect(Collectors
                         .toList());
@@ -270,41 +340,237 @@ public class StationController extends Controller
         drawStationsBox(searchedFilteredStations);
     }
 
-    public void handleSearch(ActionEvent event)
+    private void handleZoneFilterSearch()
     {
-        String query = searchField.getText().toLowerCase();
+        filteredByZoneStations = new ArrayList<>();
         searchedStations = new ArrayList<>();
-        filteredStations = new ArrayList<>();
+        searchedFilteredStations = new ArrayList<>();
 
-        for (String station : stations)
+        for (Station station : stations)
         {
-            if (station.toLowerCase().contains(query))
+            if (station.getStationName().toLowerCase().contains(query))
             {
                 searchedStations.add(station);
             }
 
-            if (selectedFacilities.isEmpty() || getFacilitiesForStation(station).containsAll(selectedFacilities))
+            if (station.getZone().getZoneName().equals(selectedZone))
             {
-                filteredStations.add(station);
+                filteredByZoneStations.add(station);
             }
         }
 
-        searchedFilteredStations = searchedStations.stream()
-                .filter(filteredStations::contains)
+        searchedFilteredStations = filteredByZoneStations.stream()
+                .filter(searchedStations::contains)
                 .collect(Collectors
                         .toList());
 
         drawStationsBox(searchedFilteredStations);
     }
 
-    public void resetSearch(ActionEvent event)
+    private void handleFacilitiesZoneFilter()
     {
-        searchedFilteredStations = filteredStations;
+        filteredByZoneStations = new ArrayList<>();
+        filteredByFacilitiesStations = new ArrayList<>();
+        searchedFilteredStations = new ArrayList<>();
+
+        for (Station station : stations)
+        {
+            List<String> facilitiesInStation = new ArrayList<>();
+            for (Facility facility : station.getFacilities())
+            {
+                facilitiesInStation.add(facility.getFacilitiesDescription());
+            }
+
+            if (facilitiesInStation.containsAll(selectedFacilities))
+            {
+                filteredByFacilitiesStations.add(station);
+            }
+
+            if (station.getZone().getZoneName().equals(selectedZone))
+            {
+                filteredByZoneStations.add(station);
+            }
+        }
+
+        searchedFilteredStations = filteredByZoneStations.stream()
+                .filter(filteredByFacilitiesStations::contains)
+                .collect(Collectors
+                        .toList());
+
+        drawStationsBox(searchedFilteredStations);
+    }
+
+    private void handleFacilitiesZoneFilterSearch()
+    {
+        filteredByZoneStations = new ArrayList<>();
+        filteredByFacilitiesStations = new ArrayList<>();
+        searchedStations = new ArrayList<>();
+        searchedFilteredStations = new ArrayList<>();
+
+        for (Station station : stations)
+        {
+            List<String> facilitiesInStation = new ArrayList<>();
+            for (Facility facility : station.getFacilities())
+            {
+                facilitiesInStation.add(facility.getFacilitiesDescription());
+            }
+
+            if (facilitiesInStation.containsAll(selectedFacilities))
+            {
+                filteredByFacilitiesStations.add(station);
+            }
+
+            if (station.getZone().getZoneName().equals(selectedZone))
+            {
+                filteredByZoneStations.add(station);
+            }
+
+            if (station.getStationName().toLowerCase().contains(query))
+            {
+                searchedStations.add(station);
+            }
+        }
+
+        searchedFilteredStations = filteredByZoneStations.stream()
+                .filter(filteredByFacilitiesStations::contains)
+                .collect(Collectors
+                        .toList());
+
+        searchedFilteredStations = searchedFilteredStations.stream()
+                .filter(searchedStations::contains)
+                .collect(Collectors
+                        .toList());
+
+        drawStationsBox(searchedFilteredStations);
+    }
+
+    private void initialiseFilterByFacilities()
+    {
+        List<CheckMenuItem> checkMenuItems = new ArrayList<>();
+        for (Facility facility : facilities)
+        {
+            CheckMenuItem checkMenuItem = new CheckMenuItem(capitalise(facility.getFacilitiesDescription()));
+            checkMenuItems.add(checkMenuItem);
+        }
+
+        filterByFacilities.getItems().addAll(checkMenuItems);
+
+        // Filter by facilities every time checkbox is selected
+        for (CheckMenuItem checkMenuItem : checkMenuItems)
+        {
+            checkMenuItem.setOnAction(event ->
+            {
+                if (!selectedFacilities.contains(checkMenuItem.getText().toLowerCase()))
+                {
+                    selectedFacilities.add(checkMenuItem.getText().toLowerCase());
+                } else
+                {
+                    selectedFacilities.remove(checkMenuItem.getText().toLowerCase());
+                }
+
+                drawSelectedFacilitiesIcon();
+
+                if (searchField.getText().isEmpty() && selectedZone.isEmpty())
+                {
+                    handleFacilitiesFilter();
+                }
+                else if (!searchField.getText().isEmpty() && selectedZone.isEmpty())
+                {
+                    handleFacilitiesFilterSearch();
+                }
+                else if (searchField.getText().isEmpty())
+                {
+                    handleFacilitiesZoneFilter();
+                }
+                else
+                {
+                    handleFacilitiesZoneFilterSearch();
+                }
+            });
+        }
+    }
+
+    private void initialiseFilterByZones()
+    {
+        List<RadioMenuItem> radioMenuItems = new ArrayList<>();
+        ToggleGroup toggleGroup = new ToggleGroup();
+
+        for (Zone zone : zones)
+        {
+            RadioMenuItem radioMenuItem = new RadioMenuItem(capitalise(zone.getZoneName()));
+            radioMenuItem.setToggleGroup(toggleGroup);
+            radioMenuItems.add(radioMenuItem);
+        }
+
+        filterByZones.getItems().addAll(radioMenuItems);
+
+        // Filter by zones every time checkbox is selected
+        for (RadioMenuItem radioMenuItem : radioMenuItems)
+        {
+            radioMenuItem.setOnAction(event ->
+            {
+                selectedZone = radioMenuItem.getText();
+                filterByZones.setText(selectedZone);
+
+                if (searchField.getText().isEmpty() && selectedFacilities.isEmpty())
+                {
+                    handleZoneFilter();
+                }
+                else if (!searchField.getText().isEmpty() && selectedFacilities.isEmpty())
+                {
+                    handleZoneFilterSearch();
+                }
+                else if (searchField.getText().isEmpty())
+                {
+                    handleFacilitiesZoneFilter();
+                }
+                else
+                {
+                    handleFacilitiesZoneFilterSearch();
+                }
+            });
+        }
+    }
+
+    @FXML
+    private void handleSearch(ActionEvent event)
+    {
+        query = searchField.getText().toLowerCase();
+
+        if (selectedFacilities.isEmpty() && selectedZone.isEmpty())
+        {
+            handleSearchStation();
+        }
+        else if (!selectedFacilities.isEmpty() && selectedZone.isEmpty())
+        {
+            handleFacilitiesFilterSearch();
+        }
+        else if (selectedFacilities.isEmpty())
+        {
+            handleZoneFilterSearch();
+        }
+        else
+        {
+            handleFacilitiesZoneFilterSearch();
+        }
+    }
+
+    @FXML
+    private void resetSearch(ActionEvent event)
+    {
         searchField.setText("");
 
-        if (!selectedFacilities.isEmpty())
+        if (!selectedFacilities.isEmpty() && selectedZone.isEmpty())
         {
-            drawStationsBox(searchedFilteredStations);
+            handleFacilitiesFilter();
+        }
+        else if (selectedFacilities.isEmpty() && !selectedZone.isEmpty())
+        {
+            handleZoneFilter();
+        }
+        else if (!selectedFacilities.isEmpty())
+        {
+            handleFacilitiesZoneFilter();
         }
         else
         {
@@ -312,7 +578,8 @@ public class StationController extends Controller
         }
     }
 
-    public void clearFilter(ActionEvent event)
+    @FXML
+    private void clearFacilitiesFilter(ActionEvent event)
     {
         ObservableList<MenuItem> items = filterByFacilities.getItems();
 
@@ -325,10 +592,49 @@ public class StationController extends Controller
         selectedFacilities = new ArrayList<>();
         drawSelectedFacilitiesIcon();
 
-        if (!searchField.getText().isEmpty())
+        if (!searchField.getText().isEmpty() && selectedZone.isEmpty())
         {
-            searchedFilteredStations = searchedStations;
-            drawStationsBox(searchedFilteredStations);
+            handleSearchStation();
+        }
+        else if (searchField.getText().isEmpty() && !selectedZone.isEmpty())
+        {
+            handleZoneFilter();
+        }
+        else if (!searchField.getText().isEmpty())
+        {
+            handleZoneFilterSearch();
+        }
+        else
+        {
+            drawStationsBox(stations);
+        }
+    }
+
+    @FXML
+    private void clearZonesFilter(ActionEvent event)
+    {
+        filterByZones.setText("Zones");
+        selectedZone = "";
+
+        ObservableList<MenuItem> items = filterByZones.getItems();
+
+        for (MenuItem item : items)
+        {
+            RadioMenuItem radioItem = (RadioMenuItem) item;
+            radioItem.setSelected(false);
+        }
+
+        if (!searchField.getText().isEmpty() && selectedFacilities.isEmpty())
+        {
+            handleSearchStation();
+        }
+        else if (searchField.getText().isEmpty() && !selectedFacilities.isEmpty())
+        {
+            handleFacilitiesFilter();
+        }
+        else if (!searchField.getText().isEmpty())
+        {
+            handleFacilitiesFilterSearch();
         }
         else
         {
