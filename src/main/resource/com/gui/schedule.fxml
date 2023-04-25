@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="gui.ScheduleController"
+            stylesheets="/style/main.css">
+    <HBox styleClass="navbar" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+          prefHeight="90" spacing="30" alignment="CENTER_LEFT">
+        <ImageView fx:id="logo" fitHeight="70" fitWidth="70" AnchorPane.leftAnchor="10"/>
+        <Label text="Porto Metro" styleClass="header-label" textFill="#00305f">
+            <padding>
+                <Insets left="12"/>
+            </padding>
+        </Label>
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <Label text="Home" textFill="#0253a3" onMouseClicked="#redirectToHome"/>
+            <Label text="Schedule" styleClass="nav-active" textFill="#0253a3"/>
+            <Label text="Journey Route" textFill="#0253a3" onMouseClicked="#redirectToJourneyRoute"/>
+            <Label text="Stations" textFill="#0253a3" onMouseClicked="#redirectToStation"/>
+            <padding>
+                <Insets right="20"/>
+            </padding>
+        </HBox>
+        <Region HBox.hgrow="ALWAYS" />
+        <HBox alignment="CENTER_RIGHT" spacing="20">
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <ImageView fx:id="profile" fitHeight="25" fitWidth="25" onMouseClicked="#redirectToProfile"/>
+                <Label text="My Profile" textFill="#0253a3" onMouseClicked="#redirectToProfile"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <ImageView fx:id="card" fitHeight="25" fitWidth="25" onMouseClicked="#redirectToCard"/>
+                <Label text="Card Details" textFill="#0253a3" onMouseClicked="#redirectToCard"/>
+            </HBox>
+            <padding>
+                <Insets right="20" />
+            </padding>
+        </HBox>
+        <padding>
+            <Insets left="20" />
+        </padding>
+    </HBox>
+
+    <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+          AnchorPane.topAnchor="90" AnchorPane.bottomAnchor="0" alignment="TOP_CENTER">
+        <HBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets left="50" top="30" right="50"/>
+            </padding>
+            <HBox fx:id="linesBox" spacing="20"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <HBox alignment="CENTER">
+                <padding>
+                    <Insets right="15"/>
+                </padding>
+                <Label text="Direction:  "/>
+                <Label fx:id="endStation" styleClass="subheader-label" text="Santo Ovidio" textFill="#00305f"/>
+            </HBox>
+            <ComboBox />
+        </HBox>
+        <Pane fx:id="stationsPane" prefWidth="1200">
+            <Line fx:id="stationsLine" startY="80" endY="80" stroke="black" strokeWidth="3" />
+            <VBox.margin>
+                <Insets top="20" bottom="20"/>
+            </VBox.margin>
+        </Pane>
+        <TableView fx:id="timetable" />
+    </VBox>
+</AnchorPane>

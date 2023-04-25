@@ -1,0 +1,115 @@
+@font-face {
+    font-family: "HarmoniaSansProCyr-Regular";
+    src: url("/fonts/HarmoniaSansProCyr-Regular.ttf");
+}
+
+@font-face {
+    font-family: "HarmoniaSansProCyr-Bold";
+    src: url("/fonts/HarmoniaSansProCyr-Bold.ttf");
+}
+
+.root {
+    -fx-font-size: 13pt;
+    -fx-font-family: "HarmoniaSansProCyr-Regular";
+}
+
+.header-label {
+    -fx-font-size: 36pt;
+    -fx-font-family: "HarmoniaSansProCyr-Bold";
+}
+
+.subheader-label {
+    -fx-font-size: 18pt;
+    -fx-font-family: "HarmoniaSansProCyr-Bold";
+}
+
+.form-text-field {
+    -fx-max-width: 400px;
+}
+
+.text-field, .combo-box, .menu-button {
+    -fx-focus-color: #00305f;
+    -fx-faint-focus-color: #00305f22;
+    -fx-background-color: white;
+    -fx-border-color: #cfcfcf;
+    -fx-border-radius: 5px;
+}
+
+.radio-button .radio {
+    -fx-focus-color: #00305f;
+    -fx-faint-focus-color: #00305f22;
+    -fx-background-color: white;
+    -fx-border-color: #cfcfcf;
+    -fx-border-radius: 100%;
+}
+
+.check-box .box {
+    -fx-focus-color: #00305f;
+    -fx-faint-focus-color: #00305f22;
+    -fx-background-color: white;
+    -fx-border-color: #cfcfcf;
+}
+
+.form-button {
+    -fx-background-color: #00305f;
+    -fx-text-fill: white;
+}
+
+.form-button-yellow {
+    -fx-background-color: #fdc300;
+    -fx-text-fill: #00305f;
+}
+
+.hyperlink {
+    -fx-text-fill: #00305f;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #d4d4d4;
+}
+
+.table-view {
+    -fx-background-color: #fff;
+    -fx-padding: 7px;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+}
+
+.table-row-cell {
+    -fx-background-color: #fff;
+    -fx-border-color: #ddd;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f9f9f9;
+}
+
+.table-column {
+    -fx-alignment: center-left;
+}
+
+.table-cell {
+    -fx-padding: 10px;
+    -fx-font-size: 15px;
+    -fx-text-fill: #333;
+    -fx-alignment: CENTER;
+}
+
+.navbar {
+    -fx-background-color: #fdc300;
+}
+
+.nav-active {
+    -fx-underline: true;
+}
+
+.transparent-blue-background {
+    -fx-background-color: rgba(0, 48, 95, 0.4);
+}
+
+.stations-box {
+    -fx-border-color: #00305f;
+    -fx-border-width: 2px;
+}
+
