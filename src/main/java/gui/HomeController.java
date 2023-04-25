@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
@@ -12,30 +11,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-public class HomeController
+public class HomeController extends Controller
 {
-    private final ControllersUtil util = new ControllersUtil();
-
-    @FXML
-    private ImageView logo;
-
     @FXML
     private AnchorPane anchorPane;
 
     @FXML
     private ComboBox<String> optionsComboBox;
-
-    @FXML
-    private ImageView profile;
-
-    @FXML
-    private ImageView card;
-
-    private App app;
-
-    public void setApp(App app) {
-        this.app = app;
-    }
 
     public void initialize()
     {
@@ -80,27 +62,27 @@ public class HomeController
     @FXML
     public void redirectToSchedule(MouseEvent event) throws IOException
     {
-        util.redirectToSchedule(event);
+        redirectToPage(event, Page.SCHEDULE);
     }
 
     public void redirectToJourneyRoute(MouseEvent event) throws IOException
     {
-        util.redirectToJourneyRoute(event);
+        redirectToPage(event, Page.JOURNEY_ROUTE);
     }
 
     public void redirectToStation(MouseEvent event) throws IOException
     {
-        util.redirectToStation(event);
+        redirectToPage(event, Page.STATION);
     }
 
     public void redirectToProfile(MouseEvent event) throws IOException
     {
-        util.redirectToProfile(event);
+        redirectToPage(event, Page.PROFILE);
     }
 
     public void redirectToCard(MouseEvent event) throws IOException
     {
-        util.redirectToCard(event);
+        redirectToPage(event, Page.CARD);
     }
 
     public void submitForm(ActionEvent event) throws IOException
@@ -108,19 +90,19 @@ public class HomeController
         String selectedItem = optionsComboBox.getSelectionModel().getSelectedItem();
         switch(selectedItem) {
             case "Look up Metro schedules by line":
-                util.redirectToSchedule(event);
+                redirectToPage(event, Page.SCHEDULE);
                 break;
             case "Look up journey route from one stop to another":
-                util.redirectToJourneyRoute(event);
+                redirectToPage(event, Page.JOURNEY_ROUTE);
                 break;
             case "Look up station(s) information":
-                util.redirectToStation(event);
+                redirectToPage(event, Page.STATION);
                 break;
             case "Edit my profile":
-                util.redirectToProfile(event);
+                redirectToPage(event, Page.PROFILE);
                 break;
             case "View my card details":
-                util.redirectToCard(event);
+                redirectToPage(event, Page.CARD);
                 break;
             default:
                 break;

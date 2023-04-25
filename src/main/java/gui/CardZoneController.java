@@ -1,6 +1,5 @@
 package gui;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -8,7 +7,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -19,16 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class CardZoneController
+public class CardZoneController extends Controller
 {
-    private final ControllersUtil util = new ControllersUtil();
-
-    @FXML
-    private ImageView metro1;
-
-    @FXML
-    private ImageView logo;
-
     @FXML
     private RadioButton allZonesRadioButton;
 
@@ -42,9 +32,6 @@ public class CardZoneController
     private VBox zonesOptionBox;
 
     @FXML
-    private Label errorText;
-
-    @FXML
     private Label zoneSelectionLabel;
 
     // TODO: this should be fetched from database
@@ -52,13 +39,6 @@ public class CardZoneController
             "PRT1", "PRT2", "PRT3", "GDM1", "VNG1");
 
     private int numSelected = 0;
-
-    private App app;
-
-    public void setApp(App app)
-    {
-        this.app = app;
-    }
 
     public void initialize()
     {
@@ -230,7 +210,7 @@ public class CardZoneController
 
             // TODO: Add to database
 
-            util.redirectToCardInvoice(event);
+            redirectToPage(event, Page.CARD_ZONE);
         }
     }
 }

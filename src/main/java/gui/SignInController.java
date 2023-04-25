@@ -16,24 +16,13 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SignInController
+public class SignInController extends Controller
 {
-    private final ControllersUtil util = new ControllersUtil();
-
-    @FXML
-    private ImageView metro1;
-
-    @FXML
-    private ImageView logo;
-
     @FXML
     private Label emailLabel;
 
     @FXML
     private Label passwordLabel;
-
-    @FXML
-    private Label errorText;
 
     @FXML
     private TextField emailText;
@@ -94,12 +83,12 @@ public class SignInController
 
             // TODO: implement sign in authentication using MySQL + set user in App
 
-            util.redirectToHome(event);
+            redirectToPage(event, Page.HOME);
         }
     }
 
     public void redirectToSignUp(ActionEvent event) throws IOException
     {
-        util.redirectToSignUp(event);
+        redirectToPage(event, Page.SIGN_UP);
     }
 }

@@ -1,33 +1,18 @@
 package gui;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
 
-public class CardInvoiceController
+public class CardInvoiceController extends Controller
 {
-    private final ControllersUtil util = new ControllersUtil();
-
-    @FXML
-    private ImageView metro1;
-
-    @FXML
-    private ImageView logo;
-
     @FXML
     private TableView<InvoiceItem> invoiceTable;
 
@@ -45,12 +30,6 @@ public class CardInvoiceController
 
     @FXML
     private Label totalInvoicePrice;
-
-    private App app;
-
-    public void setApp(App app) {
-        this.app = app;
-    }
 
     public void initialize()
     {
@@ -114,6 +93,6 @@ public class CardInvoiceController
 
     public void submitForm(ActionEvent event) throws IOException
     {
-        util.redirectToHome(event);
+        redirectToPage(event, Page.HOME);
     }
 }

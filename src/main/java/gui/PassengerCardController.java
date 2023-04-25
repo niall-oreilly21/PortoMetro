@@ -7,28 +7,17 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.Month;
 import java.time.Year;
 import java.util.Calendar;
 import java.util.Objects;
 
-public class PassengerCardController
+public class PassengerCardController extends Controller
 {
-    private final ControllersUtil util = new ControllersUtil();
-
-    @FXML
-    private ImageView metro1;
-
-    @FXML
-    private ImageView logo;
-
     @FXML
     private RadioButton yesCardRadioButton;
 
@@ -69,9 +58,6 @@ public class PassengerCardController
     private VBox greyCardBox;
 
     @FXML
-    private Label errorText;
-
-    @FXML
     private Label cardTypeLabel;
 
     @FXML
@@ -85,12 +71,6 @@ public class PassengerCardController
 
     @FXML
     private ComboBox<Integer> endYearComboBox;
-
-    private App app;
-
-    public void setApp(App app) {
-        this.app = app;
-    }
 
     public void initialize()
     {
@@ -304,12 +284,12 @@ public class PassengerCardController
 
                 // TODO: Add to database
 
-                util.redirectToCardZone(event);
+                redirectToPage(event, Page.CARD_ZONE);
             }
         }
         else
         {
-            util.redirectToHome(event);
+            redirectToPage(event, Page.HOME);
         }
     }
 

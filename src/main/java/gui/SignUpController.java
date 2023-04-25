@@ -1,7 +1,5 @@
 package gui;
 
-import com.metroporto.Passenger;
-import com.metroporto.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,16 +18,8 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SignUpController
+public class SignUpController extends Controller
 {
-    private final ControllersUtil util = new ControllersUtil();
-
-    @FXML
-    private ImageView metro1;
-
-    @FXML
-    private ImageView logo;
-
     @FXML
     private Label firstNameLabel;
 
@@ -61,9 +51,6 @@ public class SignUpController
     private TextField confirmPasswordText;
 
     @FXML
-    private Label errorText;
-
-    @FXML
     private RadioButton studentRadioButton;
 
     @FXML
@@ -72,15 +59,7 @@ public class SignUpController
     @FXML
     private ToggleGroup passengerTypeToggleGroup;
 
-    private StudentUniversityController studentUniversityController;
-
-    private App app;
-
-    public void setApp(App app) {
-        this.app = app;
-    }
-
-
+    @Override
     public void initialize()
     {
         Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/metro_1.jpg")));
@@ -174,17 +153,17 @@ public class SignUpController
 
             if (passengerType.equals("student"))
             {
-                util.redirectToStudentUniversity(event);
+                redirectToPage(event, Page.STUDENT_UNIVERSITY);
             }
             else
             {
-                util.redirectToPassengerCard(event);
+                redirectToPage(event, Page.PASSENGER_CARD);
             }
         }
     }
 
     public void redirectToSignIn(ActionEvent event) throws IOException
     {
-        util.redirectToSignIn(event);
+        redirectToPage(event, Page.SIGN_IN);
     }
 }

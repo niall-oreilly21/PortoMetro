@@ -18,19 +18,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class StationController
+public class StationController extends Controller
 {
-    private final ControllersUtil util = new ControllersUtil();
-
-    @FXML
-    private ImageView logo;
-
-    @FXML
-    private ImageView profile;
-
-    @FXML
-    private ImageView card;
-
     @FXML
     private VBox stationsBox;
 
@@ -73,7 +62,7 @@ public class StationController
         List<CheckMenuItem> checkMenuItems = new ArrayList<>();
         for (String facility : facilities)
         {
-            CheckMenuItem checkMenuItem = new CheckMenuItem(util.capitalise(facility));
+            CheckMenuItem checkMenuItem = new CheckMenuItem(capitalise(facility));
             checkMenuItems.add(checkMenuItem);
         }
 
@@ -100,27 +89,27 @@ public class StationController
 
     public void redirectToHome(MouseEvent event) throws IOException
     {
-        util.redirectToHome(event);
+        redirectToPage(event, Page.HOME);
     }
 
     public void redirectToSchedule(MouseEvent event) throws IOException
     {
-        util.redirectToSchedule(event);
+        redirectToPage(event, Page.SCHEDULE);
     }
 
     public void redirectToJourneyRoute(MouseEvent event) throws IOException
     {
-        util.redirectToJourneyRoute(event);
+        redirectToPage(event, Page.JOURNEY_ROUTE);
     }
 
     public void redirectToProfile(MouseEvent event) throws IOException
     {
-        util.redirectToProfile(event);
+        redirectToPage(event, Page.PROFILE);
     }
 
     public void redirectToCard(MouseEvent event) throws IOException
     {
-        util.redirectToCard(event);
+        redirectToPage(event, Page.CARD);
     }
 
     public void drawStationsBox(List<String> stations)
@@ -185,7 +174,7 @@ public class StationController
                 icon.setFitHeight(50);
                 icon.setFitWidth(50);
 
-                Tooltip tooltip = new Tooltip(util.capitalise(facility));
+                Tooltip tooltip = new Tooltip(capitalise(facility));
                 Tooltip.install(icon, tooltip);
 
                 facilitiesBox.getChildren().add(icon);
@@ -245,7 +234,7 @@ public class StationController
             icon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(
                             "/img/facilities/" + facility.replace(' ', '-') + ".png"))));
 
-            Tooltip tooltip = new Tooltip(util.capitalise(facility));
+            Tooltip tooltip = new Tooltip(capitalise(facility));
             Tooltip.install(icon, tooltip);
 
             selectedFacilitiesIconBox.getChildren().add(icon);

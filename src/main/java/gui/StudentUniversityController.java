@@ -14,24 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class StudentUniversityController
+public class StudentUniversityController extends Controller
 {
-    private final ControllersUtil util = new ControllersUtil();
-
     @FXML
     private Label universityLabel;
 
     @FXML
-    private ImageView metro1;
-
-    @FXML
-    private ImageView logo;
-
-    @FXML
     private ComboBox<String> universityComboBox;
-
-    @FXML
-    private Label errorText;
 
     @FXML
     private ToggleGroup cardToggleGroup;
@@ -41,12 +30,6 @@ public class StudentUniversityController
 
     @FXML
     private RadioButton noCardRadioButton;
-
-    private App app;
-
-    public void setApp(App app) {
-        this.app = app;
-    }
 
     public void initialize()
     {
@@ -121,11 +104,11 @@ public class StudentUniversityController
 
             if (cardToggleGroup.getSelectedToggle() == yesCardRadioButton)
             {
-                util.redirectToCardZone(event);
+                redirectToPage(event, Page.CARD_ZONE);
             }
             else
             {
-                util.redirectToHome(event);
+                redirectToPage(event, Page.HOME);
             }
         }
         else

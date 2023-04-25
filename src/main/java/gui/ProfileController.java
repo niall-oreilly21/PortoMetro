@@ -9,19 +9,8 @@ import javafx.scene.input.MouseEvent;
 import java.io.IOException;
 import java.util.Objects;
 
-public class ProfileController
+public class ProfileController extends Controller
 {
-    private final ControllersUtil util = new ControllersUtil();
-
-    @FXML
-    private ImageView logo;
-
-    @FXML
-    private ImageView profile;
-
-    @FXML
-    private ImageView card;
-
     public void initialize()
     {
         Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
@@ -36,27 +25,27 @@ public class ProfileController
 
     public void redirectToHome(MouseEvent event) throws IOException
     {
-        util.redirectToHome(event);
+        redirectToPage(event, Page.HOME);
     }
 
     public void redirectToSchedule(MouseEvent event) throws IOException
     {
-        util.redirectToSchedule(event);
+        redirectToPage(event, Page.SCHEDULE);
     }
 
     public void redirectToJourneyRoute(MouseEvent event) throws IOException
     {
-        util.redirectToJourneyRoute(event);
+        redirectToPage(event, Page.JOURNEY_ROUTE);
     }
 
     public void redirectToStation(MouseEvent event) throws IOException
     {
-        util.redirectToStation(event);
+        redirectToPage(event, Page.STATION);
     }
 
     public void redirectToCard(MouseEvent event) throws IOException
     {
-        util.redirectToCard(event);
+        redirectToPage(event, Page.CARD);
     }
 }
 

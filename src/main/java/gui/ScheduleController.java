@@ -23,19 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ScheduleController
+public class ScheduleController extends Controller
 {
-    private final ControllersUtil util = new ControllersUtil();
-
-    @FXML
-    private ImageView logo;
-
-    @FXML
-    private ImageView profile;
-
-    @FXML
-    private ImageView card;
-
     @FXML
     private HBox linesBox;
 
@@ -263,27 +252,27 @@ public class ScheduleController
 
     public void redirectToHome(MouseEvent event) throws IOException
     {
-        util.redirectToHome(event);
+        redirectToPage(event, Page.HOME);
     }
 
     public void redirectToJourneyRoute(MouseEvent event) throws IOException
     {
-        util.redirectToJourneyRoute(event);
+        redirectToPage(event, Page.JOURNEY_ROUTE);
     }
 
     public void redirectToStation(MouseEvent event) throws IOException
     {
-        util.redirectToStation(event);
+        redirectToPage(event, Page.STATION);
     }
 
     public void redirectToProfile(MouseEvent event) throws IOException
     {
-        util.redirectToProfile(event);
+        redirectToPage(event, Page.PROFILE);
     }
 
     public void redirectToCard(MouseEvent event) throws IOException
     {
-        util.redirectToCard(event);
+        redirectToPage(event, Page.CARD);
     }
 
     public void setScene(Scene scene)
