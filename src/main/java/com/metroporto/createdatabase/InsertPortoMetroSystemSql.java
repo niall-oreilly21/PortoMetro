@@ -1,7 +1,5 @@
-package com.metroporto.dao.createdatabase;
+package com.metroporto.createdatabase;
 
-import com.metroporto.dao.createdatabase.CreateMySqlPortoMetroDataBase;
-import com.metroporto.dao.createdatabase.CreatePortoMetroDataBaseInterface;
 import com.metroporto.exceptions.DaoException;
 
 /*run this file to insert the database*/

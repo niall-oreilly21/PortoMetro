@@ -1,8 +1,7 @@
-package com.metroporto.dao.createdatabase;
+package com.metroporto.createdatabase;
 
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.exceptions.DaoException;
-import com.metroporto.metro.University;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import java.io.BufferedReader;

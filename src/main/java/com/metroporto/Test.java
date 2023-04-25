@@ -11,6 +11,7 @@ import com.metroporto.dao.universitydao.MySqlUniversityDao;
 import com.metroporto.dao.universitydao.UniversityDaoInterface;
 import com.metroporto.dao.userdao.MySqlUserDao;
 import com.metroporto.dao.userdao.UserDaoInterface;
+import com.metroporto.enums.TimeTableType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Line;
 import com.metroporto.metro.Station;
@@ -70,14 +71,12 @@ public class Test
         MetroSystem metroSystem = new MetroSystem(lines);
 
 
-        List<Station>previousStations = metroSystem.findShortestPath(startStation, endStation);
+//        for (Station station : previousStations)
+//        {
+//            System.out.print(station.getStationName() + " -> ");
+//        }
 
-        for (Station station : previousStations)
-        {
-            System.out.print(station.getStationName() + " -> ");
-        }
-
-        metroSystem.findShortestPath(previousStations, LocalTime.MAX);
+        metroSystem.findShortestPath(startStation, endStation, LocalTime.MAX, TimeTableType.MONDAY_TO_FRIDAY);
 
     }
 }
