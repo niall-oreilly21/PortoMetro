@@ -23,6 +23,11 @@
     -fx-font-family: "HarmoniaSansProCyr-Bold";
 }
 
+.subheader-label-large {
+    -fx-font-size: 28pt;
+    -fx-font-family: "HarmoniaSansProCyr-Bold";
+}
+
 .form-text-field {
     -fx-max-width: 400px;
 }

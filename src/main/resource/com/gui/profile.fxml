@@ -44,4 +44,45 @@
             <Insets left="20" />
         </padding>
     </HBox>
+    <SplitPane AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="90"
+               AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0">
+        <VBox maxWidth="300" style="-fx-background-color: #00305f;">
+            <padding>
+                <Insets left="30" top="30"/>
+            </padding>
+            <Label text="Hi, Niall!" textFill="#fdc300" styleClass="subheader-label">
+                <VBox.margin>
+                    <Insets bottom="5"/>
+                </VBox.margin>
+            </Label>
+            <HBox spacing="15">
+                <padding>
+                    <Insets top="20"/>
+                </padding>
+                <ImageView fx:id="editProfile" fitWidth="20" fitHeight="20"/>
+                <Label text="Edit profile" fx:id="editProfileLabel" textFill="white"
+                       onMouseClicked="#initialiseEditProfileEvent" styleClass="text-underline"/>
+            </HBox>
+            <HBox spacing="15">
+                <padding>
+                    <Insets top="20"/>
+                </padding>
+                <ImageView fx:id="password" fitWidth="20" fitHeight="20"/>
+                <Label text="Change password" fx:id="changePasswordLabel" textFill="white"
+                       onMouseClicked="#initialiseChangePassword" styleClass="text-underline"/>
+            </HBox>
+            <HBox spacing="15">
+                <padding>
+                    <Insets top="20"/>
+                </padding>
+                <ImageView fx:id="signOut" fitWidth="20" fitHeight="20"/>
+                <Label text="Sign out" textFill="white" styleClass="text-underline"/>
+            </HBox>
+        </VBox>
+        <VBox fx:id="contentBox">
+            <padding>
+                <Insets top="90" left="100"/>
+            </padding>
+        </VBox>
+    </SplitPane>
 </AnchorPane>
