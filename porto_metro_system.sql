@@ -67,7 +67,7 @@ CREATE TABLE cards
 CREATE TABLE passengers
 (
     user_id INT NOT NULL,
-    card_id INT,
+    card_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (card_id) REFERENCES cards(card_id),
     UNIQUE (user_id, card_id)
@@ -806,11 +806,11 @@ BEGIN
 END// 
 -- @DELIMITER ;
 
-INSERT INTO users (user_id, email, user_password, user_type) VALUES
-(1,"niall.blackrock@gmail.com", "12345", "student"),
-(2, "luana.blackrock@gmail.com", "123454", "administrator"),
-(3, "johndoe@gmail.com", "abcdef", "passenger"),
-(4, "janedoe@gmail.com", "ghijkl", "passenger");
+INSERT INTO users (user_id, email, user_password, user_type, first_name, last_name) VALUES
+(1,"niall.blackrock@gmail.com", "12345", "student", "Niall", "O' Reilly"),
+(2, "luana.blackrock@gmail.com", "123454", "administrator", "Luana", "Kimley"),
+(3, "johndoe@gmail.com", "abcdef", "passenger", "John", "Doe"),
+(4, "janedoe@gmail.com", "ghijkl", "passenger", "Jane", "Doe");
 
 INSERT INTO students_universities (user_id, university_id) VALUES
 (1,"UOP");

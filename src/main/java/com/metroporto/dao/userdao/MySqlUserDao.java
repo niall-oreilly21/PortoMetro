@@ -17,6 +17,7 @@ import com.metroporto.users.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +69,8 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         int userId = rs.getInt("user_id");
         String email = rs.getString("email");
         String password = rs.getString("user_password");
+        String firstName = rs.getString("first_name");
+        String lastName = rs.getString("last_name");
         String userType = rs.getString("user_type");
 
         if(userType.equalsIgnoreCase("student") || userType.equalsIgnoreCase("passenger"))
@@ -82,17 +85,17 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
 
                 University university = universityDao.findUniversityByUniversityId(universityId);
 
-                user = new Student(userId, email, password, card, university);
+                user = new Student(userId, email, password, firstName, lastName, card, university);
             }
             else
             {
-                user = new Passenger(userId, email, password, card);
+                user = new Passenger(userId, email, password, firstName, lastName, card);
             }
 
         }
         else if(userType.equalsIgnoreCase("administrator"))
         {
-            user = new Administrator(userId, email, password);
+            user = new Administrator(userId, email, password, firstName, lastName);
         }
 
         return user;
@@ -134,20 +137,18 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
     @Override
     public void insertUser(User user) throws DaoException
     {
-
         try
         {
             //Get a connection to the database
             con = this.getConnection();
-            query = "INSERT INTO users (user_id, email, user_password, first_name, last_name, user_type) VALUES\n" +
-                    "(?, ?, ?, ?, ?, ?)";
+            query = "INSERT INTO users (email, user_password, first_name, last_name, user_type) VALUES\n" +
+                    "(?, ?, ?, ?, ?)";
 
-            ps = con.prepareStatement(query);
-            ps.setInt(1, user.getUserId());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getPassword());
-            ps.setString(4, user.getFirstName());
-            ps.setString(5, user.getLastName());
+            ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getFirstName());
+            ps.setString(4, user.getLastName());
 
             String userType;
 
@@ -168,11 +169,24 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
                 userType = "administrator";
             }
 
-            ps.setString(4, userType);
+            ps.setString(5, userType);
 
 
             //Use the prepared statement to execute the sql
-            ps.executeUpdate();
+            //Use the prepared statement to execute the sql
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0)
+            {
+                // Retrieve the generated keys
+                rs = ps.getGeneratedKeys();
+
+                if (rs.next())
+                {
+                    int userId = rs.getInt(1);
+                    user.setUserId(userId);
+                }
+            }
 
         }
         catch (SQLException sqe)
@@ -189,13 +203,14 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             if(((Passenger) user).getMetroCard() != null)
             {
                 cardDao.insertCardForPassenger(user);
-            }
 
-            if(user instanceof Student)
-            {
-                if(((Passenger) user).getMetroCard() != null)
+
+                if(user instanceof Student)
                 {
-                    universityDao.insertUniversityForStudent(user);
+                    if(((Passenger) user).getMetroCard() != null)
+                    {
+                        universityDao.insertUniversityForStudent(user);
+                    }
                 }
             }
         }

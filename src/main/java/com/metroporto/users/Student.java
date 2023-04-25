@@ -7,9 +7,15 @@ public class Student extends Passenger
 {
     private University university;
 
-    public Student(int userId, String email, String password, Card metroCard, University university)
+    public Student(int userId, String email, String password, String firstName, String lastName, Card metroCard, University university)
     {
-        super(userId, email, password, metroCard);
+        super(userId, email, password, firstName, lastName, metroCard);
+        this.university = university;
+    }
+
+    public Student(String email, String password, String firstName, String lastName, Card metroCard, University university)
+    {
+        super(email, password, firstName, lastName, metroCard);
         this.university = university;
     }
 

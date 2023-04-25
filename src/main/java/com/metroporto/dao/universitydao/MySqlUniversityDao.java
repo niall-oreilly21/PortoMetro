@@ -3,6 +3,9 @@ package com.metroporto.dao.universitydao;
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.University;
+import com.metroporto.users.Passenger;
+import com.metroporto.users.Student;
+import com.metroporto.users.User;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -73,6 +76,38 @@ public class MySqlUniversityDao extends MySqlDao<University> implements Universi
         }
 
         return university;
+    }
+
+    @Override
+    public void insertUniversityForStudent(User user) throws DaoException
+    {
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            String query = "INSERT INTO students_universities (user_id, university_id) VALUES\n" +
+                    "(?, ?)";
+
+            ps = con.prepareStatement(query);
+            ps.setInt(1, user.getUserId());
+
+            if(user instanceof Student)
+            {
+                ps.setString(2, ((Student) user).getUniversity().getUniversityId());
+            }
+
+            //Use the prepared statement to execute the sql
+            ps.executeUpdate();
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("insertUniversityForStudent() in MySqlUniversityDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("insertUniversityForStudent() in MySqlUniversityDao()");
+        }
+
     }
 
     @Override

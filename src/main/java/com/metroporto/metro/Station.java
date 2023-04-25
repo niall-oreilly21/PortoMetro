@@ -42,6 +42,11 @@ public class Station implements Comparable<Station>
         return stationName;
     }
 
+    public List<Facility> getFacilities()
+    {
+        return facilities;
+    }
+
     public void addFacility(Facility facility)
     {
         facilities.add(facility);
