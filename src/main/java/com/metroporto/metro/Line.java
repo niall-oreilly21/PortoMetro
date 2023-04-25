@@ -8,9 +8,18 @@ public class Line implements Comparable<Line>
     private final String lineId;
     private String lineName;
     private List<Route> routes;
-
     private List<Train> trains;
     private List<Station> stations;
+
+    public void setStations(List<Station> stations)
+    {
+        this.stations = stations;
+    }
+
+    public List<Station> getStations()
+    {
+        return stations;
+    }
 
     public Line(String lineId, String lineName, List<Route> routes, List<Train> trains)
     {

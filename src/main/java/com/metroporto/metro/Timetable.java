@@ -3,6 +3,7 @@ package com.metroporto.metro;
 import com.metroporto.ComparatorSchedules;
 import com.metroporto.enums.TimeTableType;
 
+import java.time.LocalTime;
 import java.util.*;
 
 public class Timetable
@@ -13,6 +14,12 @@ public class Timetable
     private TimeTableType timeTableType;
     private List<List<Schedule>> timetableSchedules;
     private Set<Station> stationSet;
+    private List<Station>stations;
+
+    public List<Station> getStations()
+    {
+        return stations;
+    }
 
     public Timetable(int timetableId, TimeTableType timeTableType, List<List<Schedule>> timetableSchedules)
     {
@@ -22,12 +29,57 @@ public class Timetable
         this.timetableSchedules = timetableSchedules;
 
         stationSet = new LinkedHashSet<>();
+        stations = new ArrayList<>();
 
-        Collections.sort(this.timetableSchedules.get(0));
+        List<Schedule> uniqueScheduleList = null; // Initialize with null to indicate no unique schedule list found
 
-        for(Schedule schedules : this.timetableSchedules.get(0))
+        for (List<Schedule> schedules : this.timetableSchedules)
+        {
+            Set<LocalTime> uniqueTimes = new HashSet<>();
+
+            boolean isUniqueList = true;
+
+            for (Schedule schedule : schedules)
+            {
+                if (uniqueTimes.contains(schedule.getDepartureTime()))
+                {
+                    isUniqueList = false;
+                    break; // Break out of inner loop if duplicate time found
+                }
+                else
+                {
+                    uniqueTimes.add(schedule.getDepartureTime());
+                }
+            }
+            if (isUniqueList)
+            {
+                uniqueScheduleList = schedules;
+                break; // Break out of outer loop if unique list found
+            }
+        }
+
+        if (uniqueScheduleList != null)
+        {
+            // Use uniqueScheduleList as needed
+            //System.out.println("Unique schedule list found: " + uniqueScheduleList);
+
+            Collections.sort(uniqueScheduleList);
+            for (Schedule schedule : uniqueScheduleList)
+            {
+                stations.add(schedule.getStation());
+            }
+        } else
+        {
+            System.out.println("No unique schedule list found.");
+        }
+
+
+        Collections.sort(this.timetableSchedules.get(9));
+
+        for(Schedule schedules : this.timetableSchedules.get(9))
         {
             stationSet.add(schedules.getStation());
+            stations.add(schedules.getStation());
         }
 
         for(List<Schedule> schedules : this.timetableSchedules)
