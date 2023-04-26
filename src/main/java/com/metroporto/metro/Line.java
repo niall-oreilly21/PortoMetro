@@ -62,6 +62,37 @@ public class Line implements Comparable<Line>
         trains.add(train);
     }
 
+    public Route findRoute(Station startStation, Station endStation)
+    {
+        Station lastStation = stations.get(stations.size() - 1); // Get the last station in the list
+        List<Station> tempStations;
+
+        for (Route route : routes)
+        {
+            if (route.getEndStation().equals(lastStation))
+            {
+                // The last station matches the end station, use the original stations list
+                tempStations = stations;
+            }
+            else
+            {
+                // The last station does not match the end station, use the reversed stations list
+                tempStations = new ArrayList<>(stations); // Create a reversed copy of the stations list
+                Collections.reverse(tempStations); // Reverse the stations list
+            }
+
+            int startIndex = tempStations.indexOf(startStation);
+            int endIndex = tempStations.indexOf(endStation);
+
+            if (startIndex != -1 && endIndex != -1 && startIndex < endIndex)
+            {
+                return route;
+            }
+        }
+        return null; // return null if no route is found
+    }
+
+
     @Override
     public String toString()
     {
