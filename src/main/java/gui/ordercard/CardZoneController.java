@@ -210,7 +210,7 @@ public class CardZoneController extends Controller
 
             // TODO: Add to database
 
-            redirectToPage(event, Page.CARD_ZONE);
+            redirectToPage(event, Folder.ORDER_CARD, Page.CARD_INVOICE);
         }
     }
 }
