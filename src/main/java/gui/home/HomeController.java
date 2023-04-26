@@ -1,13 +1,14 @@
 package gui.home;
 
+import com.metroporto.enums.EnumLabelConverter;
 import com.metroporto.enums.Folder;
+import com.metroporto.enums.HomeMenuOption;
 import gui.Controller;
 import com.metroporto.enums.Page;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import java.io.IOException;
@@ -21,8 +22,12 @@ public class HomeController extends Controller
     @FXML
     private ComboBox<String> optionsComboBox;
 
+    private EnumLabelConverter enumLabelConverter;
+
     public void initialize()
     {
+        enumLabelConverter = new EnumLabelConverter();
+
         initialiseLogo();
         initialiseCardIcon();
         initialiseProfileIcon();
@@ -46,11 +51,11 @@ public class HomeController extends Controller
         anchorPane.setBackground(background);
 
         List<String> options = List.of(
-                "Look up Metro schedules by line",
-                "Look up journey route from one stop to another",
-                "Look up station(s) information",
-                "Edit my profile",
-                "View my card details");
+                HomeMenuOption.SCHEDULE_OPTION.getLabel(),
+                HomeMenuOption.JOURNEY_ROUTE_OPTION.getLabel(),
+                HomeMenuOption.STATION_OPTION.getLabel(),
+                HomeMenuOption.PROFILE_OPTION.getLabel(),
+                HomeMenuOption.CARD_OPTION.getLabel());
 
         optionsComboBox.getItems().addAll(options);
         optionsComboBox.getSelectionModel().selectFirst();
@@ -58,21 +63,24 @@ public class HomeController extends Controller
 
     public void submitForm(ActionEvent event) throws IOException
     {
-        String selectedItem = optionsComboBox.getSelectionModel().getSelectedItem();
-        switch(selectedItem) {
-            case "Look up Metro schedules by line":
+        HomeMenuOption selectedItem = enumLabelConverter.fromLabel(
+                optionsComboBox.getSelectionModel().getSelectedItem(), HomeMenuOption.class);
+
+        switch(selectedItem)
+        {
+            case SCHEDULE_OPTION:
                 redirectToPage(event, Folder.HOME, Page.SCHEDULE);
                 break;
-            case "Look up journey route from one stop to another":
+            case JOURNEY_ROUTE_OPTION:
                 redirectToPage(event, Folder.HOME, Page.JOURNEY_ROUTE);
                 break;
-            case "Look up station(s) information":
+            case STATION_OPTION:
                 redirectToPage(event, Folder.HOME, Page.STATION);
                 break;
-            case "Edit my profile":
+            case PROFILE_OPTION:
                 redirectToPage(event, Folder.HOME, Page.PROFILE);
                 break;
-            case "View my card details":
+            case CARD_OPTION:
                 redirectToPage(event, Folder.HOME, Page.CARD);
                 break;
             default:
