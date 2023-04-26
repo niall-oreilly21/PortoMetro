@@ -56,32 +56,6 @@ public class HomeController extends Controller
         optionsComboBox.getSelectionModel().selectFirst();
     }
 
-    @FXML
-    public void redirectToSchedule(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.SCHEDULE);
-    }
-
-    public void redirectToJourneyRoute(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.JOURNEY_ROUTE);
-    }
-
-    public void redirectToStation(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.STATION);
-    }
-
-    public void redirectToProfile(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.PROFILE);
-    }
-
-    public void redirectToCard(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.CARD);
-    }
-
     public void submitForm(ActionEvent event) throws IOException
     {
         String selectedItem = optionsComboBox.getSelectionModel().getSelectedItem();

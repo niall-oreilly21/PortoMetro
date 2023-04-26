@@ -109,31 +109,6 @@ public class StationController extends Controller
         initialiseFilterByZones();
     }
 
-    public void redirectToHome(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.HOME);
-    }
-
-    public void redirectToSchedule(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.SCHEDULE);
-    }
-
-    public void redirectToJourneyRoute(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.JOURNEY_ROUTE);
-    }
-
-    public void redirectToProfile(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.PROFILE);
-    }
-
-    public void redirectToCard(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.CARD);
-    }
-
     private void drawStationsBox(List<Station> stations)
     {
         if (!stationsBox.getChildren().isEmpty())

@@ -162,30 +162,5 @@ public class ProfileController extends Controller
     {
 
     }
-
-    public void redirectToHome(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.HOME);
-    }
-
-    public void redirectToSchedule(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.SCHEDULE);
-    }
-
-    public void redirectToJourneyRoute(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.JOURNEY_ROUTE);
-    }
-
-    public void redirectToStation(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.STATION);
-    }
-
-    public void redirectToCard(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.CARD);
-    }
 }
 

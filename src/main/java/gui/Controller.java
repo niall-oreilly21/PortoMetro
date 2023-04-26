@@ -70,16 +70,14 @@ public abstract class Controller
 
         Parent root = loader.load();
 
-        Controller controller = loader.getController();
-
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setTitle("Porto Metro");
         Scene scene = new Scene(root, 1200, 768);
         stage.setScene(scene);
         stage.show();
 
-        controller.setScene(scene);
-        controller.setApp(App.getApplication());
+        setScene(scene);
+        setApp(App.getApplication());
     }
 
     public void redirectToPage(MouseEvent event, Folder folder, Page page) throws IOException
@@ -111,5 +109,35 @@ public abstract class Controller
     public String capitalise(String text)
     {
         return text.substring(0, 1).toUpperCase() + text.substring(1);
+    }
+
+    public void redirectToHome(MouseEvent event) throws IOException
+    {
+        redirectToPage(event, Folder.HOME, Page.HOME);
+    }
+
+    public void redirectToSchedule(MouseEvent event) throws IOException
+    {
+        redirectToPage(event, Folder.HOME, Page.SCHEDULE);
+    }
+
+    public void redirectToJourneyRoute(MouseEvent event) throws IOException
+    {
+        redirectToPage(event, Folder.HOME, Page.JOURNEY_ROUTE);
+    }
+
+    public void redirectToStation(MouseEvent event) throws IOException
+    {
+        redirectToPage(event, Folder.HOME, Page.STATION);
+    }
+
+    public void redirectToProfile(MouseEvent event) throws IOException
+    {
+        redirectToPage(event, Folder.HOME, Page.PROFILE);
+    }
+
+    public void redirectToCard(MouseEvent event) throws IOException
+    {
+        redirectToPage(event, Folder.HOME, Page.CARD);
     }
 }

@@ -37,10 +37,5 @@ public class JourneyRouteController extends Controller
     {
         redirectToPage(event, Folder.HOME, Page.PROFILE);
     }
-
-    public void redirectToCard(MouseEvent event) throws IOException
-    {
-        redirectToPage(event, Folder.HOME, Page.CARD);
-    }
 }
 
