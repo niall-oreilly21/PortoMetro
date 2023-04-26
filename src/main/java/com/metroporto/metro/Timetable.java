@@ -171,38 +171,32 @@ public class Timetable
         }
     }
 
-    public void getSchedulesByStation(String stationName)
+    public List<Schedule> getSchedulesByStation(Station station)
     {
-        int index = getIndex(stationName);
+        int index = getIndex(station);
 
-        if(index == -1)
+        if(index != -1)
         {
-            return;
+            List<Schedule>scheduleList = new ArrayList<>();
+
+            for (List<Schedule> schedules : timetableSchedules)
+            {
+                scheduleList.add(schedules.get(index));
+            }
+
+            return timetableSchedules.get(index);
         }
 
-
-       List<Schedule>scheduleList = new ArrayList<>();
-
-        for (List<Schedule> schedules : timetableSchedules)
-        {
-            scheduleList.add(schedules.get(index));
-        }
-
-        System.out.println(stationName);
-        for(Schedule schedule : scheduleList)
-        {
-            System.out.print(schedule);
-        }
+        return null;
     }
 
-    private int getIndex(String station)
+    private int getIndex(Station station)
     {
         int index = -1;
-        List<Schedule> row = timetableSchedules.get(0);
 
-        for (int i = 0; i < row.size(); i++)
+        for (int i = 0; i < timetableSchedules.get(0).size(); i++)
         {
-                if(row.get(i).getStation().getStationName().equalsIgnoreCase(station))
+                if(timetableSchedules.get(0).get(i).getStation().equals(station))
                 {
                     index = i;
                     break;
