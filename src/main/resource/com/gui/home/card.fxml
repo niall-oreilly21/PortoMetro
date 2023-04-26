@@ -7,7 +7,7 @@
 <?import javafx.geometry.Insets?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="gui.JourneyRouteController"
+            fx:controller="gui.home.CardController"
             stylesheets="/style/main.css">
     <HBox styleClass="navbar" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
           prefHeight="90" spacing="30" alignment="CENTER_LEFT">
@@ -20,7 +20,7 @@
         <HBox alignment="CENTER_LEFT" spacing="20">
             <Label text="Home" textFill="#0253a3" onMouseClicked="#redirectToHome" styleClass="text-underline"/>
             <Label text="Schedule" textFill="#0253a3" onMouseClicked="#redirectToSchedule" styleClass="text-underline"/>
-            <Label text="Journey Route" styleClass="nav-active" textFill="#0253a3"/>
+            <Label text="Journey Route" textFill="#0253a3" onMouseClicked="#redirectToJourneyRoute" styleClass="text-underline"/>
             <Label text="Stations" textFill="#0253a3" onMouseClicked="#redirectToStation" styleClass="text-underline"/>
             <padding>
                 <Insets right="20"/>
@@ -33,8 +33,8 @@
                 <Label text="My Profile" textFill="#0253a3" onMouseClicked="#redirectToProfile" styleClass="text-underline"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER_RIGHT">
-                <ImageView fx:id="card" fitHeight="25" fitWidth="25" onMouseClicked="#redirectToCard"/>
-                <Label text="Card Details" textFill="#0253a3" onMouseClicked="#redirectToCard" styleClass="text-underline"/>
+                <ImageView fx:id="card" fitHeight="25" fitWidth="25"/>
+                <Label text="Card Details" styleClass="nav-active" textFill="#0253a3"/>
             </HBox>
             <padding>
                 <Insets right="20" />
@@ -44,4 +44,32 @@
             <Insets left="20" />
         </padding>
     </HBox>
+    <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+        AnchorPane.topAnchor="90" AnchorPane.bottomAnchor="0" spacing="50" alignment="TOP_CENTER">
+        <padding>
+            <Insets top="130"/>
+        </padding>
+        <Label styleClass="subheader-label-large" text="Your Andante card" textFill="#00305f"/>
+        <HBox spacing="50" alignment="CENTER">
+            <ImageView fx:id="cardType" preserveRatio="true" fitWidth="350"/>
+            <VBox alignment="CENTER">
+                <HBox alignment="CENTER_LEFT">
+                    <Label textFill="#00305f" text="Card ID: " styleClass="subheader-label"/>
+                    <Label text="MTRP2023000001"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT">
+                    <Label textFill="#00305f" text="Type: " styleClass="subheader-label"/>
+                    <Label text="Tour card"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT">
+                    <Label textFill="#00305f" text="Expiry date: " styleClass="subheader-label"/>
+                    <Label text="30/09/2023"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT">
+                    <Label textFill="#00305f" text="Number of top ups: " styleClass="subheader-label"/>
+                    <Label text="9 trips"/>
+                </HBox>
+            </VBox>
+        </HBox>
+    </VBox>
 </AnchorPane>

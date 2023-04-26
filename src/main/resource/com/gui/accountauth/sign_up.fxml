@@ -6,7 +6,7 @@
 <?import javafx.geometry.Insets?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="gui.SignUpController"
+            fx:controller="gui.accountauth.SignUpController"
             stylesheets="/style/main.css">
     <HBox>
         <AnchorPane>

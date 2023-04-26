@@ -3,12 +3,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="gui.HomeController"
-            stylesheets="/style/main.css" fx:id="anchorPane">
+            fx:controller="gui.home.JourneyRouteController"
+            stylesheets="/style/main.css">
     <HBox styleClass="navbar" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
           prefHeight="90" spacing="30" alignment="CENTER_LEFT">
         <ImageView fx:id="logo" fitHeight="70" fitWidth="70" AnchorPane.leftAnchor="10"/>
@@ -18,9 +18,9 @@
             </padding>
         </Label>
         <HBox alignment="CENTER_LEFT" spacing="20">
-            <Label text="Home" styleClass="nav-active" textFill="#0253a3"/>
+            <Label text="Home" textFill="#0253a3" onMouseClicked="#redirectToHome" styleClass="text-underline"/>
             <Label text="Schedule" textFill="#0253a3" onMouseClicked="#redirectToSchedule" styleClass="text-underline"/>
-            <Label text="Journey Route" textFill="#0253a3" onMouseClicked="#redirectToJourneyRoute" styleClass="text-underline"/>
+            <Label text="Journey Route" styleClass="nav-active" textFill="#0253a3"/>
             <Label text="Stations" textFill="#0253a3" onMouseClicked="#redirectToStation" styleClass="text-underline"/>
             <padding>
                 <Insets right="20"/>
@@ -44,20 +44,4 @@
             <Insets left="20" />
         </padding>
     </HBox>
-    <VBox alignment="CENTER" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
-          AnchorPane.topAnchor="90" AnchorPane.bottomAnchor="0">
-        <VBox styleClass="transparent-blue-background" alignment="CENTER">
-            <Label text="Welcome to the Porto Metro app!" styleClass="header-label" textFill="#fdc300"/>
-            <Label text="What can we do for you today?" textFill="white" style="-fx-font-size: 22px;"/>
-            <ComboBox fx:id="optionsComboBox" prefWidth="435">
-                <VBox.margin>
-                    <Insets>
-                        <top>30</top>
-                        <bottom>30</bottom>
-                    </Insets>
-                </VBox.margin>
-            </ComboBox>
-            <Button onAction="#submitForm"  styleClass="form-button-yellow" prefWidth="435" text="Go to page"/>
-        </VBox>
-    </VBox>
 </AnchorPane>

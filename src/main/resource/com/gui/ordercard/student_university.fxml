@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.geometry.Insets?>
 <AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.StudentUniversityController" stylesheets="/style/main.css">
+            fx:controller="gui.ordercard.StudentUniversityController" stylesheets="/style/main.css">
     <HBox>
         <AnchorPane>
             <ImageView fx:id="metro1" preserveRatio="true" fitHeight="800"

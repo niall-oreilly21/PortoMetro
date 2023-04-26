@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="gui.home.ProfileController"
+            stylesheets="/style/main.css">
+    <HBox styleClass="navbar" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+          prefHeight="90" spacing="30" alignment="CENTER_LEFT">
+        <ImageView fx:id="logo" fitHeight="70" fitWidth="70" AnchorPane.leftAnchor="10"/>
+        <Label text="Porto Metro" styleClass="header-label" textFill="#00305f">
+            <padding>
+                <Insets left="12"/>
+            </padding>
+        </Label>
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <Label text="Home" textFill="#0253a3" onMouseClicked="#redirectToHome" styleClass="text-underline"/>
+            <Label text="Schedule" textFill="#0253a3" onMouseClicked="#redirectToSchedule" styleClass="text-underline"/>
+            <Label text="Journey Route" textFill="#0253a3" onMouseClicked="#redirectToJourneyRoute" styleClass="text-underline"/>
+            <Label text="Stations" textFill="#0253a3" onMouseClicked="#redirectToStation" styleClass="text-underline"/>
+            <padding>
+                <Insets right="20"/>
+            </padding>
+        </HBox>
+        <Region HBox.hgrow="ALWAYS" />
+        <HBox alignment="CENTER_RIGHT" spacing="20">
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <ImageView fx:id="profile" fitHeight="25" fitWidth="25"/>
+                <Label text="My Profile" textFill="#0253a3" styleClass="nav-active"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <ImageView fx:id="card" fitHeight="25" fitWidth="25" onMouseClicked="#redirectToCard"/>
+                <Label text="Card Details" textFill="#0253a3" onMouseClicked="#redirectToCard" styleClass="text-underline"/>
+            </HBox>
+            <padding>
+                <Insets right="20" />
+            </padding>
+        </HBox>
+        <padding>
+            <Insets left="20" />
+        </padding>
+    </HBox>
+    <SplitPane AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="90"
+               AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0">
+        <VBox maxWidth="300" style="-fx-background-color: #00305f;">
+            <padding>
+                <Insets left="30" top="30"/>
+            </padding>
+            <Label text="Hi, Niall!" textFill="#fdc300" styleClass="subheader-label">
+                <VBox.margin>
+                    <Insets bottom="5"/>
+                </VBox.margin>
+            </Label>
+            <HBox spacing="15">
+                <padding>
+                    <Insets top="20"/>
+                </padding>
+                <ImageView fx:id="editProfile" fitWidth="20" fitHeight="20"/>
+                <Label text="Edit profile" fx:id="editProfileLabel" textFill="white"
+                       onMouseClicked="#initialiseEditProfileEvent" styleClass="text-underline"/>
+            </HBox>
+            <HBox spacing="15">
+                <padding>
+                    <Insets top="20"/>
+                </padding>
+                <ImageView fx:id="password" fitWidth="20" fitHeight="20"/>
+                <Label text="Change password" fx:id="changePasswordLabel" textFill="white"
+                       onMouseClicked="#initialiseChangePassword" styleClass="text-underline"/>
+            </HBox>
+            <HBox spacing="15">
+                <padding>
+                    <Insets top="20"/>
+                </padding>
+                <ImageView fx:id="signOut" fitWidth="20" fitHeight="20"/>
+                <Label text="Sign out" textFill="white" styleClass="text-underline"/>
+            </HBox>
+        </VBox>
+        <VBox fx:id="contentBox">
+            <padding>
+                <Insets top="90" left="100"/>
+            </padding>
+        </VBox>
+    </SplitPane>
+</AnchorPane>
