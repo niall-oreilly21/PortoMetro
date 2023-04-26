@@ -1,5 +1,7 @@
 package gui;
 
+import com.metroporto.enums.Folder;
+import com.metroporto.enums.Page;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -35,11 +38,35 @@ public abstract class Controller
 
     public abstract void initialize();
 
-    public void redirectToPage(ActionEvent event, Page page) throws IOException
+    protected void initialiseLogo()
+    {
+        Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
+        logo.setImage(logoImage);
+    }
+
+    protected void initialiseMetroImage(String name)
+    {
+        Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/" + name + ".jpg")));
+        metro1.setImage(image1);
+    }
+
+    protected void initialiseProfileIcon()
+    {
+        Image profileImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/profile.png")));
+        profile.setImage(profileImage);
+    }
+
+    protected void initialiseCardIcon()
+    {
+        Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/card.png")));
+        card.setImage(cardImage);
+    }
+
+    public void redirectToPage(ActionEvent event, Folder folder, Page page) throws IOException
     {
         FXMLLoader loader = new FXMLLoader(
                 Objects.requireNonNull(Controller.class.getClassLoader()
-                        .getResource("com/gui/" + page.getLabel() + ".fxml")));
+                        .getResource("com/gui/" + folder.getLabel() + "/" + page.getLabel() + ".fxml")));
 
         Parent root = loader.load();
 
@@ -55,11 +82,11 @@ public abstract class Controller
         controller.setApp(App.getApplication());
     }
 
-    public void redirectToPage(MouseEvent event, Page page) throws IOException
+    public void redirectToPage(MouseEvent event, Folder folder, Page page) throws IOException
     {
         FXMLLoader loader = new FXMLLoader(
                 Objects.requireNonNull(Controller.class.getClassLoader()
-                        .getResource("com/gui/" + page.getLabel() + ".fxml")));
+                        .getResource("com/gui/" + folder.getLabel() + "/" + page.getLabel() + ".fxml")));
 
         Parent root = loader.load();
 

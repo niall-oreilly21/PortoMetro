@@ -1,11 +1,13 @@
-package gui;
+package gui.ordercard;
 
+import com.metroporto.enums.Folder;
+import gui.Controller;
+import com.metroporto.enums.Page;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -33,11 +35,8 @@ public class StudentUniversityController extends Controller
 
     public void initialize()
     {
-        Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/metro_2.jpg")));
-        metro1.setImage(image1);
-
-        Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
-        logo.setImage(logoImage);
+        initialiseLogo();
+        initialiseMetroImage("metro_2");
 
         // TODO: this should be an ArrayList of universities fetched from the database
         List<String> universities = new ArrayList<>();
@@ -104,11 +103,11 @@ public class StudentUniversityController extends Controller
 
             if (cardToggleGroup.getSelectedToggle() == yesCardRadioButton)
             {
-                redirectToPage(event, Page.CARD_ZONE);
+                redirectToPage(event, Folder.ORDER_CARD, Page.CARD_ZONE);
             }
             else
             {
-                redirectToPage(event, Page.HOME);
+                redirectToPage(event, Folder.HOME, Page.HOME);
             }
         }
         else

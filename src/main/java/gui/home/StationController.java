@@ -1,12 +1,15 @@
-package gui;
+package gui.home;
 
 import com.metroporto.dao.facilitydao.MySqlFacilityDao;
 import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.zonedao.MySqlZoneDao;
+import com.metroporto.enums.Folder;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Facility;
 import com.metroporto.metro.Station;
 import com.metroporto.metro.Zone;
+import gui.Controller;
+import com.metroporto.enums.Page;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,7 +24,6 @@ import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -97,45 +99,39 @@ public class StationController extends Controller
 
     public void initialize()
     {
-        Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
-        logo.setImage(logoImage);
-
-        Image profileImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/profile.png")));
-        profile.setImage(profileImage);
-
-        Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/card.png")));
-        card.setImage(cardImage);
+        initialiseLogo();
+        initialiseProfileIcon();
+        initialiseCardIcon();
 
         drawStationsBox(stations);
 
         initialiseFilterByFacilities();
-
         initialiseFilterByZones();
     }
 
     public void redirectToHome(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.HOME);
+        redirectToPage(event, Folder.HOME, Page.HOME);
     }
 
     public void redirectToSchedule(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.SCHEDULE);
+        redirectToPage(event, Folder.HOME, Page.SCHEDULE);
     }
 
     public void redirectToJourneyRoute(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.JOURNEY_ROUTE);
+        redirectToPage(event, Folder.HOME, Page.JOURNEY_ROUTE);
     }
 
     public void redirectToProfile(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.PROFILE);
+        redirectToPage(event, Folder.HOME, Page.PROFILE);
     }
 
     public void redirectToCard(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.CARD);
+        redirectToPage(event, Folder.HOME, Page.CARD);
     }
 
     private void drawStationsBox(List<Station> stations)

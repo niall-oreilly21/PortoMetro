@@ -1,10 +1,13 @@
-package gui;
+package gui.home;
 
 import com.metroporto.dao.linedao.LineDaoInterface;
 import com.metroporto.dao.linedao.MySqlLineDao;
+import com.metroporto.enums.Folder;
 import com.metroporto.enums.TimeTableType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Route;
+import gui.Controller;
+import com.metroporto.enums.Page;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -98,14 +101,9 @@ public class ScheduleController extends Controller
 
     public void initialize()
     {
-        Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
-        logo.setImage(logoImage);
-
-        Image profileImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/profile.png")));
-        profile.setImage(profileImage);
-
-        Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/card.png")));
-        card.setImage(cardImage);
+        initialiseLogo();
+        initialiseProfileIcon();
+        initialiseCardIcon();
 
         for (com.metroporto.metro.Line line : lines)
         {
@@ -331,27 +329,27 @@ public class ScheduleController extends Controller
 
     public void redirectToHome(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.HOME);
+        redirectToPage(event, Folder.HOME, Page.HOME);
     }
 
     public void redirectToJourneyRoute(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.JOURNEY_ROUTE);
+        redirectToPage(event, Folder.HOME, Page.JOURNEY_ROUTE);
     }
 
     public void redirectToStation(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.STATION);
+        redirectToPage(event, Folder.HOME, Page.STATION);
     }
 
     public void redirectToProfile(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.PROFILE);
+        redirectToPage(event, Folder.HOME, Page.PROFILE);
     }
 
     public void redirectToCard(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.CARD);
+        redirectToPage(event, Folder.HOME, Page.CARD);
     }
 
     public void setScene(Scene scene)

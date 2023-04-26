@@ -1,4 +1,4 @@
-package gui;
+package gui.ordercard;
 
 public class InvoiceItem
 {

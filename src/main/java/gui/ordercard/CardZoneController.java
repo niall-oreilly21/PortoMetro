@@ -1,5 +1,8 @@
-package gui;
+package gui.ordercard;
 
+import com.metroporto.enums.Folder;
+import gui.Controller;
+import com.metroporto.enums.Page;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -42,12 +45,9 @@ public class CardZoneController extends Controller
 
     public void initialize()
     {
+        initialiseLogo();
         // TODO: Change picture to zone map picture
-        Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/metro_4.jpg")));
-        metro1.setImage(image1);
-
-        Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
-        logo.setImage(logoImage);
+        initialiseMetroImage("metro_4");
 
         zoneToggleGroup = new ToggleGroup();
         allZonesRadioButton.setToggleGroup(zoneToggleGroup);

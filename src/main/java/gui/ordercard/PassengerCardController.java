@@ -1,5 +1,8 @@
-package gui;
+package gui.ordercard;
 
+import com.metroporto.enums.Folder;
+import gui.Controller;
+import com.metroporto.enums.Page;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -74,11 +77,8 @@ public class PassengerCardController extends Controller
 
     public void initialize()
     {
-        Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/metro_2.jpg")));
-        metro1.setImage(image1);
-
-        Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
-        logo.setImage(logoImage);
+        initialiseLogo();
+        initialiseMetroImage("metro_2");
 
         // Set toggle group to yes/no card radio buttons
         cardToggleGroup = new ToggleGroup();
@@ -284,12 +284,12 @@ public class PassengerCardController extends Controller
 
                 // TODO: Add to database
 
-                redirectToPage(event, Page.CARD_ZONE);
+                redirectToPage(event, Folder.ORDER_CARD, Page.CARD_ZONE);
             }
         }
         else
         {
-            redirectToPage(event, Page.HOME);
+            redirectToPage(event, Folder.HOME, Page.HOME);
         }
     }
 

@@ -1,17 +1,15 @@
-package gui;
+package gui.accountauth;
 
+import com.metroporto.enums.Folder;
+import gui.Controller;
+import com.metroporto.enums.Page;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -62,17 +60,15 @@ public class SignUpController extends Controller
     @Override
     public void initialize()
     {
-        Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/metro_1.jpg")));
-        metro1.setImage(image1);
-
-        Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
-        logo.setImage(logoImage);
+        initialiseLogo();
+        initialiseMetroImage("metro_1");
 
         passengerTypeToggleGroup = new ToggleGroup();
         studentRadioButton.setToggleGroup(passengerTypeToggleGroup);
         passengerRadioButton.setToggleGroup(passengerTypeToggleGroup);
     }
 
+    @Override
     public void setScene(Scene scene)
     {
         scene.heightProperty().addListener((observable, oldValue, newValue) ->
@@ -153,17 +149,17 @@ public class SignUpController extends Controller
 
             if (passengerType.equals("student"))
             {
-                redirectToPage(event, Page.STUDENT_UNIVERSITY);
+                redirectToPage(event, Folder.ORDER_CARD, Page.STUDENT_UNIVERSITY);
             }
             else
             {
-                redirectToPage(event, Page.PASSENGER_CARD);
+                redirectToPage(event, Folder.ORDER_CARD, Page.PASSENGER_CARD);
             }
         }
     }
 
     public void redirectToSignIn(ActionEvent event) throws IOException
     {
-        redirectToPage(event, Page.SIGN_IN);
+        redirectToPage(event, Folder.ACCOUNT_AUTH, Page.SIGN_IN);
     }
 }

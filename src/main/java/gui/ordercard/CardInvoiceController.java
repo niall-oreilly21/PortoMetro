@@ -1,5 +1,8 @@
-package gui;
+package gui.ordercard;
 
+import com.metroporto.enums.Folder;
+import gui.Controller;
+import com.metroporto.enums.Page;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -33,11 +36,8 @@ public class CardInvoiceController extends Controller
 
     public void initialize()
     {
-        Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/metro_4.jpg")));
-        metro1.setImage(image1);
-
-        Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
-        logo.setImage(logoImage);
+        initialiseLogo();
+        initialiseMetroImage("metro_4");
 
         // Set the items of the table
         ObservableList<InvoiceItem> data = FXCollections.observableArrayList();
@@ -93,6 +93,6 @@ public class CardInvoiceController extends Controller
 
     public void submitForm(ActionEvent event) throws IOException
     {
-        redirectToPage(event, Page.HOME);
+        redirectToPage(event, Folder.HOME, Page.HOME);
     }
 }

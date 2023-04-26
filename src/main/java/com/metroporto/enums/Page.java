@@ -1,6 +1,4 @@
-package gui;
-
-import com.metroporto.enums.LabelInterface;
+package com.metroporto.enums;
 
 public enum Page implements LabelInterface
 {

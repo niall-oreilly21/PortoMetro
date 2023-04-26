@@ -1,5 +1,8 @@
-package gui;
+package gui.home;
 
+import com.metroporto.enums.Folder;
+import gui.Controller;
+import com.metroporto.enums.Page;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -38,14 +41,9 @@ public class ProfileController extends Controller
 
     public void initialize()
     {
-        Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
-        logo.setImage(logoImage);
-
-        Image profileImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/profile.png")));
-        profile.setImage(profileImage);
-
-        Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/card.png")));
-        card.setImage(cardImage);
+        initialiseLogo();
+        initialiseProfileIcon();
+        initialiseCardIcon();
 
         Image editProfileImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/edit-profile.png")));
         editProfile.setImage(editProfileImage);
@@ -167,27 +165,27 @@ public class ProfileController extends Controller
 
     public void redirectToHome(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.HOME);
+        redirectToPage(event, Folder.HOME, Page.HOME);
     }
 
     public void redirectToSchedule(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.SCHEDULE);
+        redirectToPage(event, Folder.HOME, Page.SCHEDULE);
     }
 
     public void redirectToJourneyRoute(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.JOURNEY_ROUTE);
+        redirectToPage(event, Folder.HOME, Page.JOURNEY_ROUTE);
     }
 
     public void redirectToStation(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.STATION);
+        redirectToPage(event, Folder.HOME, Page.STATION);
     }
 
     public void redirectToCard(MouseEvent event) throws IOException
     {
-        redirectToPage(event, Page.CARD);
+        redirectToPage(event, Folder.HOME, Page.CARD);
     }
 }
 

@@ -1,5 +1,8 @@
-package gui;
+package gui.accountauth;
 
+import com.metroporto.enums.Folder;
+import gui.Controller;
+import com.metroporto.enums.Page;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -7,7 +10,6 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -30,15 +32,14 @@ public class SignInController extends Controller
     @FXML
     private TextField passwordText;
 
+    @Override
     public void initialize()
     {
-        Image image1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/metro_3.jpg")));
-        metro1.setImage(image1);
-
-        Image logoImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/logo.png")));
-        logo.setImage(logoImage);
+        initialiseLogo();
+        initialiseMetroImage("metro_3");
     }
 
+    @Override
     public void setScene(Scene scene)
     {
         scene.heightProperty().addListener((observable, oldValue, newValue) ->
@@ -83,12 +84,12 @@ public class SignInController extends Controller
 
             // TODO: implement sign in authentication using MySQL + set user in App
 
-            redirectToPage(event, Page.HOME);
+            redirectToPage(event, Folder.HOME, Page.HOME);
         }
     }
 
     public void redirectToSignUp(ActionEvent event) throws IOException
     {
-        redirectToPage(event, Page.SIGN_UP);
+        redirectToPage(event, Folder.ACCOUNT_AUTH, Page.SIGN_UP);
     }
 }
