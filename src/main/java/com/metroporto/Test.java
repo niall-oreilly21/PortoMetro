@@ -33,8 +33,8 @@ public class Test
 
         StationDaoInterface stationDao = new MySqlStationDao();
         List<Station>daoStations = stationDao.findAll();
-        Station startStation = stationDao.findStationByStationId("DRG");
-        Station endStation = stationDao.findStationByStationId("IPO");
+        Station startStation = stationDao.findStationByStationId("TRI");
+        Station endStation = stationDao.findStationByStationId("SEB");
 
 
         Set<Station> stationSet = new LinkedHashSet<>();
@@ -71,12 +71,7 @@ public class Test
         MetroSystem metroSystem = new MetroSystem(lines);
 
 
-//        for (Station station : previousStations)
-//        {
-//            System.out.print(station.getStationName() + " -> ");
-//        }
-
-        metroSystem.findShortestPath(startStation, endStation, LocalTime.of(10,00), TimeTableType.MONDAY_TO_FRIDAY);
+        metroSystem.findShortestPath(startStation, endStation, LocalTime.of(16,19), TimeTableType.SATURDAY);
 
     }
 }
