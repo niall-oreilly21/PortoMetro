@@ -136,10 +136,11 @@ public class MetroSystem
         List<Station> shortestPath = findShortestPath(startStation, endStation);
         // Determine schedules for each station in the shortest path
         LocalTime currentTime = startTime;
-        Line currentLine = null;
+        Line currentLine;
         boolean isChangingLine;
         boolean isConnecting = false;
-        Route currentRoute = null;
+        Route currentRoute;
+        Schedule connectionSchedule = null;
         List<Schedule> schedulesShortestPath = new ArrayList<>();
 
         for (int i = 0; i < shortestPath.size(); i++)
@@ -173,8 +174,6 @@ public class MetroSystem
                 {
                     Timetable currentTimetable = currentRoute.getTimetableByTimetableType(timeTableType);
 
-
-
                     List<Schedule> schedules = currentTimetable.getSchedulesByStartStationAndTime(current, currentTime);
 
                     if(isConnecting)
@@ -186,7 +185,6 @@ public class MetroSystem
                         {
                             schedules = currentTimetable.getSchedulesByStartStationAndTime(current, currentTime.plusMinutes(3));
                         }
-                        isConnecting = false;
                     }
 
 
@@ -200,17 +198,16 @@ public class MetroSystem
                     {
                         current = shortestPath.get(i);
                         next = shortestPath.get(i + 1);
-                        previous = (i > 0) ? shortestPath.get(i - 1) : null;
 
                         Schedule schedule = schedules.get(j);
                         Schedule nextSchedule = schedules.get(j + 1);
 
-                        schedulesShortestPath.add(schedule);
 
                         if (!nextSchedule.getStation().equals(next) || nextSchedule.getDepartureTime().equals(LocalTime.of(4,00)))
                         {
 
                             System.out.println("Connection: " + current.getStationName());
+                            connectionSchedule = schedule;
                             isChangingLine = true;
                             isConnecting = true;
                             currentTime = schedule.getDepartureTime();
@@ -218,9 +215,24 @@ public class MetroSystem
                         }
                         else
                         {
-                            System.out.println("Station: " + schedule.getStation().getStationName());
-                            System.out.println("Departure time: " + schedule.getDepartureTime());
-                            System.out.println();
+                            if(isConnecting && connectionSchedule != null)
+                            {
+                                schedulesShortestPath.add(new ConnectionSchedule(connectionSchedule.getStation(), connectionSchedule.getDepartureTime(), schedule.getDepartureTime()));
+                                isConnecting = false;
+                            }
+                            else
+                            {
+                                schedulesShortestPath.add(schedule);
+
+                                if(i == shortestPath.size() - 2)
+                                {
+                                    schedulesShortestPath.add(nextSchedule);
+                                }
+                            }
+
+//                            System.out.println("Station: " + schedule.getStation().getStationName());
+//                            System.out.println("Departure time: " + schedule.getDepartureTime());
+//                            System.out.println();
                         }
 
                         if(!isChangingLine)
@@ -236,90 +248,23 @@ public class MetroSystem
         }
 
 
-//        System.out.println("LIST");
-//        for(Schedule schedule : schedulesShortestPath)
-//        {
-//            System.out.println("Station: " + schedule.getStation().getStationName());
-//            System.out.println("Departure time: " + schedule.getDepartureTime());
-//            System.out.println();
-//        }
+        System.out.println("LIST");
+        for(Schedule schedule : schedulesShortestPath)
+        {
+            if(schedule instanceof ConnectionSchedule)
+            {
+                System.out.println("------Connection: " + schedule.getStation().getStationName() + "-----");
+                System.out.println("Arrival time: " + ((ConnectionSchedule) schedule).getArrivalTime());
+                System.out.println("Transfer time: " + ((ConnectionSchedule) schedule).getTransferTime() + " mins");
+            }
+            else
+            {
+                System.out.println("Stop: " + schedule.getStation().getStationName());
+            }
+            System.out.println("Departure time: " + schedule.getDepartureTime());
+            System.out.println();
+        }
     }
-
-//        public void findShortestPath(Station startStation, Station endStation, LocalTime startTime, TimeTableType timeTableType) {
-//        List<Station> shortestPath = findShortestPath(startStation, endStation);
-//
-//        // Determine schedules for each station in the shortest path
-//        LocalTime currentTime = startTime;
-//        Line currentLine = null;
-//        boolean changingLine;
-//        Route currentRoute = null;
-//        List<Schedule> schedulesShortestPath = new ArrayList<>();
-//
-//        Iterator<Station> iterator = shortestPath.iterator();
-//        Station current = iterator.next();
-//        Station next;
-//
-//        while (iterator.hasNext()) {
-//            next = iterator.next();
-//            Station previous = (current == startStation) ? null : shortestPath.get(shortestPath.indexOf(current) - 1);
-//
-//            List<Line> linesPreviousStation = new ArrayList<>();
-//            List<Line> linesNextStation = new ArrayList<>();
-//
-//            setLinesForStations(previous, next, linesPreviousStation, linesNextStation);
-//            List<Line> commonLines = findCommonLines(linesPreviousStation, linesNextStation);
-//
-//            if (commonLines.size() == 1) {
-//                currentLine = commonLines.get(0);
-//            } else {
-//                currentLine = findFastestLine(commonLines, current, next, currentTime, timeTableType);
-//            }
-//
-//            if (currentLine != null) {
-//                currentRoute = currentLine.findRoute(current, next);
-//
-//                if (currentRoute != null) {
-//                    Timetable currentTimetable = currentRoute.getTimetableByTimetableType(timeTableType);
-//
-//                    List<Schedule> schedules = currentTimetable.getSchedulesByStartStationAndTime(current, currentTime);
-//
-//                    System.out.println("Final Destination " + currentRoute.getEndStation().getStationName());
-//
-//                    changingLine = false;
-//
-//                    int j = 0;
-//                    while (iterator.hasNext() && !changingLine) {
-//                        Schedule schedule = schedules.get(j);
-//
-//                        if (schedule.getStation().equals(current)) {
-//                            schedulesShortestPath.add(schedule);
-//                            System.out.println("Station: " + schedule.getStation().getStationName());
-//                            System.out.println("Departure time: " + schedule.getDepartureTime());
-//                            System.out.println();
-//                        } else {
-//                            System.out.println("Connection: " + previous.getStationName());
-//                            System.out.println();
-//                            currentTime = schedule.getDepartureTime();
-//                            changingLine = true;
-//                        }
-//
-//                        j++;
-//                    }
-//                }
-//            }
-//
-//            current = next;
-//        }
-//
-//        // Add the last station to the schedulesShortestPath list
-//        Station lastStation = shortestPath.get(shortestPath.size() - 1);
-//        List<Schedule> lastSchedules = currentRoute.getTimetableByTimetableType(timeTableType)
-//                .getSchedulesByStartStationAndTime(lastStation, currentTime);
-//        schedulesShortestPath.addAll(lastSchedules);
-//    }
-
-
-
 
 
     public List<Station> findShortestPath(Station startStation, Station endStation)

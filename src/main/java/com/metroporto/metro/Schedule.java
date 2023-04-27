@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Schedule implements Comparable<Schedule>
 {
     private Station station;
-    private LocalTime departureTime;
+    protected LocalTime departureTime;
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
 
     public Schedule(Station station, LocalTime departureTime)
@@ -25,7 +25,7 @@ public class Schedule implements Comparable<Schedule>
 
     public LocalTime getDepartureTime()
     {
-        return departureTime;
+        return departureTime.withSecond(0);
     }
 
     @Override
