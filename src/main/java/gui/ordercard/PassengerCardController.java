@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -17,7 +16,6 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import java.time.Year;
 import java.util.Calendar;
-import java.util.Objects;
 
 public class PassengerCardController extends Controller
 {
@@ -97,8 +95,10 @@ public class PassengerCardController extends Controller
         cardBox.managedProperty().bind(yesCardRadioButton.selectedProperty());
 
         // If "no" is selected, clear the selected card type radio button
-        noCardRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
+        noCardRadioButton.selectedProperty().addListener((observable, oldValue, newValue) ->
+        {
+            if (newValue)
+            {
                 clearCardTypeSelection();
             }
         });
@@ -108,7 +108,7 @@ public class PassengerCardController extends Controller
         blueCardBox.managedProperty().bind(blueCardRadioButton.selectedProperty());
 
         // Populate blueNumTrips combo box with values 1-10
-        for (int i=1; i <= 10; i++)
+        for (int i = 1; i <= 10; i++)
             blueNumTripsComboBox.getItems().add(i);
 
         // Make "1" the default selected option for blueNumTrips combo box
@@ -119,7 +119,7 @@ public class PassengerCardController extends Controller
         touristCardBox.managedProperty().bind(touristCardRadioButton.selectedProperty());
 
         // Populate touristNumTrips combo box with values 1-10
-        for (int i=1; i <= 10; i++)
+        for (int i = 1; i <= 10; i++)
             touristNumTripsComboBox.getItems().add(i);
 
         // Make "1" the default selected option for touristNumTrips combo box
@@ -170,9 +170,12 @@ public class PassengerCardController extends Controller
         endYearComboBox.getSelectionModel().select(endYears.indexOf(currentYear));
 
         // Add listener to end month combo box to prevent user
-        endMonthComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (startYearComboBox.getValue() != null && endYearComboBox.getValue() != null) {
-                if (endYearComboBox.getValue() < startYearComboBox.getValue()) {
+        endMonthComboBox.valueProperty().addListener((observable, oldValue, newValue) ->
+        {
+            if (startYearComboBox.getValue() != null && endYearComboBox.getValue() != null)
+            {
+                if (endYearComboBox.getValue() < startYearComboBox.getValue())
+                {
                     endYearComboBox.setValue(startYearComboBox.getValue());
                 }
 
@@ -191,36 +194,47 @@ public class PassengerCardController extends Controller
         });
 
         // Add listener to end year combo box
-        endYearComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (startYearComboBox.getValue() != null && endYearComboBox.getValue() != null) {
-                if (endYearComboBox.getValue() < startYearComboBox.getValue()) {
+        endYearComboBox.valueProperty().addListener((observable, oldValue, newValue) ->
+        {
+            if (startYearComboBox.getValue() != null && endYearComboBox.getValue() != null)
+            {
+                if (endYearComboBox.getValue() < startYearComboBox.getValue())
+                {
                     endYearComboBox.setValue(startYearComboBox.getValue());
                 }
                 if (endYearComboBox.getValue().equals(startYearComboBox.getValue())
-                        && endMonths.indexOf(endMonthComboBox.getValue()) <= startMonths.indexOf(startMonthComboBox.getValue())) {
+                        && endMonths.indexOf(endMonthComboBox.getValue()) <= startMonths.indexOf(startMonthComboBox.getValue()))
+                {
                     endMonthComboBox.setValue(startMonths.get((startMonths.indexOf(startMonthComboBox.getValue()) + 1) % 12));
                 }
             }
         });
 
         // Add listener to start year combo box
-        startYearComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (startYearComboBox.getValue() != null && endYearComboBox.getValue() != null) {
-                if (endYearComboBox.getValue() <= startYearComboBox.getValue()) {
+        startYearComboBox.valueProperty().addListener((observable, oldValue, newValue) ->
+        {
+            if (startYearComboBox.getValue() != null && endYearComboBox.getValue() != null)
+            {
+                if (endYearComboBox.getValue() <= startYearComboBox.getValue())
+                {
                     startYearComboBox.setValue(endYearComboBox.getValue());
                 }
 
                 if (endYearComboBox.getValue().equals(startYearComboBox.getValue())
-                        && endMonths.indexOf(endMonthComboBox.getValue()) <= startMonths.indexOf(startMonthComboBox.getValue())) {
+                        && endMonths.indexOf(endMonthComboBox.getValue()) <= startMonths.indexOf(startMonthComboBox.getValue()))
+                {
                     startMonthComboBox.setValue(startMonths.get((startMonths.indexOf(startMonthComboBox.getValue()) + 1) % 12));
                 }
             }
         });
 
         // Add listener to start month combo box
-        startMonthComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (startYearComboBox.getValue() != null && endYearComboBox.getValue() != null) {
-                if (endYearComboBox.getValue() < startYearComboBox.getValue()) {
+        startMonthComboBox.valueProperty().addListener((observable, oldValue, newValue) ->
+        {
+            if (startYearComboBox.getValue() != null && endYearComboBox.getValue() != null)
+            {
+                if (endYearComboBox.getValue() < startYearComboBox.getValue())
+                {
                     startYearComboBox.setValue(endYearComboBox.getValue());
                 }
                 if (endYearComboBox.getValue().equals(startYearComboBox.getValue())
@@ -256,9 +270,8 @@ public class PassengerCardController extends Controller
     public void setScene(Scene scene)
     {
         scene.heightProperty().addListener((observable, oldValue, newValue) ->
-        {
-            metro1.fitHeightProperty().setValue(newValue);
-        });
+                metro1.fitHeightProperty().setValue(newValue)
+        );
     }
 
     public void submitForm(ActionEvent event) throws IOException
@@ -276,8 +289,7 @@ public class PassengerCardController extends Controller
                 errorText.setText(asterisk + " Choose a card type");
                 cardTypeLabel.setGraphic(redAsterisk);
                 cardTypeLabel.setContentDisplay(ContentDisplay.RIGHT);
-            }
-            else
+            } else
             {
                 cardTypeLabel.setGraphic(null);
                 errorText.setText("");
@@ -286,14 +298,14 @@ public class PassengerCardController extends Controller
 
                 redirectToPage(event, Folder.ORDER_CARD, Page.CARD_ZONE);
             }
-        }
-        else
+        } else
         {
             redirectToPage(event, Folder.HOME, Page.HOME);
         }
     }
 
-    private void clearCardTypeSelection() {
+    private void clearCardTypeSelection()
+    {
         // Clear the selection of the card type radio buttons
         cardTypeToggleGroup.selectToggle(null);
     }

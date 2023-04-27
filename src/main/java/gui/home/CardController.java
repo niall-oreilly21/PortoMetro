@@ -1,14 +1,10 @@
 package gui.home;
 
-import com.metroporto.enums.Folder;
 import gui.Controller;
-import com.metroporto.enums.Page;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 
-import java.io.IOException;
 import java.util.Objects;
 
 public class CardController extends Controller

@@ -1,8 +1,6 @@
 package gui.home;
 
-import com.metroporto.enums.Folder;
 import gui.Controller;
-import com.metroporto.enums.Page;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -16,7 +14,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.io.IOException;
 import java.util.Objects;
 
 public class ProfileController extends Controller

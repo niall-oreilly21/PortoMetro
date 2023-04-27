@@ -9,10 +9,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class CardInvoiceController extends Controller
 {
@@ -86,9 +84,8 @@ public class CardInvoiceController extends Controller
     public void setScene(Scene scene)
     {
         scene.heightProperty().addListener((observable, oldValue, newValue) ->
-        {
-            metro1.fitHeightProperty().setValue(newValue);
-        });
+            metro1.fitHeightProperty().setValue(newValue)
+        );
     }
 
     public void submitForm(ActionEvent event) throws IOException

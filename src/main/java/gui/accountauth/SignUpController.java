@@ -7,12 +7,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,9 +70,8 @@ public class SignUpController extends Controller
     public void setScene(Scene scene)
     {
         scene.heightProperty().addListener((observable, oldValue, newValue) ->
-        {
-            metro1.fitHeightProperty().setValue(newValue);
-        });
+            metro1.fitHeightProperty().setValue(newValue)
+        );
     }
 
     public void submitForm(ActionEvent event) throws IOException

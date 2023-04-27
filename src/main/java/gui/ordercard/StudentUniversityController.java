@@ -7,14 +7,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class StudentUniversityController extends Controller
 {
@@ -78,9 +76,8 @@ public class StudentUniversityController extends Controller
     public void setScene(Scene scene)
     {
         scene.heightProperty().addListener((observable, oldValue, newValue) ->
-        {
-            metro1.fitHeightProperty().setValue(newValue);
-        });
+            metro1.fitHeightProperty().setValue(newValue)
+        );
     }
 
     @FXML
