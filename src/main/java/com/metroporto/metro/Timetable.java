@@ -3,6 +3,7 @@ package com.metroporto.metro;
 import com.metroporto.ComparatorSchedules;
 import com.metroporto.enums.TimeTableType;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -60,9 +61,6 @@ public class Timetable
 
         if (uniqueScheduleList != null)
         {
-            // Use uniqueScheduleList as needed
-            //System.out.println("Unique schedule list found: " + uniqueScheduleList);
-
             Collections.sort(uniqueScheduleList);
             for (Schedule schedule : uniqueScheduleList)
             {
@@ -171,7 +169,55 @@ public class Timetable
         }
     }
 
-    public List<Schedule> getSchedulesByStation(Station station)
+    public List<Schedule> getSchedulesByStartStationAndTime(Station station, LocalTime startTime)
+    {
+        List<Schedule>schedulesByStation = getSchedulesByStation(station);
+        Schedule schedule = getClosestScheduleToStartTime(schedulesByStation, startTime);
+
+        int rowIndex = schedulesByStation.indexOf(schedule);
+        int columnIndex = getIndex(station);
+
+        int size = timetableSchedules.get(columnIndex).size();
+
+        if (columnIndex >= 0 && columnIndex < size)
+        {
+            return timetableSchedules.get(rowIndex).subList(columnIndex, size);
+        }
+
+        return null;
+
+    }
+
+    public Schedule getClosestScheduleToStartTime(Station station, LocalTime startTime)
+    {
+        List<Schedule>schedulesByStation = getSchedulesByStation(station);
+        return getClosestScheduleToStartTime(schedulesByStation, startTime);
+    }
+
+    private Schedule getClosestScheduleToStartTime(List<Schedule> schedules, LocalTime startTime)
+    {
+        Duration minTimeDifference =  Duration.ofSeconds(Long.MAX_VALUE); // Step 2
+        Schedule closestSchedule = null;
+
+        for (Schedule schedule : schedules)
+        {
+            LocalTime scheduleTime = schedule.getDepartureTime();
+            if (scheduleTime.isAfter(startTime))
+            {
+                Duration timeDifference = Duration.between(startTime, scheduleTime);
+
+                if (timeDifference.abs().compareTo(minTimeDifference.abs()) < 0)
+                {
+                    minTimeDifference = timeDifference.abs();
+                    closestSchedule = schedule;
+                }
+            }
+        }
+
+        return closestSchedule;
+    }
+
+    private List<Schedule> getSchedulesByStation(Station station)
     {
         int index = getIndex(station);
 
@@ -184,7 +230,7 @@ public class Timetable
                 scheduleList.add(schedules.get(index));
             }
 
-            return timetableSchedules.get(index);
+            return scheduleList;
         }
 
         return null;
