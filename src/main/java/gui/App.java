@@ -1,6 +1,7 @@
 package gui;
 
-import com.metroporto.User;
+import com.metroporto.enums.Folder;
+import com.metroporto.enums.Page;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,9 +30,10 @@ public class App extends Application
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getClassLoader().getResource("com/gui/sign_up.fxml")));
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getClassLoader()
+                .getResource("com/gui/" + Folder.ACCOUNT_AUTH.getLabel() + "/" + Page.SIGN_UP.getLabel() + ".fxml")));
         Parent root = loader.load();
-        SignUpController controller = loader.getController();
+        Controller controller = loader.getController();
 
         instance = this;
 

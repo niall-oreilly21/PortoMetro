@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="gui.ordercard.CardZoneController"
+            prefHeight="400.0" prefWidth="600.0" stylesheets="/style/main.css">
+    <HBox>
+        <AnchorPane>
+            <ImageView fx:id="metro1" preserveRatio="true" fitHeight="800"
+                       AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0"/>
+            <ImageView fx:id="logo" fitHeight="100" fitWidth="100" AnchorPane.leftAnchor="20" AnchorPane.topAnchor="20"/>
+        </AnchorPane>
+        <AnchorPane>
+            <VBox AnchorPane.leftAnchor="130" AnchorPane.topAnchor="205">
+                <Label text="Card zone" styleClass="header-label" textFill="#00305f" wrapText="true">
+                    <padding>
+                        <Insets bottom="25"/>
+                    </padding>
+                </Label>
+                <Label text="Do you want your card to be valid for..."/>
+                <HBox spacing="15">
+                    <VBox.margin>
+                        <Insets>
+                            <top>15</top>
+                        </Insets>
+                    </VBox.margin>
+                    <RadioButton text="All zones" userData="allZones" fx:id="allZonesRadioButton" selected="true"/>
+                    <RadioButton text="3 zones" userData="threeZones" fx:id="threeZonesRadioButton"/>
+                </HBox>
+                <VBox fx:id="zonesOptionBox">
+                    <Label text="Which zones do you want to be included in?" fx:id="zoneSelectionLabel">
+                        <VBox.margin>
+                            <Insets>
+                                <top>40</top>
+                            </Insets>
+                        </VBox.margin>
+                    </Label>
+                </VBox>
+                <Label fx:id="errorText" textFill="#de2a1d">
+                    <VBox.margin>
+                        <Insets>
+                            <top>20</top>
+                        </Insets>
+                    </VBox.margin>
+                </Label>
+                <Button onAction="#submitForm" text="Continue" prefWidth="370" styleClass="form-button">
+                    <VBox.margin>
+                        <Insets>
+                            <top>20</top>
+                        </Insets>
+                    </VBox.margin>
+                </Button>
+            </VBox>
+        </AnchorPane>
+    </HBox>
+</AnchorPane>
