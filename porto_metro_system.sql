@@ -67,7 +67,7 @@ CREATE TABLE cards
 CREATE TABLE passengers
 (
     user_id INT NOT NULL,
-    card_id INT,
+    card_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (card_id) REFERENCES cards(card_id),
     UNIQUE (user_id, card_id)
@@ -301,7 +301,7 @@ INSERT INTO stations (station_id, zone_id, station_name) VALUES
 ("PDV", 1, "Póvoa De Varzim"),
 ("SBR", 1, "São Brás"),
 ("PFR", 1, "Portas Fronhas"),
-("ADP", 1, "Alto Da Pega"),
+("ADP", 1, "Alto De Pega"),
 ("VDC", 1, "Vila Do Conde"),
 ("STC", 1, "Santa Clara"),
 ("AZR", 2, "Azurara"),
@@ -312,7 +312,7 @@ INSERT INTO stations (station_id, zone_id, station_name) VALUES
 ("VCO", 3, "VC Fashion Outlet I Modivas"),
 ("MDC", 3, "Modivas Centro"),
 ("MDS", 3, "Modivas Sul"),
-("VLP", 3, "Vilar de Pinheiro"),
+("VLP", 3, "Vilar do Pinheiro"),
 ("LDR", 3, "Lidador"),
 ("PDR", 3, "Pedras Rubras"),
 ("VDS", 3, "Verdes"),
@@ -323,7 +323,7 @@ INSERT INTO stations (station_id, zone_id, station_name) VALUES
 ("ISM", 5, "ISMAI"),
 ("CAS", 5, "Castêlo Da Maia"),
 ("MAN", 5, "Mandim"),
-("ZIN", 5, "Zona Industrial"),
+("ZIN", 5, "Zona Indústrial"),
 ("FMA", 6, "Fórum Maia"),
 ("PMA", 6, "Parque Maia"),
 ("CUS", 6, "Custió"),
@@ -353,7 +353,7 @@ INSERT INTO stations (station_id, zone_id, station_name) VALUES
 ("BOT", 3, "Botica"),
 ("APO", 3, "Aeroporto"),
 ("SDH", 9, "Senhora Da Hora"),
-("CON", 10, "Contumil"),
+("COL", 10, "Contumil"),
 ("NAS", 10, "Nasoni"),
 ("NAV", 10, "Nau Vitória"),
 ("LEV", 7, "Levada"),
@@ -501,7 +501,7 @@ INSERT INTO station_facilities (station_id, facility_id) VALUES
 ("DRG", 7),
 ("DRG", 9),
 ("DRG", 11),
-("CON", 7),
+("COL", 7),
 ("NAV", 5), 
 ("NAV", 9), 
 ("LEV", 3), 
@@ -806,11 +806,11 @@ BEGIN
 END// 
 -- @DELIMITER ;
 
-INSERT INTO users (user_id, email, user_password, user_type) VALUES
-(1,"niall.blackrock@gmail.com", "12345", "student"),
-(2, "luana.blackrock@gmail.com", "123454", "administrator"),
-(3, "johndoe@gmail.com", "abcdef", "passenger"),
-(4, "janedoe@gmail.com", "ghijkl", "passenger");
+INSERT INTO users (user_id, email, user_password, user_type, first_name, last_name) VALUES
+(1,"niall.blackrock@gmail.com", "12345", "student", "Niall", "O' Reilly"),
+(2, "luana.blackrock@gmail.com", "123454", "administrator", "Luana", "Kimley"),
+(3, "johndoe@gmail.com", "abcdef", "passenger", "John", "Doe"),
+(4, "janedoe@gmail.com", "ghijkl", "passenger", "Jane", "Doe");
 
 INSERT INTO students_universities (user_id, university_id) VALUES
 (1,"UOP");

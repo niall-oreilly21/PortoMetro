@@ -1,10 +1,8 @@
-package com.metroporto.import_timetables;
+package com.metroporto.createdatabase.importtimetables;
 
 import com.metroporto.metro.Line;
 import com.metroporto.metro.Station;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class ImportReaderLinesStations

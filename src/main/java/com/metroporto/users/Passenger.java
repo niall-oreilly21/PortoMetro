@@ -7,9 +7,15 @@ public class Passenger extends User
 {
     private Card metroCard;
 
-    public Passenger(int userId, String email, String password, Card metroCard)
+    public Passenger(int userId, String email, String password, String firstName, String lastName, Card metroCard)
     {
-        super(userId, email, password);
+        super(userId, email, password, firstName, lastName);
+        checkMetroCard(metroCard);
+    }
+
+    public Passenger(String email, String password, String firstName, String lastName, Card metroCard)
+    {
+        super(email, password, firstName,  lastName);
         checkMetroCard(metroCard);
     }
 
@@ -17,15 +23,8 @@ public class Passenger extends User
     {
         if(this.metroCard instanceof StudentCard)
         {
-            if(Passenger.class.isInstance(Student.class))
-            {
-                    this.metroCard = metroCard;
-            }
-            else
-            {
-                System.out.println("You can't have a student card unless you are a student.");
-                this.metroCard = null;
-            }
+            System.out.println("You can't have a student card unless you are a student.");
+            this.metroCard = null;
         }
         else
         {

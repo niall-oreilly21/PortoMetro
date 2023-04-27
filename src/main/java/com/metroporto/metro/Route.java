@@ -1,7 +1,10 @@
 package com.metroporto.metro;
 
+import com.metroporto.enums.TimeTableType;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Route
 {
@@ -43,6 +46,18 @@ public class Route
         return endStation;
     }
 
+    public Timetable getTimetableByTimetableType(TimeTableType timeTableType)
+    {
+        for (Timetable timetable : timetables)
+        {
+            if (timetable.getTimeTableType().equals(timeTableType))
+            {
+                return timetable;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString()
     {
@@ -53,4 +68,18 @@ public class Route
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Route route = (Route) o;
+        return routeId == route.routeId && Objects.equals(endStation, route.endStation) && Objects.equals(timetables, route.timetables);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(routeId, endStation, timetables);
+    }
 }

@@ -9,6 +9,8 @@ import com.metroporto.dao.zonedao.ZoneDaoInterface;
 import com.metroporto.enums.CardAccessType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Zone;
+import com.metroporto.users.Passenger;
+import com.metroporto.users.Student;
 import com.metroporto.users.User;
 
 import java.sql.SQLException;
@@ -61,7 +63,32 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
     @Override
     public void insertCardForPassenger(User user) throws DaoException
     {
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            String query = "INSERT INTO passengers (user_id, card_id) VALUES\n" +
+                    "(?, ?)";
 
+            ps = con.prepareStatement(query);
+            ps.setInt(1, user.getUserId());
+
+            if(user instanceof Passenger)
+            {
+                ps.setInt(2, ((Passenger) user).getMetroCard().getCardId());
+            }
+
+            //Use the prepared statement to execute the sql
+            ps.executeUpdate();
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("insertCardForPassenger() in MySqlCardDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("insertCardForPassenger() in v()");
+        }
     }
 
     @Override

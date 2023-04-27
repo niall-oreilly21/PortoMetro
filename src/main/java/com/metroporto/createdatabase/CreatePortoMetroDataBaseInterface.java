@@ -1,4 +1,4 @@
-package com.metroporto.dao.createdatabase;
+package com.metroporto.createdatabase;
 
 import com.metroporto.exceptions.DaoException;
 

@@ -1,4 +1,4 @@
-package com.metroporto.import_timetables;
+package com.metroporto.createdatabase.importtimetables;
 
 import com.metroporto.metro.*;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

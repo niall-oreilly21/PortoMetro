@@ -1,4 +1,4 @@
-package com.metroporto.import_timetables;
+package com.metroporto.createdatabase.importtimetables;
 
 import com.metroporto.enums.TimeTableType;
 

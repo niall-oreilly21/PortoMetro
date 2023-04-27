@@ -1,17 +1,33 @@
 package com.metroporto.metro;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Line implements Comparable<Line>
 {
     private final String lineId;
     private String lineName;
     private List<Route> routes;
-
     private List<Train> trains;
     private List<Station> stations;
 
+    public void setStations(List<Station> stations)
+    {
+        this.stations = stations;
+    }
+
+    public List<Station> getStations()
+    {
+        return stations;
+    }
+
+    public Line(Line line)
+    {
+        this.lineId = line.getLineId();
+        this.lineName = line.getLineName();
+        this.routes = line.getRoutes();
+        this.trains = line.getTrains();
+        stations = line.getStations();
+    }
     public Line(String lineId, String lineName, List<Route> routes, List<Train> trains)
     {
         this.lineId = lineId;
@@ -46,6 +62,37 @@ public class Line implements Comparable<Line>
         trains.add(train);
     }
 
+    public Route findRoute(Station startStation, Station endStation)
+    {
+        Station lastStation = stations.get(stations.size() - 1); // Get the last station in the list
+        List<Station> tempStations;
+
+        for (Route route : routes)
+        {
+            if (route.getEndStation().equals(lastStation))
+            {
+                // The last station matches the end station, use the original stations list
+                tempStations = stations;
+            }
+            else
+            {
+                // The last station does not match the end station, use the reversed stations list
+                tempStations = new ArrayList<>(stations); // Create a reversed copy of the stations list
+                Collections.reverse(tempStations); // Reverse the stations list
+            }
+
+            int startIndex = tempStations.indexOf(startStation);
+            int endIndex = tempStations.indexOf(endStation);
+
+            if (startIndex != -1 && endIndex != -1 && startIndex < endIndex)
+            {
+                return route;
+            }
+        }
+        return null; // return null if no route is found
+    }
+
+
     @Override
     public String toString()
     {
@@ -61,5 +108,20 @@ public class Line implements Comparable<Line>
     public int compareTo(Line otherLine)
     {
         return this.lineId.compareToIgnoreCase(otherLine.getLineId());
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Line line = (Line) o;
+        return Objects.equals(lineId, line.lineId) && Objects.equals(lineName, line.lineName) && Objects.equals(routes, line.routes) && Objects.equals(trains, line.trains) && Objects.equals(stations, line.stations);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(lineId, lineName, routes, trains, stations);
     }
 }
