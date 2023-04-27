@@ -13,10 +13,22 @@ public class Passenger extends User
         checkMetroCard(metroCard);
     }
 
+    public Passenger(int userId, String email, String password, String firstName, String lastName)
+    {
+        super(userId, email, password, firstName, lastName);
+        this.metroCard = null;;
+    }
+
     public Passenger(String email, String password, String firstName, String lastName, Card metroCard)
     {
         super(email, password, firstName,  lastName);
         checkMetroCard(metroCard);
+    }
+
+    public Passenger(String email, String password, String firstName, String lastName)
+    {
+        super(email, password, firstName,  lastName);
+        this.metroCard = null;
     }
 
     private void checkMetroCard(Card metroCard)
@@ -39,7 +51,7 @@ public class Passenger extends User
 
     public void setMetroCard(Card metroCard)
     {
-        this.metroCard = metroCard;
+        checkMetroCard(metroCard);
     }
 
     @Override
