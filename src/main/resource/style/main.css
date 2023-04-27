@@ -118,6 +118,16 @@
     -fx-border-width: 2px;
 }
 
+.bold {
+    -fx-font-family: HarmoniaSansProCyr-Bold;
+    -fx-font-size: 18;
+}
+
+.regular {
+    -fx-font-family: HarmoniaSansProCyr-Regular;
+    -fx-font-size: 14;
+}
+
 .circle-button {
     -fx-background-color: #00305f;
     -fx-background-radius: 20px;
@@ -125,4 +135,8 @@
 
 .text-underline:hover {
     -fx-underline: true;
+}
+
+.saved-routes-combo-box .list-cell {
+
 }

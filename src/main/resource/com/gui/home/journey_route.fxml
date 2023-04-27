@@ -5,6 +5,7 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Line?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="gui.home.JourneyRouteController"
@@ -44,4 +45,71 @@
             <Insets left="20" />
         </padding>
     </HBox>
+    <VBox spacing="50" AnchorPane.topAnchor="90"
+          AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0">
+        <padding>
+            <Insets top="30"/>
+        </padding>
+        <HBox alignment="CENTER">
+            <padding>
+                <Insets left="65" right="65"/>
+            </padding>
+            <Label styleClass="subheader-label-large" text="Plan your journey" textFill="#00305f"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <HBox spacing="5">
+                <padding>
+                    <Insets top="10"/>
+                </padding>
+                <HBox>
+                    <ComboBox fx:id="savedRoutes" styleClass="saved-routes-combo-box" promptText="View saved routes"/>
+                    <Button text="View" onAction="#viewSavedRoute" styleClass="form-button"/>
+                </HBox>
+                <Button text="Clear" onAction="#clearSavedRoute" styleClass="form-button"/>
+            </HBox>
+        </HBox>
+        <HBox spacing="30" alignment="CENTER">
+            <VBox spacing="7">
+                <Label text="Start station" textFill="#00305f"/>
+                <ComboBox fx:id="startStations"/>
+            </VBox>
+            <Label text="to"/>
+            <VBox spacing="7">
+                <Label text="End station" textFill="#00305f"/>
+                <ComboBox fx:id="endStations"/>
+            </VBox>
+            <Separator orientation="VERTICAL"/>
+            <VBox spacing="7">
+                <Label text="Day(s)" textFill="#00305f"/>
+                <ComboBox fx:id="timetableType"/>
+            </VBox>
+            <VBox spacing="7">
+                <Label text="Start time" textFill="#00305f"/>
+                <HBox alignment="CENTER" spacing="5">
+                    <ComboBox fx:id="hours"/>
+                    <Label text=":"/>
+                    <ComboBox fx:id="minutes"/>
+                </HBox>
+            </VBox>
+        </HBox>
+        <HBox alignment="CENTER" spacing="20">
+            <Button onAction="#searchRoute" styleClass="form-button" text="Search route" prefWidth="250"/>
+            <CheckBox fx:id="saveRouteOption" text="Save route"/>
+        </HBox>
+        <VBox spacing="20" alignment="CENTER">
+            <Label text="Total journey duration: 50 mins"/>
+            <Pane fx:id="stationsPane" prefWidth="1200">
+                <Line fx:id="stationsLine" startY="80" endY="80" stroke="black" strokeWidth="3" />
+                <VBox.margin>
+                    <Insets bottom="20"/>
+                </VBox.margin>
+            </Pane>
+            <Label text="Switch line in: Trindade"/>
+            <Pane fx:id="stationsPane2" prefWidth="1200">
+                <Line fx:id="stationsLine2" startY="80" endY="80" stroke="black" strokeWidth="3" />
+                <VBox.margin>
+                    <Insets bottom="20"/>
+                </VBox.margin>
+            </Pane>
+        </VBox>
+    </VBox>
 </AnchorPane>
