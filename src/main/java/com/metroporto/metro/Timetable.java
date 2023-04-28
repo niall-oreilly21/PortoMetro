@@ -172,6 +172,7 @@ public class Timetable
     public List<Schedule> getSchedulesByStartStationAndTime(Station station, LocalTime startTime)
     {
         List<Schedule>schedulesByStation = getSchedulesByStation(station);
+
         Schedule schedule = getClosestScheduleToStartTime(schedulesByStation, startTime);
 
         int rowIndex = schedulesByStation.indexOf(schedule);
@@ -181,7 +182,7 @@ public class Timetable
 
         if (columnIndex < size)
         {
-            return new ArrayList<>(timetableSchedules.get(rowIndex).subList(columnIndex, size));
+            return timetableSchedules.get(rowIndex).subList(columnIndex, size);
         }
 
         return null;
@@ -207,7 +208,13 @@ public class Timetable
         for (Schedule schedule : schedules)
         {
             LocalTime scheduleTime = schedule.getDepartureTime();
-            if (scheduleTime.isAfter(startTime))
+
+            if (scheduleTime.equals(startTime))
+            {
+                minTimeDifference = Duration.ZERO;
+                closestSchedule = schedule;
+            }
+            else if (scheduleTime.isAfter(startTime))
             {
                 Duration timeDifference = Duration.between(startTime, scheduleTime);
 

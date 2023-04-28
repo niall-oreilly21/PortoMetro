@@ -50,7 +50,6 @@ public class JourneyRoute
     public void addSchedule(Schedule schedule)
     {
         schedules.add(schedule);
-        System.out.println(schedule.getStation().getStationName());
     }
 
     @Override

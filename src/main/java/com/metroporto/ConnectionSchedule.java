@@ -39,7 +39,6 @@ public class ConnectionSchedule extends Schedule
     {
         if(this.departureTime != null)
         {
-            System.out.println(departureTime);
             createTransferTime();
             return transferTime;
         }
