@@ -1,6 +1,6 @@
 package com.metroporto.createdatabase.importtimetables;
 
-interface ImportTimetablesInterface
+public interface StartInterface
 {
     void start();
 }
