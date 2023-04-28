@@ -1,6 +1,10 @@
 package gui.accountauth;
 
+import com.metroporto.dao.userdao.MySqlUserDao;
+import com.metroporto.dao.userdao.UserDaoInterface;
 import com.metroporto.enums.Folder;
+import com.metroporto.exceptions.DaoException;
+import com.metroporto.users.User;
 import gui.Controller;
 import com.metroporto.enums.Page;
 import javafx.event.ActionEvent;
@@ -18,6 +22,8 @@ import java.util.regex.Pattern;
 
 public class SignInController extends Controller
 {
+    UserDaoInterface userDao;
+
     @FXML
     private Label emailLabel;
 
@@ -29,6 +35,11 @@ public class SignInController extends Controller
 
     @FXML
     private TextField passwordText;
+
+    public SignInController()
+    {
+        userDao = new MySqlUserDao();
+    }
 
     @Override
     public void initialize()
@@ -77,9 +88,25 @@ public class SignInController extends Controller
             passwordLabel.setGraphic(null);
             errorText.setText("");
 
-            // TODO: implement sign in authentication using MySQL + set user in App
+            try
+            {
+                User user = userDao.findUserByEmail(email);
 
-            redirectToPage(event, Folder.HOME, Page.HOME);
+                if (user.getPassword().equals(password))
+                {
+                    errorText.setText("");
+                    app.setUser(user);
+                    redirectToPage(event, Folder.HOME, Page.HOME);
+                }
+                else
+                {
+                    errorText.setText("Incorrect email or password");
+                }
+
+            } catch (DaoException de)
+            {
+                de.printStackTrace();
+            }
         }
     }
 
