@@ -2,6 +2,7 @@ package gui;
 
 import com.metroporto.enums.Folder;
 import com.metroporto.enums.Page;
+import com.metroporto.users.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,11 +21,7 @@ public class App extends Application
         launch(args);
     }
 
-//    private User user;
-//
-//    public User getUser() {
-//        return user;
-//    }
+    private User user;
 
     private static App instance;
 
@@ -49,8 +46,12 @@ public class App extends Application
         return instance;
     }
 
-//    public void setUser(User user)
-//    {
-//        this.user = user;
-//    }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user)
+    {
+        this.user = user;
+    }
 }

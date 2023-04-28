@@ -56,7 +56,7 @@ public abstract class Controller
 
     protected final Paint[] fColours = {Color.web("#ff5c00"), Color.web("#ffab7d")};
 
-    protected App app;
+    protected static App app;
 
     public abstract void initialize();
 
@@ -91,6 +91,7 @@ public abstract class Controller
                         .getResource("com/gui/" + folder.getLabel() + "/" + page.getLabel() + ".fxml")));
 
         Parent root = loader.load();
+        Controller controller = loader.getController();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setTitle("Porto Metro");
@@ -98,8 +99,8 @@ public abstract class Controller
         stage.setScene(scene);
         stage.show();
 
-        setScene(scene);
-        setApp(App.getApplication());
+        controller.setScene(scene);
+        controller.setApp(App.getApplication());
     }
 
     public void redirectToPage(MouseEvent event, Folder folder, Page page) throws IOException
@@ -123,7 +124,7 @@ public abstract class Controller
     }
 
     protected void setApp(App application) {
-        this.app = application;
+        app = application;
     }
 
     protected void setScene(Scene scene) {}

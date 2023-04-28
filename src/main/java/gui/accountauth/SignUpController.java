@@ -1,6 +1,12 @@
 package gui.accountauth;
 
+import com.metroporto.dao.userdao.MySqlUserDao;
+import com.metroporto.dao.userdao.UserDaoInterface;
 import com.metroporto.enums.Folder;
+import com.metroporto.exceptions.DaoException;
+import com.metroporto.users.Passenger;
+import com.metroporto.users.Student;
+import com.metroporto.users.User;
 import gui.Controller;
 import com.metroporto.enums.Page;
 import javafx.event.ActionEvent;
@@ -16,6 +22,8 @@ import java.util.regex.Pattern;
 
 public class SignUpController extends Controller
 {
+    UserDaoInterface userDao;
+
     @FXML
     private Label firstNameLabel;
 
@@ -55,6 +63,11 @@ public class SignUpController extends Controller
     @FXML
     private ToggleGroup passengerTypeToggleGroup;
 
+    public SignUpController()
+    {
+        userDao = new MySqlUserDao();
+    }
+
     @Override
     public void initialize()
     {
@@ -70,7 +83,7 @@ public class SignUpController extends Controller
     public void setScene(Scene scene)
     {
         scene.heightProperty().addListener((observable, oldValue, newValue) ->
-            metro1.fitHeightProperty().setValue(newValue)
+                metro1.fitHeightProperty().setValue(newValue)
         );
     }
 
@@ -100,57 +113,62 @@ public class SignUpController extends Controller
             errorText.setText(asterisk + " Invalid first name");
             firstNameLabel.setGraphic(redAsterisk);
             firstNameLabel.setContentDisplay(ContentDisplay.RIGHT);
-        }
-        else if (surname.isEmpty())
+        } else if (surname.isEmpty())
         {
             firstNameLabel.setGraphic(null);
             errorText.setText(asterisk + " Invalid surname");
             surnameLabel.setGraphic(redAsterisk);
             surnameLabel.setContentDisplay(ContentDisplay.RIGHT);
-        }
-        else if (email.isEmpty() || !emailMatcher.matches())
+        } else if (email.isEmpty() || !emailMatcher.matches())
         {
             surnameLabel.setGraphic(null);
             errorText.setText(asterisk + " Invalid email address");
             emailLabel.setGraphic(redAsterisk);
             emailLabel.setContentDisplay(ContentDisplay.RIGHT);
-        }
-        else if (password.isEmpty())
+        } else if (password.isEmpty())
         {
             emailLabel.setGraphic(null);
             errorText.setText(asterisk + " Password is required");
             passwordLabel.setGraphic(redAsterisk);
             passwordLabel.setContentDisplay(ContentDisplay.RIGHT);
-        }
-        else if (!password.equals(confirmPassword))
+        } else if (!password.equals(confirmPassword))
         {
             emailLabel.setGraphic(null);
             passwordLabel.setGraphic(null);
             errorText.setText(asterisk + " Password does not match");
             confirmPasswordLabel.setGraphic(redAsterisk);
             confirmPasswordLabel.setContentDisplay(ContentDisplay.RIGHT);
-        }
-        else
+        } else
         {
             emailLabel.setGraphic(null);
             passwordLabel.setGraphic(null);
             confirmPasswordLabel.setGraphic(null);
             errorText.setText("");
 
-            // TODO: Add details to MySQL database + set user in App
-            System.out.println("Sign up successful with email: " + email + ", passenger type: "  + passengerType);
-
-//            User user = new User(1, email, password);
-//            app.setUser(user);
-//            System.out.println(app.getUser());
-
             if (passengerType.equals("student"))
             {
-                redirectToPage(event, Folder.ORDER_CARD, Page.STUDENT_UNIVERSITY);
-            }
-            else
+                User user = new Student(email, password, firstName, surname);
+                try
+                {
+                    userDao.insertUser(user);
+                    app.setUser(user);
+                    redirectToPage(event, Folder.ORDER_CARD, Page.STUDENT_UNIVERSITY);
+                } catch (DaoException de)
+                {
+                    de.printStackTrace();
+                }
+            } else
             {
-                redirectToPage(event, Folder.ORDER_CARD, Page.PASSENGER_CARD);
+                User user = new Passenger(email, password, firstName, surname);
+                try
+                {
+                    userDao.insertUser(user);
+                    app.setUser(user);
+                    redirectToPage(event, Folder.ORDER_CARD, Page.PASSENGER_CARD);
+                } catch (DaoException de)
+                {
+                    de.printStackTrace();
+                }
             }
         }
     }
