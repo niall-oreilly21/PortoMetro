@@ -2,6 +2,7 @@ package gui;
 
 import com.metroporto.enums.Folder;
 import com.metroporto.enums.Page;
+import com.metroporto.metro.Station;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public abstract class Controller
@@ -44,17 +46,14 @@ public abstract class Controller
     @FXML
     protected Label errorText;
 
-    protected final Paint[] aColours = {Color.web("#0086de"), Color.web("#63beea")};
-
-    protected final Paint[] bColours = {Color.web("#fb0000"), Color.web("#fc8788")};
-
-    protected final Paint[] cColours = {Color.web("#59ad00"), Color.web("#a9d184")};
-
-    protected final Paint[] dColours = {Color.web("#ffa200"), Color.web("#ffcc6b")};
-
-    protected final Paint[] eColours = {Color.web("#665a99"), Color.web("#ada7c8")};
-
-    protected final Paint[] fColours = {Color.web("#ff5c00"), Color.web("#ffab7d")};
+    protected final Map<String, Paint[]> colours = Map.of(
+            "A", new Paint[]{Color.web("#0086de"), Color.web("#63beea")},
+            "B", new Paint[]{Color.web("#fb0000"), Color.web("#fc8788")},
+            "C", new Paint[]{Color.web("#59ad00"), Color.web("#a9d184")},
+            "D", new Paint[]{Color.web("#ffa200"), Color.web("#ffcc6b")},
+            "E", new Paint[]{Color.web("#665a99"), Color.web("#ada7c8")},
+            "F", new Paint[]{Color.web("#ff5c00"), Color.web("#ffab7d")}
+    );
 
     protected static App app;
 
@@ -164,10 +163,10 @@ public abstract class Controller
         redirectToPage(event, Folder.HOME, Page.CARD);
     }
 
-    public void drawStationNodes(List<String> currentLineStationsId, List<String> currentLineStationsName,
+    public void drawStationNodes(List<Station> currentLineStations,
                                  Paint[] colours, Pane stationsPane, Line stationsLine, int bigRadius, int smallRadius,
                                  double spacing, double lineStartX, double lineEndX) {
-        int numStations = currentLineStationsId.size();
+        int numStations = currentLineStations.size();
         double lineWidth = lineEndX - lineStartX;
         if (lineWidth == 0) {
             lineWidth = bigRadius + (numStations - 1) * (smallRadius + spacing);
@@ -205,8 +204,8 @@ public abstract class Controller
                     : i == 0 ? textX
                     : textX + increment;
 
-            drawStationNode(group, circleX, radius, currentLineStationsId.get(i),
-                    currentLineStationsName.get(i), textX, colours[colourIndex], isBold);
+            drawStationNode(group, circleX, radius, currentLineStations.get(i).getStationId(),
+                    currentLineStations.get(i).getStationName(), textX, colours[colourIndex], isBold);
         }
     }
 

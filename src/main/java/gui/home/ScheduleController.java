@@ -5,6 +5,7 @@ import com.metroporto.dao.linedao.MySqlLineDao;
 import com.metroporto.enums.TimeTableType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Route;
+import com.metroporto.metro.Station;
 import gui.Controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,8 +20,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ScheduleController extends Controller
 {
@@ -45,9 +45,7 @@ public class ScheduleController extends Controller
 
     private ImageView selectedImageView;
 
-    private List<String> currentLineStationsId;
-
-    private List<String> currentLineStationsName;
+    private List<Station> currentLineStations;
 
     private com.metroporto.metro.Line currentLine;
 
@@ -59,7 +57,7 @@ public class ScheduleController extends Controller
 
     private double lineEndX;
 
-    private Paint[] selectedColours = aColours;
+    private Paint[] selectedColours;
 
     private Route currentRoute;
 
@@ -70,11 +68,21 @@ public class ScheduleController extends Controller
         try
         {
             lines = lineDao.findAll();
+            for (com.metroporto.metro.Line line : lines)
+            {
+                Set<Station> stations = line.getRoutes().get(0).getTimetables().get(0).getStations();
+
+                for (Station station : stations)
+                {
+                    line.getStations().add(station);
+                }
+            }
+            currentLineStations = lines.get(0).getStations();
+            selectedColours = colours.get(lines.get(0).getLineId());
         } catch (DaoException de)
         {
             System.out.println(de.getMessage());
         }
-
     }
 
     public void initialize()
@@ -115,59 +123,18 @@ public class ScheduleController extends Controller
                 currentRoute = line.getRoutes().get(0);
                 endStationLabel.setText(currentRoute.getEndStation().getStationName());
 
-                switch (line.getLineId())
+                currentLineStations = line.getStations();
+
+                if (!currentLineStations.get(currentLineStations.size() - 1).getStationName()
+                        .equals(currentRoute.getEndStation().getStationName()))
                 {
-                    case "A":
-                        currentLineStationsId = List.of("HSJ", "IPO", "PLU",
-                                "SGS", "CBT", "MRQ", "FGM", "TDD", "ALD",
-                                "SBT", "JDM", "GLT", "CMG", "JDD",
-                                "DJII", "STO", "HSJ", "IPO", "PLU",
-                                "SGS", "CBT", "MRQ", "FGM", "TDD", "ALD",
-                                "SBT", "JDM", "GLT", "CMG", "JDD",
-                                "DJII", "STO", "LAL", "AKA");
-                        setCurrentLine("A");
-                        selectedColours = aColours;
-                        drawStationNodes(currentLineStationsId, currentLineStationsName, selectedColours,
-                                stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
-                        break;
-                    case "B":
-                        currentLineStationsId = List.of("B", "BB", "BBB", "BBBB", "BBBBB");
-                        setCurrentLine("B");
-                        selectedColours = bColours;
-                        drawStationNodes(currentLineStationsId, currentLineStationsName, selectedColours,
-                                stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
-                        break;
-                    case "C":
-                        currentLineStationsId = List.of("C", "CC", "CCC", "CCCC", "CCCCC");
-                        setCurrentLine("C");
-                        selectedColours = cColours;
-                        drawStationNodes(currentLineStationsId, currentLineStationsName, selectedColours,
-                                stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
-                        break;
-                    case "D":
-                        currentLineStationsId = List.of("D", "DD", "DDD", "DDDD", "DDDDD");
-                        setCurrentLine("D");
-                        selectedColours = dColours;
-                        drawStationNodes(currentLineStationsId, currentLineStationsName, selectedColours,
-                                stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
-                        break;
-                    case "E":
-                        currentLineStationsId = List.of("E", "EE", "EEE", "EEEE", "EEEEE");
-                        setCurrentLine("E");
-                        selectedColours = eColours;
-                        drawStationNodes(currentLineStationsId, currentLineStationsName, selectedColours,
-                                stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
-                        break;
-                    case "F":
-                        currentLineStationsId = List.of("F", "FF", "FFF", "FFFF", "FFFFF");
-                        setCurrentLine("F");
-                        selectedColours = fColours;
-                        drawStationNodes(currentLineStationsId, currentLineStationsName, selectedColours,
-                                stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
-                        break;
-                    default:
-                        break;
+                    Collections.reverse(currentLineStations);
                 }
+
+                setCurrentLine(line.getLineId());
+                selectedColours = colours.get(line.getLineId());
+                drawStationNodes(currentLineStations, selectedColours,
+                        stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
             });
 
             linesBox.getChildren().add(lineImageView);
@@ -176,8 +143,7 @@ public class ScheduleController extends Controller
         try
         {
             initialiseInitialLine();
-        }
-        catch (DaoException de)
+        } catch (DaoException de)
         {
             System.out.println(de.getMessage());
         }
@@ -190,7 +156,7 @@ public class ScheduleController extends Controller
 
         lineEndX = stationsPane.getPrefWidth() - 50;
 
-        drawStationNodes(currentLineStationsId, currentLineStationsName, selectedColours,
+        drawStationNodes(currentLineStations, selectedColours,
                 stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
 
         List<String> days = List.of(TimeTableType.MONDAY_TO_FRIDAY.getLabel(),
@@ -205,23 +171,7 @@ public class ScheduleController extends Controller
         setCurrentLine("A");
         selectedImageView = (ImageView) linesBox.getChildren().get(0);
         selectedImageView.setOpacity(selectedOpacity);
-        currentLineStationsId = List.of("HSJ", "IPO", "PLU",
-                "SGS", "CBT", "MRQ", "FGM", "TDD", "ALD",
-                "SBT", "JDM", "GLT", "CMG", "JDD",
-                "DJII", "STO", "HSJ", "IPO", "PLU",
-                "SGS", "CBT", "MRQ", "FGM", "TDD", "ALD",
-                "SBT", "JDM", "GLT", "CMG", "JDD",
-                "DJII", "STO", "LAL", "AKA", "AKA", "ALA");
-
-        currentLineStationsName = List.of("Hospital Sao Joao", "IPO", "PoLo Universitario",
-                "SalGueiroS", "ComBanTentes", "MaRQues", "Faria GuiMares", "TrinDaDe", "ALiaDos",
-                "Sao BenTo", "Jardim Do Morro", "GeneraL Torres", "CaMara Gaia", "Joao De Deus",
-                "D. Joao II", "SanTo Ovidio", "Hospital Sao Joao", "IPO", "PoLo Universitario",
-                "SalGueiroS", "ComBanTentes", "MaRQues", "Faria GuiMares", "TrinDaDe", "ALiaDos",
-                "Sao BenTo", "Jardim Do Morro", "GeneraL Torres", "CaMara Gaia", "Joao De Deus",
-                "D. Joao II", "SanTo Ovidio", "Lalalal", "Akakaka", "Lalalal", "Akakaka");
-
-        currentRoute = lineDao.findLineByLineId("A").getRoutes().get(0);
+        currentRoute = lineDao.findLineByLineId(lines.get(0).getLineId()).getRoutes().get(0);
         endStationLabel.setText(currentRoute.getEndStation().getStationName());
     }
 
@@ -243,7 +193,7 @@ public class ScheduleController extends Controller
         scene.widthProperty().addListener((observable, oldValue, newValue) ->
         {
             lineEndX = stationsPane.getPrefWidth() - 50;
-            drawStationNodes(currentLineStationsId, currentLineStationsName, selectedColours,
+            drawStationNodes(currentLineStations, selectedColours,
                     stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
         });
     }
@@ -255,10 +205,14 @@ public class ScheduleController extends Controller
             if (currentRoute.getRouteId() == currentLine.getRoutes().get(0).getRouteId())
             {
                 currentRoute = currentLine.getRoutes().get(1);
+
             } else
             {
                 currentRoute = currentLine.getRoutes().get(0);
             }
+            Collections.reverse(currentLineStations);
+            drawStationNodes(currentLineStations, selectedColours,
+                    stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
             endStationLabel.setText(currentRoute.getEndStation().getStationName());
         }
     }
