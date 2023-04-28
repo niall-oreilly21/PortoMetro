@@ -1,5 +1,6 @@
 package gui;
 
+import com.metroporto.JourneyRoute;
 import com.metroporto.enums.Folder;
 import com.metroporto.enums.Page;
 import com.metroporto.metro.Station;
@@ -206,6 +207,53 @@ public abstract class Controller
 
             drawStationNode(group, circleX, radius, currentLineStations.get(i).getStationId(),
                     currentLineStations.get(i).getStationName(), textX, colours[colourIndex], isBold);
+        }
+    }
+
+    public void drawStationNodes(JourneyRoute currentJourneyRoute,
+                                 Paint[] colours, Pane stationsPane, Line stationsLine, int bigRadius, int smallRadius,
+                                 double spacing, double lineStartX, double lineEndX) {
+        int numSchedules = currentJourneyRoute.getSchedules().size();
+        double lineWidth = lineEndX - lineStartX;
+        if (lineWidth == 0) {
+            lineWidth = bigRadius + (numSchedules - 1) * (smallRadius + spacing);
+            lineStartX = (stationsPane.getPrefWidth() - lineWidth) / 2.0;
+            lineEndX = lineStartX + lineWidth;
+            stationsLine.setStartX(lineStartX);
+            stationsLine.setEndX(lineEndX);
+        }
+
+        double increment = lineWidth / (numSchedules - 1);
+        double circleX = lineStartX + bigRadius/2.0;
+        double textX = lineStartX - 8;
+
+        if (stationsPane.getChildren().size() > 1 && stationsPane.getChildren().get(1) instanceof Group) {
+            List<Node> nodesToRemove = new ArrayList<>();
+            for (Node node : stationsPane.getChildren()) {
+                if (node instanceof Group) {
+                    nodesToRemove.add(node);
+                }
+            }
+            stationsPane.getChildren().removeAll(nodesToRemove);
+        }
+
+        Group group = new Group();
+        stationsPane.getChildren().add(group);
+
+        for (int i = 0; i < numSchedules; i++) {
+            int radius = (i == 0 || i == numSchedules - 1) ? bigRadius : smallRadius;
+            int colourIndex = (i == 0 || i == numSchedules - 1) ? 0 : 1;
+            boolean isBold = (i == 0 || i == numSchedules - 1);
+            circleX = lineWidth == 0 && i != 0 ? circleX + smallRadius + spacing
+                    : lineWidth == 0 || i == 0 ? circleX
+                    : circleX + increment;
+            textX = lineWidth == 0 && i != 0 ? textX + smallRadius + spacing
+                    : i == 0 ? textX
+                    : textX + increment;
+
+            drawStationNode(group, circleX, radius, currentJourneyRoute.getSchedules().get(i).getStation().getStationId(),
+                    currentJourneyRoute.getSchedules().get(i).getStation().getStationName(),
+                    textX, colours[colourIndex], isBold);
         }
     }
 

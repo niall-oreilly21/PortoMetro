@@ -1,15 +1,25 @@
 package gui.home;
 
+import com.metroporto.JourneyPlanner;
+import com.metroporto.JourneyRoute;
+import com.metroporto.MetroSystem;
+import com.metroporto.dao.linedao.LineDaoInterface;
+import com.metroporto.dao.linedao.MySqlLineDao;
 import com.metroporto.dao.stationdao.MySqlStationDao;
+import com.metroporto.dao.stationdao.StationDaoInterface;
+import com.metroporto.enums.EnumLabelConverter;
 import com.metroporto.enums.TimeTableType;
 import com.metroporto.exceptions.DaoException;
+import com.metroporto.metro.Schedule;
 import com.metroporto.metro.Station;
 import gui.Controller;
+import gui.StationConverter;
 import gui.TimeConverter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,7 +34,9 @@ import java.util.Objects;
 
 public class JourneyRouteController extends Controller
 {
-    private MySqlStationDao stationDao;
+    private StationDaoInterface stationDao;
+
+    private LineDaoInterface lineDao;
 
     @FXML
     private Pane stationsPane;
@@ -40,6 +52,9 @@ public class JourneyRouteController extends Controller
 
     @FXML
     private ComboBox<Station> startStations;
+
+    @FXML
+    private Label connectionLabel;
 
     @FXML
     private ComboBox<Station> endStations;
@@ -59,11 +74,11 @@ public class JourneyRouteController extends Controller
     @FXML
     private CheckBox saveRouteOption;
 
-    private String selectedStartStation = "PLU";
+    private Station selectedStartStation;
 
-    private String selectedEndStation = "MAT";
+    private Station selectedEndStation;
 
-    private String selectedTimetableType = TimeTableType.MONDAY_TO_FRIDAY.getLabel();
+    private TimeTableType selectedTimetableType;
 
     private int selectedHour = LocalTime.now().getHour();
 
@@ -71,23 +86,45 @@ public class JourneyRouteController extends Controller
 
     private List<Station> stations;
 
-    private com.metroporto.metro.Line startStationLine;
+    private List<com.metroporto.metro.Line> lines;
 
-    private com.metroporto.metro.Line endStationLine;
+    private MetroSystem metroSystem;
+
+    private JourneyPlanner journeyPlanner;
+
+    private JourneyRoute startStationLine;
+
+    private JourneyRoute endStationLine;
 
 
     public JourneyRouteController()
     {
         stationDao = new MySqlStationDao();
+        lineDao = new MySqlLineDao();
 
         try
         {
             stations = stationDao.findAll();
-            //startStationLine.findRoute()
+            lines = lineDao.findAll();
+            metroSystem = new MetroSystem(lines);
+
+            selectedStartStation = stationDao.findStationByStationId("APO");
+            selectedEndStation = stationDao.findStationByStationId("CDR");
+            selectedTimetableType = TimeTableType.MONDAY_TO_FRIDAY;
+
+            journeyPlanner = new JourneyPlanner(selectedStartStation, selectedEndStation,
+                    LocalTime.of(selectedHour, selectedMinute), selectedTimetableType);
+
+            journeyPlanner.setMetroSystem(metroSystem);
+            journeyPlanner.start();
+
+            startStationLine = journeyPlanner.getJourneyRoutes().get(0);
+            endStationLine = journeyPlanner.getJourneyRoutes().get(1);
+
 
         } catch (DaoException de)
         {
-            System.out.println(de.getMessage());
+            de.printStackTrace();
         }
     }
 
@@ -100,15 +137,18 @@ public class JourneyRouteController extends Controller
         initialiseStationsComboBox(startStations, selectedStartStation);
         initialiseStationsComboBox(endStations, selectedEndStation);
 
-        initialiseTimetableTypeComboBox(timetableType, selectedTimetableType);
+        initialiseTimetableTypeComboBox(timetableType, selectedTimetableType.getLabel());
 
-        initialiseTimeComboBox(hours, 0, 24, selectedHour);
-        initialiseTimeComboBox(minutes, 0, 59, selectedMinute);
+        initialiseTimeComboBox(hours, 24, selectedHour);
+        initialiseTimeComboBox(minutes, 59, selectedMinute);
 
-        drawStationNodes(startStationLine.getStations(), colours.get(startStationLine.getLineId()), stationsPane,
+        connectionLabel.setText("Switch line in: " +
+                journeyPlanner.getJourneyRoutes().get(1).getSchedules().get(0).getStation().getStationName());
+
+        drawStationNodes(startStationLine, colours.get(startStationLine.getLine().getLineId()), stationsPane,
                 stationsLine, 10, 6, 27, 0, 0);
 
-        drawStationNodes(endStationLine.getStations(), colours.get(endStationLine.getLineId()),
+        drawStationNodes(endStationLine, colours.get(endStationLine.getLine().getLineId()),
                 stationsPane2, stationsLine2, 10, 6, 27, 0, 0);
 
         savedRoutes.getItems().addAll("PLU-JDD | Monday-Friday | 13:30",
@@ -172,12 +212,13 @@ public class JourneyRouteController extends Controller
         });
     }
 
-    private void initialiseStationsComboBox(ComboBox<Station> comboBox, String selectedStationId)
+    private void initialiseStationsComboBox(ComboBox<Station> comboBox, Station selectedStation)
     {
         comboBox.getItems().addAll(stations);
+        comboBox.setConverter(new StationConverter());
 
         for (int i = 0; i < stations.size(); i++)
-            if (stations.get(i).getStationId().equals(selectedStationId))
+            if (stations.get(i).getStationId().equals(selectedStation.getStationId()))
                 comboBox.getSelectionModel().select(i);
     }
 
@@ -190,9 +231,9 @@ public class JourneyRouteController extends Controller
         comboBox.getSelectionModel().select(selectedType);
     }
 
-    private void initialiseTimeComboBox(ComboBox<Integer> comboBox, int start, int end, int selectedItem)
+    private void initialiseTimeComboBox(ComboBox<Integer> comboBox, int end, int selectedItem)
     {
-        for (int i = start; i <= end; i++)
+        for (int i = 0; i <= end; i++)
         {
             comboBox.getItems().add(i);
         }
@@ -203,14 +244,43 @@ public class JourneyRouteController extends Controller
 
     public void searchRoute(ActionEvent event)
     {
-        selectedStartStation = startStations.getSelectionModel().getSelectedItem().getStationId();
-        selectedEndStation = endStations.getSelectionModel().getSelectedItem().getStationId();
-        selectedTimetableType = timetableType.getSelectionModel().getSelectedItem();
+        selectedStartStation = startStations.getSelectionModel().getSelectedItem();
+        selectedEndStation = endStations.getSelectionModel().getSelectedItem();
+        EnumLabelConverter labelConverter = new EnumLabelConverter();
+        selectedTimetableType = labelConverter.fromLabel(timetableType.getSelectionModel().getSelectedItem(),
+                TimeTableType.class);
         selectedHour = hours.getSelectionModel().getSelectedItem();
         selectedMinute = minutes.getSelectionModel().getSelectedItem();
 
-        System.out.println(selectedStartStation + "-" + selectedEndStation+ " | "
-                + selectedTimetableType + " | " + selectedHour + ":" + selectedMinute);
+        journeyPlanner = new JourneyPlanner(selectedStartStation, selectedEndStation,
+                LocalTime.of(selectedHour, selectedMinute), selectedTimetableType);
+
+        journeyPlanner.setMetroSystem(metroSystem);
+        journeyPlanner.start();
+
+        startStationLine = journeyPlanner.getJourneyRoutes().get(0);
+
+        drawStationNodes(startStationLine, colours.get(startStationLine.getLine().getLineId()), stationsPane,
+                stationsLine, 10, 6, 27, 0, 0);
+
+        if (journeyPlanner.getJourneyRoutes().size() > 1)
+        {
+            connectionLabel.setText("Switch line in: " +
+                    journeyPlanner.getJourneyRoutes().get(1).getSchedules().get(0).getStation().getStationName());
+
+            endStationLine = journeyPlanner.getJourneyRoutes().get(1);
+            stationsLine2.setVisible(true);
+            drawStationNodes(endStationLine, colours.get(endStationLine.getLine().getLineId()),
+                    stationsPane2, stationsLine2, 10, 6, 27, 0, 0);
+        }
+        else
+        {
+            connectionLabel.setText("");
+
+            stationsPane2.getChildren().removeIf(node -> !(node instanceof Line));
+            stationsLine2.setVisible(false);
+
+        }
 
         if (saveRouteOption.isSelected())
         {
@@ -226,11 +296,16 @@ public class JourneyRouteController extends Controller
     public void clearSavedRoute(ActionEvent event)
     {
         savedRoutes.getSelectionModel().clearSelection();
-        selectedStartStation = "PLU";
-        selectedEndStation = "MAT";
-        selectedTimetableType = TimeTableType.MONDAY_TO_FRIDAY.getLabel();
+        try
+        {
+            selectedStartStation = stationDao.findStationByStationId("PLU");
+            selectedEndStation = stationDao.findStationByStationId("PLU");
+        } catch (DaoException de)
+        {
+            de.printStackTrace();
+        }
+        selectedTimetableType = TimeTableType.MONDAY_TO_FRIDAY;
         selectedHour = LocalTime.now().getHour();
         selectedMinute = LocalTime.now().getMinute();
     }
 }
-

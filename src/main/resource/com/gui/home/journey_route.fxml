@@ -103,7 +103,7 @@
                     <Insets bottom="20"/>
                 </VBox.margin>
             </Pane>
-            <Label text="Switch line in: Trindade"/>
+            <Label fx:id="connectionLabel"/>
             <Pane fx:id="stationsPane2" prefWidth="1200">
                 <Line fx:id="stationsLine2" startY="80" endY="80" stroke="black" strokeWidth="3" />
                 <VBox.margin>
