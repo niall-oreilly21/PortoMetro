@@ -21,7 +21,6 @@ import javafx.scene.shape.Line;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class JourneyRouteController extends Controller
 {
@@ -40,10 +39,10 @@ public class JourneyRouteController extends Controller
     private Line stationsLine2;
 
     @FXML
-    private ComboBox<String> startStations;
+    private ComboBox<Station> startStations;
 
     @FXML
-    private ComboBox<String> endStations;
+    private ComboBox<Station> endStations;
 
     @FXML
     private ComboBox<String> timetableType;
@@ -60,9 +59,9 @@ public class JourneyRouteController extends Controller
     @FXML
     private CheckBox saveRouteOption;
 
-    private String selectedStartStationName = "Pólo Universitário";
+    private String selectedStartStation = "PLU";
 
-    private String selectedEndStationName = "Matosinhos Sul";
+    private String selectedEndStation = "MAT";
 
     private String selectedTimetableType = TimeTableType.MONDAY_TO_FRIDAY.getLabel();
 
@@ -72,29 +71,9 @@ public class JourneyRouteController extends Controller
 
     private List<Station> stations;
 
-    private List<String> currentLineStationsId = List.of("HSJ", "IPO", "PLU",
-            "SGS", "CBT", "MRQ", "FGM", "TDD", "ALD",
-            "SBT", "JDM", "GLT", "CMG", "JDD",
-            "DJII", "STO", "HSJ", "IPO", "PLU",
-            "SGS", "CBT", "MRQ", "FGM", "TDD", "ALD",
-            "SBT", "JDM", "GLT", "CMG", "JDD",
-            "DJII", "STO", "LAL", "AKA");
+    private com.metroporto.metro.Line startStationLine;
 
-    private List<String> currentLineStationsName = List.of("Hospital Sao Joao", "IPO", "PoLo Universitario",
-            "SalGueiroS", "ComBanTentes", "MaRQues", "Faria GuiMares", "TrinDaDe", "ALiaDos",
-            "Sao BenTo", "Jardim Do Morro", "GeneraL Torres", "CaMara Gaia", "Joao De Deus",
-            "D. Joao II", "SanTo Ovidio", "Hospital Sao Joao", "IPO", "PoLo Universitario",
-            "SalGueiroS", "ComBanTentes", "MaRQues", "Faria GuiMares", "TrinDaDe", "ALiaDos",
-            "Sao BenTo", "Jardim Do Morro", "GeneraL Torres", "CaMara Gaia", "Joao De Deus",
-            "D. Joao II", "SanTo Ovidio", "Lalalal", "Akakaka", "Lalalal", "Akakaka");
-
-    private List<String> currentLineStationsId2 = List.of("HSJ", "IPO", "PLU",
-            "SGS", "CBT", "MRQ", "FGM", "TDD", "ALD",
-            "SBT", "JDM");
-
-    private List<String> currentLineStationsName2 = List.of("Hospital Sao Joao", "IPO", "PoLo Universitario",
-            "SalGueiroS", "ComBanTentes", "MaRQues", "Faria GuiMares", "TrinDaDe", "ALiaDos",
-            "Sao BenTo", "Jardim Do Morro");
+    private com.metroporto.metro.Line endStationLine;
 
 
     public JourneyRouteController()
@@ -104,6 +83,7 @@ public class JourneyRouteController extends Controller
         try
         {
             stations = stationDao.findAll();
+            //startStationLine.findRoute()
 
         } catch (DaoException de)
         {
@@ -117,21 +97,19 @@ public class JourneyRouteController extends Controller
         initialiseProfileIcon();
         initialiseCardIcon();
 
-        initialiseStationsComboBox(startStations, selectedStartStationName);
-        initialiseStationsComboBox(endStations, selectedEndStationName);
+        initialiseStationsComboBox(startStations, selectedStartStation);
+        initialiseStationsComboBox(endStations, selectedEndStation);
 
         initialiseTimetableTypeComboBox(timetableType, selectedTimetableType);
 
         initialiseTimeComboBox(hours, 0, 24, selectedHour);
         initialiseTimeComboBox(minutes, 0, 59, selectedMinute);
 
-        drawStationNodes(currentLineStationsId, currentLineStationsName, aColours,
-                stationsPane, stationsLine, 10, 6,
-                27, 0, 0);
+        drawStationNodes(startStationLine.getStations(), colours.get(startStationLine.getLineId()), stationsPane,
+                stationsLine, 10, 6, 27, 0, 0);
 
-        drawStationNodes(currentLineStationsId2, currentLineStationsName2, bColours,
-                stationsPane2, stationsLine2, 10, 6,
-                27, 0, 0);
+        drawStationNodes(endStationLine.getStations(), colours.get(endStationLine.getLineId()),
+                stationsPane2, stationsLine2, 10, 6, 27, 0, 0);
 
         savedRoutes.getItems().addAll("PLU-JDD | Monday-Friday | 13:30",
                 "AER-MTS | Saturday | 09:00");
@@ -194,13 +172,13 @@ public class JourneyRouteController extends Controller
         });
     }
 
-    private void initialiseStationsComboBox(ComboBox<String> comboBox, String selectedName)
+    private void initialiseStationsComboBox(ComboBox<Station> comboBox, String selectedStationId)
     {
-        comboBox.getItems().addAll(stations.stream()
-                .map(Station::getStationName)
-                .collect(Collectors.toList()));
+        comboBox.getItems().addAll(stations);
 
-        comboBox.getSelectionModel().select(selectedName);
+        for (int i = 0; i < stations.size(); i++)
+            if (stations.get(i).getStationId().equals(selectedStationId))
+                comboBox.getSelectionModel().select(i);
     }
 
     private void initialiseTimetableTypeComboBox(ComboBox<String> comboBox, String selectedType)
@@ -225,13 +203,13 @@ public class JourneyRouteController extends Controller
 
     public void searchRoute(ActionEvent event)
     {
-        selectedStartStationName = startStations.getSelectionModel().getSelectedItem();
-        selectedEndStationName = endStations.getSelectionModel().getSelectedItem();
+        selectedStartStation = startStations.getSelectionModel().getSelectedItem().getStationId();
+        selectedEndStation = endStations.getSelectionModel().getSelectedItem().getStationId();
         selectedTimetableType = timetableType.getSelectionModel().getSelectedItem();
         selectedHour = hours.getSelectionModel().getSelectedItem();
         selectedMinute = minutes.getSelectionModel().getSelectedItem();
 
-        System.out.println(selectedStartStationName + "-" + selectedEndStationName + " | "
+        System.out.println(selectedStartStation + "-" + selectedEndStation+ " | "
                 + selectedTimetableType + " | " + selectedHour + ":" + selectedMinute);
 
         if (saveRouteOption.isSelected())
@@ -248,8 +226,8 @@ public class JourneyRouteController extends Controller
     public void clearSavedRoute(ActionEvent event)
     {
         savedRoutes.getSelectionModel().clearSelection();
-        selectedStartStationName = "Pólo Universitário";
-        selectedEndStationName = "Matosinhos Sul";
+        selectedStartStation = "PLU";
+        selectedEndStation = "MAT";
         selectedTimetableType = TimeTableType.MONDAY_TO_FRIDAY.getLabel();
         selectedHour = LocalTime.now().getHour();
         selectedMinute = LocalTime.now().getMinute();
