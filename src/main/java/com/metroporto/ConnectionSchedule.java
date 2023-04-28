@@ -11,14 +11,20 @@ public class ConnectionSchedule extends Schedule
     private LocalTime arrivalTime;
     private int transferTime;
 
-    public ConnectionSchedule(Station station, LocalTime arrivalTime, LocalTime departureTime)
+    public ConnectionSchedule(Station station, LocalTime arrivalTime)
     {
-        super(station, departureTime);
+        super(station);
         this.arrivalTime = arrivalTime;
-        setTransferTime();
+        transferTime = 0;
+
     }
 
-    private void setTransferTime()
+    public void setTransferTime(int transferTime)
+    {
+        this.transferTime = transferTime;
+    }
+
+    private void createTransferTime()
     {
         Duration transferDuration = Duration.between(arrivalTime, departureTime);
         this.transferTime = (int) transferDuration.toMinutes();
@@ -31,7 +37,12 @@ public class ConnectionSchedule extends Schedule
 
     public int getTransferTime()
     {
-        return transferTime;
+        if(this.departureTime != null)
+        {
+            createTransferTime();
+            return transferTime;
+        }
+        return -1;
     }
 
 }
