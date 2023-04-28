@@ -1,11 +1,16 @@
 package com.metroporto.users;
 
+import com.metroporto.JourneyPlanner;
+import com.metroporto.JourneyRoute;
 import com.metroporto.cards.Card;
 import com.metroporto.cards.StudentCard;
+
+import java.util.List;
 
 public class Passenger extends User
 {
     private Card metroCard;
+    private List<JourneyPlanner> journeyPlanners;
 
     public Passenger(int userId, String email, String password, String firstName, String lastName, Card metroCard)
     {
@@ -40,6 +45,19 @@ public class Passenger extends User
     public void setMetroCard(Card metroCard)
     {
         this.metroCard = metroCard;
+    }
+
+    public boolean addJourneyPlanner(JourneyPlanner journeyPlannerToBeAdded)
+    {
+        for(JourneyPlanner journeyPlanner : journeyPlanners)
+        {
+            if(!journeyPlanner.getStartStation().equals(journeyPlannerToBeAdded.getStartStation()) && !journeyPlanner.getEndStation().equals(journeyPlannerToBeAdded.getEndStation()))
+            {
+                journeyPlanners.add(journeyPlannerToBeAdded);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
