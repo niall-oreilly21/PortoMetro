@@ -66,6 +66,10 @@
                     <Label text="30/09/2023"/>
                 </HBox>
                 <HBox alignment="CENTER_LEFT">
+                    <Label textFill="#00305f" text="Zones: " styleClass="subheader-label"/>
+                    <Label text="3 zones (PRT1, PRT3, VNG1)"/>
+                </HBox>
+                <HBox alignment="CENTER_LEFT">
                     <Label textFill="#00305f" text="Number of top ups: " styleClass="subheader-label"/>
                     <Label text="9 trips"/>
                 </HBox>
