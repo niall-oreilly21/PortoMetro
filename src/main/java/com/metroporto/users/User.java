@@ -5,7 +5,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 public abstract class User
 {
     private int userId;
-    private final String email;
+    private String email;
     private String password;
     private String firstName;
     private String lastName;
@@ -66,6 +66,11 @@ public abstract class User
     public void setLastName(String lastName)
     {
         this.lastName = lastName;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
     }
 
     public void setPassword(String password)
