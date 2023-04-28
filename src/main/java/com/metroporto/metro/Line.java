@@ -10,31 +10,18 @@ public class Line implements Comparable<Line>
     private List<Train> trains;
     private List<Station> stations;
 
-    public void setStations(List<Station> stations)
-    {
-        this.stations = stations;
-    }
-
-    public List<Station> getStations()
-    {
-        return stations;
-    }
-
-    public Line(Line line)
-    {
-        this.lineId = line.getLineId();
-        this.lineName = line.getLineName();
-        this.routes = line.getRoutes();
-        this.trains = line.getTrains();
-        stations = line.getStations();
-    }
     public Line(String lineId, String lineName, List<Route> routes, List<Train> trains)
     {
         this.lineId = lineId;
         this.lineName = lineName;
         this.routes = routes;
         this.trains = trains;
-        stations = new ArrayList<>();
+        setStations();
+    }
+
+    private void setStations()
+    {
+         stations = new ArrayList<>(routes.get(0).getTimetables().get(0).getStations());
     }
 
     public String getLineId()
@@ -60,6 +47,11 @@ public class Line implements Comparable<Line>
     public void addTrain(Train train)
     {
         trains.add(train);
+    }
+
+    public List<Station> getStations()
+    {
+        return stations;
     }
 
     public Route findRoute(Station startStation, Station endStation)

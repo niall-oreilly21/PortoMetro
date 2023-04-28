@@ -5,7 +5,7 @@ import com.metroporto.metro.Station;
 
 import java.util.List;
 
-public abstract class ImportReaderLinesStations
+public abstract class ImportReaderLinesStations implements StartInterface
 {
     protected List<Station> stations;
     protected List<Line> lines;
