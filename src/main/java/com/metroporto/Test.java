@@ -28,6 +28,21 @@ public class Test
 
     public static void main(String[] args) throws DaoException
     {
+        UserDaoInterface userDao = new MySqlUserDao();
+
+        List<User> users = userDao.findAll();
+
+        for(User user : users)
+        {
+            user.setPassword("password");
+
+            if(user.checkPassword("password"))
+            {
+                System.out.println("password");
+            }
+
+        }
+
         LineDaoInterface lineDao = new MySqlLineDao();
         List<Line> lines = lineDao.findAll();
 
@@ -42,7 +57,7 @@ public class Test
         MetroSystem metroSystem = new MetroSystem(lines);
         journeyPlanner.setMetroSystem(metroSystem);
         journeyPlanner.start();
-        journeyPlanner.displayJourneyPlanner();
+        //journeyPlanner.displayJourneyPlanner();
 
     }
 }

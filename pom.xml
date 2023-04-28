@@ -44,11 +44,6 @@
       <version>19-ea+8</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.9.0</version>
-    </dependency>
 
 <!--    <dependency>-->
 <!--      <groupId>org.springframework.boot</groupId>-->
@@ -85,6 +80,13 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-dbcp2</artifactId>
       <version>2.9.0</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/at.favre.lib/bcrypt -->
+    <dependency>
+      <groupId>at.favre.lib</groupId>
+      <artifactId>bcrypt</artifactId>
+      <version>0.10.2</version>
     </dependency>
 
   </dependencies>
