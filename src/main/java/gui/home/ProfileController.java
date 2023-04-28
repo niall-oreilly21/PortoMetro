@@ -41,6 +41,9 @@ public class ProfileController extends Controller
     private VBox contentBox;
 
     @FXML
+    private Label greetLabel;
+
+    @FXML
     private Label editProfileLabel;
 
     @FXML
@@ -86,6 +89,8 @@ public class ProfileController extends Controller
 
         Image signOutImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/sign-out.png")));
         signOut.setImage(signOutImage);
+
+        greetLabel.setText("Hello, " + user.getFirstName() + "!");
 
         initialiseEditProfile();
     }
