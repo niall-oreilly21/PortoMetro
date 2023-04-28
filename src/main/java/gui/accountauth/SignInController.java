@@ -4,6 +4,9 @@ import com.metroporto.dao.userdao.MySqlUserDao;
 import com.metroporto.dao.userdao.UserDaoInterface;
 import com.metroporto.enums.Folder;
 import com.metroporto.exceptions.DaoException;
+import com.metroporto.users.Administrator;
+import com.metroporto.users.Passenger;
+import com.metroporto.users.Student;
 import com.metroporto.users.User;
 import gui.Controller;
 import com.metroporto.enums.Page;
@@ -96,7 +99,17 @@ public class SignInController extends Controller
                 {
                     errorText.setText("");
                     app.setUser(user);
-                    redirectToPage(event, Folder.HOME, Page.HOME);
+
+                    if (user instanceof Passenger)
+                    {
+                        redirectToPage(event, Folder.HOME, Page.HOME);
+                    }
+
+                    if (user instanceof Administrator)
+                    {
+                        redirectToPage(event, Folder.ACCOUNT_AUTH, Page.ADMINISTRATOR);
+                    }
+
                 }
                 else
                 {
