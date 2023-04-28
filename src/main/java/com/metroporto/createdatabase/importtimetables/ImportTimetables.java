@@ -15,7 +15,7 @@ import java.util.List;
 
 //Run this class to insert Timetables to database
 
-public class ImportTimetables implements ImportTimetablesInterface
+public class ImportTimetables implements StartInterface
 {
     private static List<Station>stations;
     private static List<Line>lines;

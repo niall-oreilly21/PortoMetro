@@ -33,45 +33,16 @@ public class Test
 
         StationDaoInterface stationDao = new MySqlStationDao();
         List<Station>daoStations = stationDao.findAll();
-        Station startStation = stationDao.findStationByStationId("TRI");
+        Station startStation = stationDao.findStationByStationId("IPO");
         Station endStation = stationDao.findStationByStationId("SEB");
 
 
-        Set<Station> stationSet = new LinkedHashSet<>();
-        //System.out.println(line.getRoutes().get(0));
-
-        int i;
-
-        Line l = new Line(lines.get(0));
-
-        List<Line>lines1 = new ArrayList<>();
-
-        lines1.add(l);
-
-//        if(lines1.contains(lines.get(0)))
-//        {
-//            System.out.println("jhjjjjjjh");
-//        }
-
-
-        for(Line line : lines)
-        {
-//            if(line.getLineId().equalsIgnoreCase("D"))
-//            {
-            //System.out.println(line.getLineName());
-            Set<Station> stations = line.getRoutes().get(0).getTimetables().get(0).getStations();
-
-            for (Station station : stations)
-            {
-                line.getStations().add(station);
-            }
-        //}
-        }
+        JourneyPlanner journeyPlanner = new JourneyPlanner(startStation, endStation, LocalTime.of(16,19), TimeTableType.SATURDAY);
 
         MetroSystem metroSystem = new MetroSystem(lines);
-
-
-        metroSystem.findShortestPath(startStation, endStation, LocalTime.of(16,19), TimeTableType.SATURDAY);
+        journeyPlanner.setMetroSystem(metroSystem);
+        journeyPlanner.start();
+        journeyPlanner.displayJourneyPlanner();
 
     }
 }

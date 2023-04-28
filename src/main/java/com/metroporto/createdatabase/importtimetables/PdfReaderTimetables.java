@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PdfReaderTimetables extends ExcelReaderTimetables implements ImportTimetablesInterface
+public class PdfReaderTimetables extends ExcelReaderTimetables
 {
     private PortoMetroPdfPageManager portoMetroPdfPageManager;
     private PDFTextStripperByArea stripper;
