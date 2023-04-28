@@ -32,7 +32,7 @@ CREATE TABLE users
     last_name VARCHAR(255) NOT NULL,
     user_type ENUM("passenger", "administrator", "student") NOT NULL,
     PRIMARY KEY (user_id),
-    UNIQUE (user_id, email, user_password)
+    UNIQUE (email)
 );
 
 /*CREATE universities table*/
