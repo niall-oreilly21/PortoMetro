@@ -18,6 +18,12 @@ public class Schedule implements Comparable<Schedule>
         this.departureTime = departureTime;
     }
 
+    public Schedule(Station station)
+    {
+        this.station = station;
+        this.departureTime = null;
+    }
+
     public Station getStation()
     {
         return station;
@@ -26,6 +32,11 @@ public class Schedule implements Comparable<Schedule>
     public LocalTime getDepartureTime()
     {
         return departureTime.withSecond(0);
+    }
+
+    public void setDepartureTime(LocalTime departureTime)
+    {
+        this.departureTime = departureTime;
     }
 
     @Override

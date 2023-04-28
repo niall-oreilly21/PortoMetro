@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ExcelReaderTimetables extends ImportReaderLinesStations implements ImportTimetablesInterface
+public class ExcelReaderTimetables extends ImportReaderLinesStations
 {
     public ExcelReaderTimetables(List<Station> stations, List<Line> lines)
     {
