@@ -9,8 +9,8 @@ import java.util.*;
 
 public class MetroSystem
 {
-    private Map<Station, Map<Station, Double>> graph; // Graph representation of the metro system
-    private List<Line> lines; // Set to keep track of lines in the metro system
+    private final Map<Station, Map<Station, Double>> graph; // Graph representation of the metro system
+    private final List<Line> lines; // Set to keep track of lines in the metro system
     private boolean isConnecting;
     private int index;
     private Schedule connectionSchedule;
@@ -61,7 +61,7 @@ public class MetroSystem
     }
 
 
-    private List<Line> findCommonLines(List<Line> linesPreviousStation, List<Line> linesNextStation, Station startStation, Station endStation)
+    private List<Line> findCommonLines(List<Line> linesPreviousStation, List<Line> linesNextStation, Station currentStation, Station endStation)
     {
 
         List<Line>commonLines = new ArrayList<>();
@@ -78,7 +78,7 @@ public class MetroSystem
         for(Line line : commonLines)
         {
             // Check if the line has a route between startStation and endStation
-            if (line.findRoute(startStation, endStation) != null)
+            if (line.findRoute(currentStation, endStation) != null)
             {
                 foundCommonLine = true;
                 break;
@@ -87,7 +87,7 @@ public class MetroSystem
 
         if (foundCommonLine)
         {
-            commonLines.removeIf(line -> (line.findRoute(startStation, endStation) == null));
+            commonLines.removeIf(line -> (line.findRoute(currentStation, endStation) == null));
         }
 
         return commonLines;
@@ -132,6 +132,7 @@ public class MetroSystem
                 if (travelTime < fastestTravelTime)
                 {
                     fastestLine = line;
+                    System.out.println(fastestLine.getLineName());
                     fastestTravelTime = travelTime;
                 }
             }
@@ -140,13 +141,13 @@ public class MetroSystem
         return fastestLine;
     }
 
-    private Line getCurrentLine(Station currentStation, Station nextStation, LocalTime currentTime, TimeTableType timeTableType)
+    private Line getCurrentLine(Station currentStation, Station nextStation, Station endStation, LocalTime currentTime, TimeTableType timeTableType)
     {
         List<Line> linesPreviousStation = new ArrayList<>();
         List<Line> linesNextStation = new ArrayList<>();
 
         setLinesForStations(currentStation, nextStation, linesPreviousStation, linesNextStation);
-        List<Line> commonLines = findCommonLines(linesPreviousStation, linesNextStation, currentStation, nextStation);
+        List<Line> commonLines = findCommonLines(linesPreviousStation, linesNextStation, currentStation, endStation);
 
         if (commonLines.size() == 1)
         {
@@ -166,6 +167,7 @@ public class MetroSystem
         isConnecting = false;
         Route currentRoute;
         JourneyRoute currentJourneyRoute = null;
+        index = 0;
 
         List<JourneyRoute>journeyRoutes = new ArrayList<>();
 
@@ -173,7 +175,7 @@ public class MetroSystem
         {
             Station currentStation = shortestPath.get(index);
             Station nextStation = shortestPath.get(index + 1);
-            currentLine = getCurrentLine(currentStation, nextStation, currentTime, timeTableType);
+            currentLine = getCurrentLine(currentStation, nextStation, endStation, currentTime, timeTableType);
 
             if (currentLine != null)
             {
@@ -198,28 +200,38 @@ public class MetroSystem
     {
         int j = 0;
 
-        for (;index < shortestPath.size() - 1 && j < schedules.size() - 1; index++, j++)
+        for (;index < shortestPath.size() && j < schedules.size(); index++, j++)
         {
-            Station nextStation = shortestPath.get(index + 1);
+            Station nextStation = null;
+
+            if(index != shortestPath.size() - 1)
+            {
+                nextStation = shortestPath.get(index + 1);
+            }
+
             Schedule schedule = schedules.get(j);
             Schedule nextSchedule = schedules.get(j + 1);
 
             if(!isConnecting)
             {
-                if (!nextSchedule.getStation().equals(nextStation) || nextSchedule.getDepartureTime().equals(LocalTime.of(4, 00)))
+                if(index != shortestPath.size() - 1)
                 {
-                    setConnectionSchedule(currentJourneyRoute, schedule);
-                    break;
+                    if (!nextSchedule.getStation().equals(nextStation) || nextSchedule.getDepartureTime().equals(LocalTime.of(4, 00)))
+                    {
+                        setConnectionSchedule(currentJourneyRoute, schedule);
+                        break;
+                    }
+                    else
+                    {
+                        currentJourneyRoute.addSchedule(schedule);
+                    }
+
                 }
                 else
                 {
                     currentJourneyRoute.addSchedule(schedule);
-
-                    if (index == shortestPath.size() - 2)
-                    {
-                        currentJourneyRoute.addSchedule(nextSchedule);
-                    }
                 }
+
             }
             else
             {
