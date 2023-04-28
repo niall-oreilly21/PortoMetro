@@ -13,15 +13,27 @@ public class Student extends Passenger
         this.university = university;
     }
 
-    public Student(String email, String password, String firstName, String lastName, Card metroCard, University university)
+    public Student(int userId, String email, String password, String firstName, String lastName, University university)
     {
-        super(email, password, firstName, lastName, metroCard);
+        super(userId, email, password, firstName, lastName);
         this.university = university;
     }
+
+    public Student(String email, String password, String firstName, String lastName)
+    {
+        super(email, password, firstName, lastName);
+        this.university = null;
+    }
+
 
     public University getUniversity()
     {
         return university;
+    }
+
+    public void setUniversity(University university)
+    {
+        this.university = university;
     }
 
     @Override

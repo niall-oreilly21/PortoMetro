@@ -75,7 +75,14 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         {
             int cardId = rs.getInt("card_id");
 
-            Card card = cardDao.findCardByCardId(cardId);
+            Card card = null;
+
+            if (rs.wasNull())
+            {
+                cardId = 0;
+                card = cardDao.findCardByCardId(cardId);
+            }
+
 
             if(userType.equalsIgnoreCase("student"))
             {
@@ -83,13 +90,27 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
 
                 University university = universityDao.findUniversityByUniversityId(universityId);
 
-                user = new Student(userId, email, password, firstName, lastName, card, university);
+                if(cardId != 0)
+                {
+                    user = new Student(userId, email, password, firstName, lastName, card, university);
+                }
+                else
+                {
+                    user = new Student(userId, email, password, firstName, lastName, university);
+                }
+
             }
             else
             {
-                user = new Passenger(userId, email, password, firstName, lastName, card);
+                if(cardId != 0)
+                {
+                    user = new Passenger(userId, email, password, firstName, lastName, card);
+                }
+                else
+                {
+                    user = new Passenger(userId, email, password, firstName, lastName);
+                }
             }
-
         }
         else if(userType.equalsIgnoreCase("administrator"))
         {
@@ -108,7 +129,7 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         {
             //Get a connection to the database
             con = this.getConnection();
-            query = "SELECT * FROM users WHERE email = ?";
+            query = "SELECT * FROM all_users WHERE email = ?";
             ps = con.prepareStatement(query);
             ps.setString(1, email);
 
@@ -211,6 +232,111 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
                     }
                 }
             }
+        }
+    }
+
+    @Override
+    public void updateEmail(User user) throws DaoException
+    {
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "UPDATE users SET email = ? WHERE user_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, user.getEmail());
+            ps.setInt(2, user.getUserId());
+
+            ps.executeUpdate();
+
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("updateEmail() in MySqlUserDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("updateEmail() in MySqlUserDao");
+        }
+    }
+
+    @Override
+    public void updatePassword(User user) throws DaoException
+    {
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "UPDATE users SET user_password = ? WHERE user_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, user.getPassword());
+            ps.setInt(2, user.getUserId());
+
+
+            ps.executeUpdate();
+
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("updatePassword() in MySqlUserDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("updatePassword() in MySqlUserDao");
+        }
+    }
+
+    @Override
+    public void updateFirstName(User user) throws DaoException
+    {
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "UPDATE users SET first_name = ? WHERE user_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, user.getFirstName());
+            ps.setInt(2, user.getUserId());
+
+            ps.executeUpdate();
+
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("updateFirstName() in MySqlUserDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("updateFirstName() in MySqlUserDao");
+        }
+    }
+
+    @Override
+    public void updateLastName(User user) throws DaoException
+    {
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "UPDATE users SET last_name = ? WHERE user_id = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, user.getLastName());
+            ps.setInt(2, user.getUserId());
+
+            ps.executeUpdate();
+
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("updateLastName() in MySqlUserDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("updateLastName() in MySqlUserDao");
         }
     }
 }
