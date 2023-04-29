@@ -74,6 +74,16 @@ public class JourneyPlanner implements StartInterface
         this.metroSystem = metroSystem;
     }
 
+    public LocalTime getStartTime()
+    {
+        return startTime;
+    }
+
+    public TimeTableType getTimetableType()
+    {
+        return timetableType;
+    }
+
     @Override
     public void start()
     {

@@ -45,7 +45,7 @@
             <Insets left="20" />
         </padding>
     </HBox>
-    <VBox spacing="50" AnchorPane.topAnchor="90"
+    <VBox spacing="40" AnchorPane.topAnchor="90"
           AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0">
         <padding>
             <Insets top="30"/>
@@ -95,15 +95,33 @@
             <Button onAction="#searchRoute" styleClass="form-button" text="Search route" prefWidth="250"/>
             <CheckBox fx:id="saveRouteOption" text="Save route"/>
         </HBox>
-        <VBox spacing="20" alignment="CENTER">
-            <Label text="Total journey duration: 50 mins"/>
+        <VBox fx:id="searchRouteBox" visible="false" spacing="20" alignment="CENTER">
+            <HBox spacing="5" alignment="CENTER">
+                <Label text="Zones: "/>
+                <Label fx:id="journeyZones" styleClass="bold" textFill="#00305f"/>
+                <Label text=" | Total trip duration: "/>
+                <Label fx:id="journeyDuration" styleClass="bold" textFill="#00305f"/>
+            </HBox>
             <Pane fx:id="stationsPane" prefWidth="1200">
                 <Line fx:id="stationsLine" startY="80" endY="80" stroke="black" strokeWidth="3" />
                 <VBox.margin>
                     <Insets bottom="20"/>
                 </VBox.margin>
             </Pane>
-            <Label fx:id="connectionLabel"/>
+            <HBox spacing="5" alignment="CENTER" fx:id="connectionBox">
+                <Label text="Switch to line"/>
+                <Label fx:id="connectionLine" styleClass="bold" textFill="#00305f"/>
+                <HBox>
+                    <Label text=" (direction: "/>
+                    <Label fx:id="connectionDirection" styleClass="bold" textFill="#00305f"/>
+                    <Label text=")"/>
+                </HBox>
+                <Label text="in"/>
+                <Label fx:id="connectionStation" styleClass="bold" textFill="#00305f"/>
+                <Label text=" | Transfer time: "/>
+                <Label fx:id="connectionTransferTime" styleClass="bold" textFill="#00305f"/>
+                <Label styleClass="bold" textFill="#00305f" text="mins"/>
+            </HBox>
             <Pane fx:id="stationsPane2" prefWidth="1200">
                 <Line fx:id="stationsLine2" startY="80" endY="80" stroke="black" strokeWidth="3" />
                 <VBox.margin>
