@@ -14,13 +14,8 @@ public class Timetable
     private String scheduleDescription;
     private TimeTableType timeTableType;
     private List<List<Schedule>> timetableSchedules;
-    private Set<Station> stationSet;
-    private Set<Station>stations;
-
-    public Set<Station> getStations()
-    {
-        return stations;
-    }
+    private Map <Station, List<Schedule>> schedulesByStation;
+    private Map <Station, Integer> stationsRowIndex;
 
     public Timetable(int timetableId, TimeTableType timeTableType, List<List<Schedule>> timetableSchedules)
     {
@@ -28,63 +23,10 @@ public class Timetable
         this.scheduleDescription = "";
         this.timeTableType = timeTableType;
         this.timetableSchedules = timetableSchedules;
-
-        stationSet = new LinkedHashSet<>();
-        stations = new LinkedHashSet<>();
-
-        List<Schedule> uniqueScheduleList = null; // Initialize with null to indicate no unique schedule list found
-
-        for (List<Schedule> schedules : this.timetableSchedules)
-        {
-            Set<LocalTime> uniqueTimes = new HashSet<>();
-
-            boolean isUniqueList = true;
-
-            for (Schedule schedule : schedules)
-            {
-                if (uniqueTimes.contains(schedule.getDepartureTime()))
-                {
-                    isUniqueList = false;
-                    break; // Break out of inner loop if duplicate time found
-                }
-                else
-                {
-                    uniqueTimes.add(schedule.getDepartureTime());
-                }
-            }
-            if (isUniqueList)
-            {
-                uniqueScheduleList = schedules;
-                break; // Break out of outer loop if unique list found
-            }
-        }
-
-        if (uniqueScheduleList != null)
-        {
-            Collections.sort(uniqueScheduleList);
-            for (Schedule schedule : uniqueScheduleList)
-            {
-                stations.add(schedule.getStation());
-            }
-        } else
-        {
-            System.out.println("No unique schedule list found.");
-        }
-
-
-        Collections.sort(this.timetableSchedules.get(9));
-
-        for(Schedule schedules : this.timetableSchedules.get(9))
-        {
-            stationSet.add(schedules.getStation());
-            stations.add(schedules.getStation());
-        }
-
-        for(List<Schedule> schedules : this.timetableSchedules)
-        {
-            schedules.sort(new ComparatorSchedules(stationSet));
-        }
-
+        this.schedulesByStation = new LinkedHashMap<>();
+        this.stationsRowIndex = new HashMap<>();
+        setScheduleStationOrder();
+        setSchedulesByStation();
     }
 
     public Timetable(TimeTableType timeTableType)
@@ -136,6 +78,11 @@ public class Timetable
         return timeTableType;
     }
 
+    public List<Station> getStationsForTimetable()
+    {
+        return new ArrayList<>(schedulesByStation.keySet());
+    }
+
     public void setTimeTableType(TimeTableType timeTableType)
     {
         this.timeTableType = timeTableType;
@@ -154,6 +101,64 @@ public class Timetable
                 ", scheduleDescription='" + scheduleDescription + '\'' +
                 ", timeTableType=" + timeTableType +
                 '}';
+    }
+
+    public void setScheduleStationOrder()
+    {
+        List<Schedule> uniqueScheduleList = null;
+
+        for (List<Schedule> schedules : this.timetableSchedules)
+        {
+            Set<LocalTime> uniqueTimes = new HashSet<>();
+
+            boolean isUniqueList = true;
+
+            for (Schedule schedule : schedules)
+            {
+                if (uniqueTimes.contains(schedule.getDepartureTime()))
+                {
+                    isUniqueList = false;
+                    break;
+                }
+                else
+                {
+                    uniqueTimes.add(schedule.getDepartureTime());
+                }
+            }
+            if (isUniqueList)
+            {
+                uniqueScheduleList = schedules;
+                break;
+            }
+        }
+
+        if (uniqueScheduleList != null)
+        {
+            Collections.sort(uniqueScheduleList);
+
+            Map<Station, List<Schedule>> sortedMap = new LinkedHashMap<>();
+
+            int index = 0;
+
+            for (Schedule schedule : uniqueScheduleList)
+            {
+                schedulesByStation.put(schedule.getStation(), new ArrayList<>());
+                stationsRowIndex.put(schedule.getStation(), index);
+                index++;
+            }
+        }
+        else
+        {
+            System.out.println("No unique schedule list found.");
+        }
+    }
+
+    public void displayStationForScheduleInOrder()
+    {
+        for (Station key : schedulesByStation.keySet())
+        {
+            System.out.println(key.getStationName());
+        }
     }
 
     public void displayTimeTable()
@@ -175,8 +180,8 @@ public class Timetable
 
         Schedule schedule = getClosestScheduleToStartTime(schedulesByStation, startTime);
 
-        int rowIndex = schedulesByStation.indexOf(schedule);
-        int columnIndex = getIndex(station);
+        int columnIndex = schedulesByStation.indexOf(schedule);
+        int rowIndex = stationsRowIndex.get(station);
 
         int size = timetableSchedules.get(columnIndex).size();
 
@@ -186,7 +191,16 @@ public class Timetable
         }
 
         return null;
+    }
 
+    public List<Schedule> getSchedulesByStation(Station station)
+    {
+        if(this.schedulesByStation.containsKey(station))
+        {
+            return this.schedulesByStation.get(station);
+        }
+
+        return null;
     }
 
     public Schedule getClosestScheduleToStartTime(Station station, LocalTime startTime)
@@ -202,7 +216,7 @@ public class Timetable
 
     private Schedule getClosestScheduleToStartTime(List<Schedule> schedules, LocalTime startTime)
     {
-        Duration minTimeDifference =  Duration.ofSeconds(Long.MAX_VALUE); // Step 2
+        Duration minTimeDifference =  Duration.ofSeconds(Long.MAX_VALUE);
         Schedule closestSchedule = null;
 
         for (Schedule schedule : schedules)
@@ -229,40 +243,25 @@ public class Timetable
         return closestSchedule;
     }
 
-    private List<Schedule> getSchedulesByStation(Station station)
+    public void setSchedulesByStation()
     {
-        int index = getIndex(station);
-
-        if(index != -1)
+        for (List<Schedule> scheduleList : timetableSchedules)
         {
-            List<Schedule>scheduleList = new ArrayList<>();
-
-            for (List<Schedule> schedules : timetableSchedules)
+            for (Schedule schedule : scheduleList)
             {
-                scheduleList.add(schedules.get(index));
-            }
-
-            return scheduleList;
-        }
-
-        return null;
-    }
-
-    private int getIndex(Station station)
-    {
-        int index = -1;
-
-        for (int i = 0; i < timetableSchedules.get(0).size(); i++)
-        {
-                if(timetableSchedules.get(0).get(i).getStation().equals(station))
+                Station station = schedule.getStation();
+                if (!schedulesByStation.containsKey(station))
                 {
-                    index = i;
-                    break;
+                    schedulesByStation.put(station, new ArrayList<>());
                 }
 
-        }
+                if(!schedule.getDepartureTime().equals(LocalTime.of(4, 00)))
+                {
+                    schedulesByStation.get(station).add(schedule);
+                }
 
-        return index;
+            }
+        }
     }
 
     @Override
@@ -271,12 +270,12 @@ public class Timetable
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Timetable timetable = (Timetable) o;
-        return timetableId == timetable.timetableId && Objects.equals(scheduleDescription, timetable.scheduleDescription) && timeTableType == timetable.timeTableType && Objects.equals(timetableSchedules, timetable.timetableSchedules) && Objects.equals(stationSet, timetable.stationSet) && Objects.equals(stations, timetable.stations);
+        return timetableId == timetable.timetableId && Objects.equals(scheduleDescription, timetable.scheduleDescription) && timeTableType == timetable.timeTableType && Objects.equals(timetableSchedules, timetable.timetableSchedules) && Objects.equals(schedulesByStation, timetable.schedulesByStation);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(timetableId, scheduleDescription, timeTableType, timetableSchedules, stationSet, stations);
+        return Objects.hash(timetableId, scheduleDescription, timeTableType, timetableSchedules, schedulesByStation);
     }
 }
