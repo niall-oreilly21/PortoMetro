@@ -15,6 +15,7 @@ public class MetroSystem
     private int index;
     private Schedule connectionSchedule;
     private LocalTime currentTime;
+    Comparator<Schedule> schedulesClosestTime;
 
     public MetroSystem(List<Line> lines)
     {
@@ -25,6 +26,7 @@ public class MetroSystem
         this.connectionSchedule = null;
         this.currentTime = null;
         setUpConnections();
+        schedulesClosestTime = null;
     }
 
     private void setUpConnections()
@@ -108,12 +110,11 @@ public class MetroSystem
         }
     }
 
-    private Line findFastestLine(List<Line> lines, Station stationOne, Station stationTwo, LocalTime startTime, TimeTableType timeTableType)
+    private Line findFastestLine(List<Line> lines, Station stationOne, Station stationTwo, Station endStation, LocalTime startTime, TimeTableType timeTableType)
     {
 
         Line fastestLine = null;
         long fastestTravelTime = Integer.MAX_VALUE;
-        List<Schedule> schedules = new ArrayList<>();
 
         for (Line line : lines)
         {
@@ -122,9 +123,8 @@ public class MetroSystem
             if (route != null)
             {
                 Timetable timetable = route.getTimetableByTimetableType(timeTableType);
-                Schedule schedule = timetable.getClosestScheduleToStartTime(stationOne, startTime);
 
-                schedules.add(schedule);
+                Schedule schedule = timetable.getClosestScheduleToStartTime(stationOne, endStation, schedulesClosestTime);
 
                 Duration duration = Duration.between(startTime, schedule.getDepartureTime());
                 long travelTime = duration.toMinutes(); // returns 90 minutes
@@ -132,7 +132,6 @@ public class MetroSystem
                 if (travelTime < fastestTravelTime)
                 {
                     fastestLine = line;
-                    System.out.println(fastestLine.getLineName());
                     fastestTravelTime = travelTime;
                 }
             }
@@ -146,6 +145,7 @@ public class MetroSystem
         List<Line> linesPreviousStation = new ArrayList<>();
         List<Line> linesNextStation = new ArrayList<>();
 
+
         setLinesForStations(currentStation, nextStation, linesPreviousStation, linesNextStation);
         List<Line> commonLines = findCommonLines(linesPreviousStation, linesNextStation, currentStation, endStation);
 
@@ -155,13 +155,14 @@ public class MetroSystem
         }
         else
         {
-            return findFastestLine(commonLines, currentStation, nextStation, currentTime, timeTableType);
+            return findFastestLine(commonLines, currentStation, nextStation, endStation, currentTime, timeTableType);
         }
     }
 
     public List<JourneyRoute> findShortestPath(Station startStation, Station endStation, LocalTime startTime, TimeTableType timeTableType)
     {
         List<Station> shortestPath = findShortestPath(startStation, endStation);
+
         currentTime = startTime;
         Line currentLine;
         isConnecting = false;
@@ -169,12 +170,14 @@ public class MetroSystem
         JourneyRoute currentJourneyRoute = null;
         index = 0;
 
-        List<JourneyRoute>journeyRoutes = new ArrayList<>();
+        List<JourneyRoute> journeyRoutes = new ArrayList<>();
 
         for (index = 0; index < shortestPath.size(); index++)
         {
             Station currentStation = shortestPath.get(index);
             Station nextStation = shortestPath.get(index + 1);
+            schedulesClosestTime = new ComparatorSchedulesClosestTime(currentTime);
+
             currentLine = getCurrentLine(currentStation, nextStation, endStation, currentTime, timeTableType);
 
             if (currentLine != null)
@@ -186,7 +189,8 @@ public class MetroSystem
                     currentJourneyRoute = new JourneyRoute(currentLine, currentRoute);
                     Timetable currentTimetable = currentRoute.getTimetableByTimetableType(timeTableType);
 
-                    List<Schedule>schedules = adjustSchedulesForConnectingStation(currentJourneyRoute, currentStation, currentTimetable);
+                    List<Schedule> schedules = adjustSchedulesForConnectingStation(currentJourneyRoute, currentStation, endStation, currentTimetable);
+
                     processSchedulesForRoute(currentJourneyRoute, schedules, shortestPath);
                 }
                 journeyRoutes.add(currentJourneyRoute);
@@ -196,6 +200,7 @@ public class MetroSystem
         return journeyRoutes;
     }
 
+
     private void processSchedulesForRoute(JourneyRoute currentJourneyRoute, List<Schedule> schedules, List<Station> shortestPath)
     {
         int j = 0;
@@ -203,7 +208,7 @@ public class MetroSystem
         for (;index < shortestPath.size() && j < schedules.size(); index++, j++)
         {
             Station nextStation = null;
-            Schedule nextSchedule = schedules.get(j + 1);
+            Schedule nextSchedule = null;
 
             if(index != shortestPath.size() - 1)
             {
@@ -212,7 +217,6 @@ public class MetroSystem
             }
 
             Schedule schedule = schedules.get(j);
-
 
             if(!isConnecting)
             {
@@ -227,7 +231,6 @@ public class MetroSystem
                     {
                         currentJourneyRoute.addSchedule(schedule);
                     }
-
                 }
                 else
                 {
@@ -253,9 +256,9 @@ public class MetroSystem
         index--;
     }
 
-    private List<Schedule> adjustSchedulesForConnectingStation(JourneyRoute currentJourneyRoute, Station currentStation, Timetable currentTimetable)
+    private List<Schedule> adjustSchedulesForConnectingStation(JourneyRoute currentJourneyRoute, Station currentStation, Station endStation, Timetable currentTimetable)
     {
-        List<Schedule> schedules = currentTimetable.getSchedulesByStartStationAndTime(currentStation, currentTime);
+        List<Schedule> schedules = currentTimetable.getSchedulesByStartStationAndTime(currentStation, endStation, schedulesClosestTime);
 
         if(isConnecting)
         {
@@ -264,7 +267,9 @@ public class MetroSystem
             // If the first schedule is within 5 minutes from the current time, use its list of schedules
             if (Duration.between(currentTime, firstSchedule.getDepartureTime()).toMinutes() <= 3)
             {
-                schedules = currentTimetable.getSchedulesByStartStationAndTime(currentStation, currentTime.plusMinutes(3));
+                schedulesClosestTime = new ComparatorSchedulesClosestTime(currentTime.plusMinutes(3));
+
+                schedules = currentTimetable.getSchedulesByStartStationAndTime(currentStation, endStation, schedulesClosestTime);
             }
 
             firstSchedule = schedules.get(0);
