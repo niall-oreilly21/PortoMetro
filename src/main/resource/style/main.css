@@ -107,6 +107,7 @@
 
 .nav-active {
     -fx-underline: true;
+    -fx-font-family: HarmoniaSansProCyr-Bold;
 }
 
 .transparent-blue-background {
