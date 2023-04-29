@@ -5,6 +5,7 @@ import com.metroporto.dao.linedao.MySqlLineDao;
 import com.metroporto.enums.TimeTableType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Route;
+import com.metroporto.metro.Schedule;
 import com.metroporto.metro.Station;
 import gui.Controller;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,6 +43,11 @@ public class ScheduleController extends Controller
     @FXML
     private Label endStationLabel;
 
+    @FXML
+    private TableView<List<Schedule>> timetable;
+
+    private List<List<Schedule>> schedulesForRouteTimetableType;
+
     private List<com.metroporto.metro.Line> lines;
 
     private ImageView selectedImageView;
@@ -68,15 +75,6 @@ public class ScheduleController extends Controller
         try
         {
             lines = lineDao.findAll();
-            for (com.metroporto.metro.Line line : lines)
-            {
-                Set<Station> stations = line.getRoutes().get(0).getTimetables().get(0).getStations();
-
-                for (Station station : stations)
-                {
-                    line.getStations().add(station);
-                }
-            }
             currentLineStations = lines.get(0).getStations();
             selectedColours = colours.get(lines.get(0).getLineId());
         } catch (DaoException de)

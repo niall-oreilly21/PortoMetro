@@ -78,6 +78,6 @@
                 <Insets top="20" bottom="20"/>
             </VBox.margin>
         </Pane>
-        <TableView fx:id="timetable" />
+        <TableView fx:id="timetable"/>
     </VBox>
 </AnchorPane>
