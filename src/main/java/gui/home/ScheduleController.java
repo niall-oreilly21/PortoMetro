@@ -191,6 +191,10 @@ public class ScheduleController extends Controller
         scene.widthProperty().addListener((observable, oldValue, newValue) ->
         {
             lineEndX = stationsPane.getPrefWidth() - 50;
+
+            stationsLine.setStartX(lineStartX);
+            stationsLine.setEndX(lineEndX);
+
             drawStationNodes(currentLineStations, selectedColours,
                     stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
         });

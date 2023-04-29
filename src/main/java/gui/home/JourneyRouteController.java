@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -99,6 +100,10 @@ public class JourneyRouteController extends Controller
     private Station selectedStartStation;
 
     private Station selectedEndStation;
+
+    private JourneyRoute startStationLine;
+
+    private JourneyRoute endStationLine;
 
     private TimeTableType selectedTimetableType;
 
@@ -291,7 +296,7 @@ public class JourneyRouteController extends Controller
         journeyPlanner.setMetroSystem(metroSystem);
         journeyPlanner.start();
 
-        JourneyRoute startStationLine = journeyPlanner.getJourneyRoutes().get(0);
+        startStationLine = journeyPlanner.getJourneyRoutes().get(0);
 
         zoneNames.add(startStationLine.getSchedules().get(0).getStation().getZone().getZoneName());
 
@@ -302,7 +307,7 @@ public class JourneyRouteController extends Controller
         {
             initialiseConnectionDescription();
 
-            JourneyRoute endStationLine = journeyPlanner.getJourneyRoutes().get(1);
+            endStationLine = journeyPlanner.getJourneyRoutes().get(1);
 
             int endStationSchedulesSize = endStationLine.getSchedules().size();
             zoneNames.add(endStationLine.getSchedules().get(0).getStation().getZone().getZoneName());
@@ -368,5 +373,26 @@ public class JourneyRouteController extends Controller
         timetableType.getSelectionModel().select(selectedTimetableType.getLabel());
         hours.getSelectionModel().select(selectedHour);
         minutes.getSelectionModel().select(selectedMinute);
+    }
+
+    @Override
+    public void setScene(Scene scene)
+    {
+        stationsPane.prefWidthProperty().bind(scene.widthProperty());
+        stationsPane2.prefWidthProperty().bind(scene.widthProperty());
+        scene.widthProperty().addListener((observable, oldValue, newValue) ->
+        {
+            if (startStationLine != null)
+            {
+                drawStationNodes(startStationLine, colours.get(startStationLine.getLine().getLineId()), stationsPane,
+                        stationsLine, 10, 6, 27, 0, 0);
+
+                if (journeyPlanner.getJourneyRoutes().size() > 1)
+                {
+                    drawStationNodes(endStationLine, colours.get(endStationLine.getLine().getLineId()), stationsPane2,
+                            stationsLine2, 10, 6, 27, 0, 0);
+                }
+            }
+        });
     }
 }
