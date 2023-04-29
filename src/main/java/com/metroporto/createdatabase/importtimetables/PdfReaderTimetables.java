@@ -157,6 +157,7 @@ public class PdfReaderTimetables extends ExcelReaderTimetables
             String match = matcher.group();
             if(match.equalsIgnoreCase("-"))
             {
+                //Set schedule with no time to default of 4:00 am
                 match = "04:00";
             }
             LocalTime localTime = LocalTime.parse(match);
