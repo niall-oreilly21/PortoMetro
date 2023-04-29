@@ -203,20 +203,22 @@ public class MetroSystem
         for (;index < shortestPath.size() && j < schedules.size(); index++, j++)
         {
             Station nextStation = null;
+            Schedule nextSchedule = schedules.get(j + 1);
 
             if(index != shortestPath.size() - 1)
             {
                 nextStation = shortestPath.get(index + 1);
+                nextSchedule = schedules.get(j + 1);
             }
 
             Schedule schedule = schedules.get(j);
-            Schedule nextSchedule = schedules.get(j + 1);
+
 
             if(!isConnecting)
             {
                 if(index != shortestPath.size() - 1)
                 {
-                    if (!nextSchedule.getStation().equals(nextStation) || nextSchedule.getDepartureTime().equals(LocalTime.of(4, 00)))
+                    if (!nextSchedule.getStation().equals(nextStation))
                     {
                         setConnectionSchedule(currentJourneyRoute, schedule);
                         break;
