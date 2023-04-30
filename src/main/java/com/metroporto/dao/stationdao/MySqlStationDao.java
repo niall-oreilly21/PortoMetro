@@ -21,14 +21,12 @@ public class MySqlStationDao extends MySqlDao<Station> implements StationDaoInte
     private ZoneDaoInterface zoneDao;
     private FacilityDaoInterface facilityDao;
     private Map<Integer, Zone> zones;
-    private Map<String, Facility> facilities;
 
     public MySqlStationDao()
     {
         zoneDao = new MySqlZoneDao();
         facilityDao = new MySqlFacilityDao();
         zones = new HashMap<>();
-        facilities = new HashMap<>();
     }
 
     @Override

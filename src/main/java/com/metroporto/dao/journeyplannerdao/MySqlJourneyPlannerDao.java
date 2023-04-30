@@ -27,7 +27,12 @@ import java.util.Map;
 
 public class MySqlJourneyPlannerDao extends MySqlDao<JourneyPlanner> implements JourneyPlannerDaoInterface
 {
+    StationDaoInterface stationDao;
 
+    public MySqlJourneyPlannerDao()
+    {
+        stationDao = new MySqlStationDao();
+    }
     @Override
     public List<JourneyPlanner> findAllJourneyPlannersByUserId(int userId) throws DaoException
     {
@@ -219,8 +224,8 @@ public class MySqlJourneyPlannerDao extends MySqlDao<JourneyPlanner> implements 
     protected JourneyPlanner createDto() throws SQLException
     {
         int journeyPlannerId = rs.getInt("journey_planner_id");
-        Station startStation  = getStation(rs.getString("start_station_id"));
-        Station endStation = getStation(rs.getString("end_station_id"));
+        Station startStation  = getCachedStation(rs.getString("start_station_id"), stationDao);
+        Station endStation = getCachedStation(rs.getString("end_station_id"),stationDao);
         LocalTime startTime = rs.getTime("start_time").toLocalTime();
         TimeTableType TimetableDayType = enumLabelConverter.fromLabel(rs.getString("timetable_day_type"), TimeTableType.class);
         return new JourneyPlanner(journeyPlannerId, startStation, endStation, startTime, TimetableDayType);

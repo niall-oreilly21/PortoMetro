@@ -3,7 +3,6 @@ package com.metroporto.dao.scheduledao;
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.stationdao.StationDaoInterface;
-import com.metroporto.enums.TimeTableType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.*;
 
@@ -14,12 +13,10 @@ import java.util.*;
 public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoInterface
 {
     private StationDaoInterface stationDao;
-    private Map<String, Station> stations;
 
     public MySqlScheduleDao()
     {
         stationDao = new MySqlStationDao();
-        stations = new HashMap<>();
     }
 
     @Override
@@ -51,7 +48,8 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
 
             // Validate the update counts
             for (int updateCount : updateCounts) {
-                if (updateCount == PreparedStatement.EXECUTE_FAILED) {
+                if (updateCount == PreparedStatement.EXECUTE_FAILED)
+                {
                     throw new DaoException("Batch insert failed.");
                 }
             }
@@ -65,19 +63,23 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
         catch (SQLException sqe)
         {
             // Rollback the transaction on error
-            if (con != null) {
-                try {
+            if (con != null)
+            {
+                try
+                {
                     con.rollback();
-                } catch (SQLException e) {
+                }
+                catch (SQLException e)
+                {
                     // Log the rollback error, if any
                     e.printStackTrace();
                 }
             }
-            throw new DaoException("insert() in MySqlScheduleDao " + sqe.getMessage());
+            throw new DaoException("insertSchedulesByRow() in MySqlScheduleDao " + sqe.getMessage());
         }
         finally
         {
-            handleFinally("insert() in MySqlScheduleDao");
+            handleFinally("insertSchedulesByRow() in MySqlScheduleDao");
         }
     }
 
@@ -131,29 +133,10 @@ public class MySqlScheduleDao extends MySqlDao<Schedule> implements ScheduleDaoI
     @Override
     protected Schedule createDto() throws SQLException
     {
-        String stationId = rs.getString("station_id");
+        Station station = getCachedStation(rs.getString("station_id"), stationDao);
         LocalTime departureTime = rs.getTime("departure_time").toLocalTime();
 
-
-        Station station;
-
-        if (stations.containsKey(stationId))
-        {
-            station = stations.get(stationId);
-        }
-        else
-        {
-            // Fetch station data from database and add it to cache
-            station = fetchStationDto(stationId);
-            stations.put(stationId, station);
-        }
-
         return new Schedule(station, departureTime);
-    }
-
-    private Station fetchStationDto(String stationId) throws SQLException
-    {
-        return stationDao.findStationByStationId(stationId);
     }
 
 }

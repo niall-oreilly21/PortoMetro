@@ -1,5 +1,7 @@
 package com.metroporto.dao;
 
+import com.metroporto.dao.stationdao.MySqlStationDao;
+import com.metroporto.dao.stationdao.StationDaoInterface;
 import com.metroporto.enums.EnumLabelConverter;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Station;
@@ -7,6 +9,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.*;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class MySqlDao<T>
 {
@@ -19,7 +23,8 @@ public abstract class MySqlDao<T>
     protected static final String username = "root";
     private static final String password = "";
     protected String query;
-    protected EnumLabelConverter enumLabelConverter;
+    protected EnumLabelConverter enumLabelConverter = new EnumLabelConverter();
+    private static final HashMap<String, Station> stations = new HashMap<>();
 
     public MySqlDao()
     {
@@ -27,7 +32,6 @@ public abstract class MySqlDao<T>
         this.ps = null;
         this.rs = null;
         this.query = "";
-        this.enumLabelConverter = new EnumLabelConverter();
     }
 
     private Connection establishConnection(String jdbcUrl)
@@ -121,4 +125,29 @@ public abstract class MySqlDao<T>
     }
 
     protected abstract T createDto() throws SQLException;
+
+
+    protected Station getCachedStation(String stationId, StationDaoInterface stationDao) throws DaoException
+    {
+        Station station;
+
+        if (stations.containsKey(stationId))
+        {
+            return stations.get(stationId);
+        }
+        else
+        {
+            // Fetch station data from database and add it to cache
+            station = fetchStationDto(stationId,stationDao);
+            stations.put(stationId, station);
+        }
+
+        return station;
+    }
+
+    private Station fetchStationDto(String stationId, StationDaoInterface stationDao) throws DaoException
+    {
+        return stationDao.findStationByStationId(stationId);
+    }
+
 }
