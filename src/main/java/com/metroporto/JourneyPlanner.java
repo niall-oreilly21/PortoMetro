@@ -5,6 +5,7 @@ import com.metroporto.enums.TimeTableType;
 import com.metroporto.metro.Schedule;
 import com.metroporto.metro.Station;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,6 +128,30 @@ public class JourneyPlanner implements StartInterface
         {
             journeyRoutes.addAll(metroSystem.findShortestPath(startStation, endStation, startTime, timetableType));
         }
+    }
+
+    public int getTotalJourneyDuration()
+    {
+        Schedule currentSchedule;
+        Schedule nextSchedule;
+        List<Schedule>schedules;
+        int totalMinutes = 0;
+
+        for(JourneyRoute journeyRoute : journeyRoutes)
+        {
+            schedules = journeyRoute.getSchedules();
+
+            for (int i = 0; i < schedules.size() - 1; i++)
+            {
+                currentSchedule = schedules.get(i);
+                nextSchedule = schedules.get(i + 1);
+
+                Duration duration = Duration.between(currentSchedule.getDepartureTime(), nextSchedule.getDepartureTime());
+                totalMinutes += duration.toMinutes();
+            }
+        }
+
+        return totalMinutes;
     }
 
     public void displayJourneyPlanner()
