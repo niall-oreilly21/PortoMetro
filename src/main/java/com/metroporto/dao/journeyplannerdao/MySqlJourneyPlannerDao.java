@@ -15,10 +15,7 @@ import com.metroporto.users.Student;
 import com.metroporto.users.User;
 import org.apache.poi.ss.formula.functions.T;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Statement;
-import java.sql.Time;
+import java.sql.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,68 +67,59 @@ public class MySqlJourneyPlannerDao extends MySqlDao<JourneyPlanner> implements 
     @Override
     public boolean insertJourneyPlannerForPassenger(User user, JourneyPlanner journeyPlanner) throws DaoException
     {
-        boolean journeyPlannerInserted = false;
-
         if(user instanceof Passenger)
         {
             if(((Passenger) user).addJourneyPlanner(journeyPlanner))
             {
-                    if(insertJourneyPlannerForPassenger(user.getUserId(), journeyPlanner))
-                    {
-                        journeyPlannerInserted = true;
-                    }
-                }
+                return insertJourneyPlannerForPassenger(user.getUserId(), journeyPlanner);
             }
+        }
 
-        return journeyPlannerInserted;
+        return false;
     }
 
     public boolean insertJourneyPlannerForPassenger(int userId, JourneyPlanner journeyPlanner) throws DaoException
     {
-        boolean isInserted = false;
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "INSERT INTO journey_planners (user_id, start_station_id, end_station_id, start_time, timetable_day_type) VALUES\n" +
+                    "(?, ?, ?, ?, ?)";
 
-            try
+            ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            prepareSqlStatement(journeyPlanner, userId);
+
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0)
             {
-                //Get a connection to the database
-                con = this.getConnection();
-                query = "INSERT INTO journey_planners (user_id, start_station_id, end_station_id, start_time, timetable_day_type) VALUES\n" +
-                        "(?, ?, ?, ?, ?)";
+                // Retrieve the generated keys
+                rs = ps.getGeneratedKeys();
 
-                ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-                prepareSqlStatement(journeyPlanner, userId);
-
-                int rowsAffected = ps.executeUpdate();
-
-                if (rowsAffected > 0)
+                if (rs.next())
                 {
-                    isInserted = true;
-
-                    // Retrieve the generated keys
-                    rs = ps.getGeneratedKeys();
-
-                    if (rs.next())
-                    {
-                        int journeyPlannerId = rs.getInt(1);
-                        journeyPlanner.setJourneyPlannerId(journeyPlannerId);
-                    }
+                    int journeyPlannerId = rs.getInt(1);
+                    journeyPlanner.setJourneyPlannerId(journeyPlannerId);
                 }
+                return true;
             }
-            catch (SQLIntegrityConstraintViolationException e)
-            {
-                // Handle duplicate entry error
-                System.out.println("Duplicate entry found in the database");
-            }
-            catch (SQLException sqe)
-            {
-                throw new DaoException("insertJourneyPlannerForPassenger() in MySqlJourneyPlannerDao " + sqe.getMessage());
-            }
-            finally
-            {
-                handleFinally("insertJourneyPlannerForPassenger() in MySqlJourneyPlannerDao");
-            }
+        }
+        catch (SQLIntegrityConstraintViolationException e)
+        {
+            // Handle duplicate entry error
+            System.out.println("Duplicate entry found in the database");
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("insertJourneyPlannerForPassenger() in MySqlJourneyPlannerDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("insertJourneyPlannerForPassenger() in MySqlJourneyPlannerDao");
+        }
 
-
-        return isInserted;
+    return false;
     }
 
 
@@ -153,5 +141,45 @@ public class MySqlJourneyPlannerDao extends MySqlDao<JourneyPlanner> implements 
         LocalTime startTime = rs.getTime("start_time").toLocalTime();
         TimeTableType TimetableDayType = enumLabelConverter.fromLabel(rs.getString("timetable_day_type"), TimeTableType.class);
         return new JourneyPlanner(journeyPlannerId, startStation, endStation, startTime, TimetableDayType);
+    }
+
+    @Override
+    public boolean remove(JourneyPlanner journeyPlanner) throws DaoException
+    {
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            String query = "DELETE FROM journey_planners WHERE journey_planner_id = ?";
+            ps = con.prepareStatement(query);
+            ps.setInt(1, journeyPlanner.getJourneyPlannerId());
+
+            //Use the prepared statement to execute the sql
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0)
+            {
+                query = "SELECT * FROM journey_planners WHERE journey_planner_id = ?";
+                ps = con.prepareStatement(query);
+                ps.setInt(1, journeyPlanner.getJourneyPlannerId());
+                rs = ps.executeQuery();
+
+                if (!rs.next())
+                {
+                    return true;
+                }
+            }
+
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("remove() in MySqlJourneyPlannerDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("insertJourneyPlannerForPassenger() in MySqlJourneyPlannerDao");
+        }
+
+        return false;
     }
 }
