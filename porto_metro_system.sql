@@ -124,7 +124,8 @@ CREATE TABLE journey_planners
     PRIMARY KEY (journey_planner_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (start_station_id) REFERENCES stations(station_id),
-    FOREIGN KEY (end_station_id) REFERENCES stations(station_id)
+    FOREIGN KEY (end_station_id) REFERENCES stations(station_id),
+    UNIQUE(user_id, start_station_id, end_station_id, start_time, timetable_day_type)
 );
 
 

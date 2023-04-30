@@ -224,18 +224,22 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
            handleFinally("insertUser() in MySqlUserDao");
         }
 
-        if(user instanceof Passenger)
+        if(!isInserted)
+
         {
-            if(((Passenger) user).getMetroCard() != null)
+            if(user instanceof Passenger)
             {
-                cardDao.insertCardForPassenger(user);
-
-
-                if(user instanceof Student)
+                if(((Passenger) user).getMetroCard() != null)
                 {
-                    if(((Passenger) user).getMetroCard() != null)
+                    cardDao.insertCardForPassenger(user);
+
+
+                    if(user instanceof Student)
                     {
-                        universityDao.insertUniversityForStudent(user);
+                        if(((Passenger) user).getMetroCard() != null)
+                        {
+                            universityDao.insertUniversityForStudent(user);
+                        }
                     }
                 }
             }
