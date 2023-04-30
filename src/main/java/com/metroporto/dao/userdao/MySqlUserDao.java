@@ -15,6 +15,7 @@ import com.metroporto.users.Student;
 import com.metroporto.users.User;
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -154,8 +155,10 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
     }
 
     @Override
-    public void insertUser(User user) throws DaoException
+    public boolean insertUser(User user) throws DaoException
     {
+        boolean isInserted = false;
+
         try
         {
             //Get a connection to the database
@@ -191,12 +194,12 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             ps.setString(5, userType);
 
 
-            //Use the prepared statement to execute the sql
-            //Use the prepared statement to execute the sql
             int rowsAffected = ps.executeUpdate();
 
             if (rowsAffected > 0)
             {
+                isInserted = true;
+
                 // Retrieve the generated keys
                 rs = ps.getGeneratedKeys();
 
@@ -206,7 +209,11 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
                     user.setUserId(userId);
                 }
             }
-
+        }
+        catch (SQLIntegrityConstraintViolationException e)
+        {
+            // Handle duplicate entry error
+            System.out.println("Duplicate entry found in the database");
         }
         catch (SQLException sqe)
         {
@@ -233,6 +240,7 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
                 }
             }
         }
+        return isInserted;
     }
 
     @Override

@@ -19,11 +19,11 @@ public abstract class User
         this.lastName = lastName;
     }
 
-    public User(String email, String password, String firstName, String lastName)
+    public User(String email, String firstName, String lastName)
     {
         this.userId = 0;
         this.email = email;
-        this.password = password;
+        this.password = "";
         this.firstName = firstName;
         this.lastName = lastName;
     }

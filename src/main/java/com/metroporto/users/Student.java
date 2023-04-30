@@ -19,9 +19,9 @@ public class Student extends Passenger
         this.university = university;
     }
 
-    public Student(String email, String password, String firstName, String lastName)
+    public Student(String email, String firstName, String lastName)
     {
-        super(email, password, firstName, lastName);
+        super(email, firstName, lastName);
         this.university = null;
     }
 
