@@ -225,7 +225,6 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         }
 
         if(!isInserted)
-
         {
             if(user instanceof Passenger)
             {
@@ -248,7 +247,7 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
     }
 
     @Override
-    public void updateEmail(User user) throws DaoException
+    public boolean updateEmail(User user) throws DaoException
     {
         try
         {
@@ -260,7 +259,12 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             ps.setString(1, user.getEmail());
             ps.setInt(2, user.getUserId());
 
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0)
+            {
+                return true;
+            }
 
         }
         catch (SQLException sqe)
@@ -271,10 +275,12 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         {
             handleFinally("updateEmail() in MySqlUserDao");
         }
+
+        return false;
     }
 
     @Override
-    public void updatePassword(User user) throws DaoException
+    public boolean updatePassword(User user) throws DaoException
     {
         try
         {
@@ -286,8 +292,12 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             ps.setString(1, user.getPassword());
             ps.setInt(2, user.getUserId());
 
+            int rowsAffected = ps.executeUpdate();
 
-            ps.executeUpdate();
+            if (rowsAffected > 0)
+            {
+                return true;
+            }
 
         }
         catch (SQLException sqe)
@@ -298,10 +308,12 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         {
             handleFinally("updatePassword() in MySqlUserDao");
         }
+
+        return false;
     }
 
     @Override
-    public void updateFirstName(User user) throws DaoException
+    public boolean updateFirstName(User user) throws DaoException
     {
         try
         {
@@ -313,7 +325,12 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             ps.setString(1, user.getFirstName());
             ps.setInt(2, user.getUserId());
 
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0)
+            {
+                return true;
+            }
 
         }
         catch (SQLException sqe)
@@ -324,10 +341,12 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         {
             handleFinally("updateFirstName() in MySqlUserDao");
         }
+
+        return false;
     }
 
     @Override
-    public void updateLastName(User user) throws DaoException
+    public boolean updateLastName(User user) throws DaoException
     {
         try
         {
@@ -339,7 +358,12 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             ps.setString(1, user.getLastName());
             ps.setInt(2, user.getUserId());
 
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0)
+            {
+                return true;
+            }
 
         }
         catch (SQLException sqe)
@@ -350,5 +374,48 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         {
             handleFinally("updateLastName() in MySqlUserDao");
         }
+
+        return false;
     }
+
+
+    @Override
+    public boolean remove(User user) throws DaoException
+    {
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            String query = "DELETE FROM users WHERE user_id = ?";
+            ps = con.prepareStatement(query);
+            ps.setInt(1, user.getUserId());
+
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0)
+            {
+                query = "SELECT * FROM users WHERE user_id = ?";
+                ps = con.prepareStatement(query);
+                ps.setInt(1, user.getUserId());
+                rs = ps.executeQuery();
+
+                if (!rs.next())
+                {
+                    return true;
+                }
+            }
+
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("remove() in MySqlUserDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("remove() in MySqlUserDao");
+        }
+
+        return false;
+    }
+
 }
