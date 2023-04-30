@@ -10,7 +10,7 @@ CREATE DATABASE IF NOT EXISTS porto_metro_system DEFAULT CHARACTER SET utf8 COLL
 USE porto_metro_system;
 
 /*DROPS any of the tables that may already exists*/
-DROP TABLE IF EXISTS station_facilities, facilities, schedules, timetables, routes, trains,  metro_lines, stations_in_journey_routes, journey_routes, stations, blue_cards, timer_cards, cards_zones, cards_prices, passengers, cards, students_universities, universities, users, zones;
+DROP TABLE IF EXISTS station_facilities, facilities, schedules, timetables, routes, trains,  metro_lines, passengers_journey_planners, journey_planners, stations, blue_cards, timer_cards, cards_zones, cards_prices, passengers_cards, cards, students_universities, universities, users, zones;
 
 
 /*CREATE zones table*/
@@ -35,6 +35,7 @@ CREATE TABLE users
     UNIQUE (email)
 );
 
+
 /*CREATE universities table*/
 CREATE TABLE universities
 (
@@ -42,6 +43,7 @@ CREATE TABLE universities
     university_name VARCHAR(255) NOT NULL,
     PRIMARY KEY (university_id)
 );
+
 
 /*CREATE students_universities table*/
 CREATE TABLE students_universities
@@ -53,6 +55,7 @@ CREATE TABLE students_universities
     UNIQUE (user_id)
 );
 
+
 /*CREATE cards table*/
 CREATE TABLE cards
 (
@@ -63,8 +66,9 @@ CREATE TABLE cards
     PRIMARY KEY(card_id)
 );
 
+
 /*CREATE users table*/
-CREATE TABLE passengers
+CREATE TABLE passengers_cards
 (
     user_id INT NOT NULL,
     card_id INT NOT NULL,
@@ -94,6 +98,7 @@ CREATE TABLE cards_zones
     UNIQUE (card_id, zone_id)
 );
 
+
 /*CREATE blue card table*/
 CREATE TABLE timer_cards 
 (
@@ -102,6 +107,7 @@ CREATE TABLE timer_cards
     FOREIGN KEY (card_id) REFERENCES cards(card_id),
     UNIQUE(card_id)
 );
+
 
 /*CREATE card types table*/
 CREATE TABLE blue_cards
@@ -124,32 +130,28 @@ CREATE TABLE stations
 );
 
 
-/*CREATE journey_routes table*/
-CREATE TABLE journey_routes 
+/*CREATE journey_planners table*/
+CREATE TABLE journey_planners
 (
-    journey_route_id INT(3) NOT NULL,
-    user_id INT NOT NULL,
-    start_station_id VARCHAR(3) DEFAULT NULL,
-    end_station_id VARCHAR(3) DEFAULT NULL,
-    start_time DATETIME NOT NULL,
-    end_time DATETIME NOT NULL,
-    fare DECIMAL(5,2) NOT NULL,
-    journey_route_description VARCHAR(255),
-    PRIMARY KEY (journey_route_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    journey_planner_id INT NOT NULL AUTO_INCREMENT,
+    start_station_id VARCHAR(3) NOT NULL,
+    end_station_id VARCHAR(3) NOT NULL,
+    start_time TIME NOT NULL,
+    timetable_day_type ENUM("Monday-Friday", "Saturday","Sunday") NOT NULL,
+    PRIMARY KEY (journey_planner_id),
     FOREIGN KEY (start_station_id) REFERENCES stations(station_id),
     FOREIGN KEY (end_station_id) REFERENCES stations(station_id)
 );
 
 
-/*CREATE stations_in_journey_routes table*/
-CREATE TABLE stations_in_journey_routes 
+/*CREATE passengers_journey_planners table*/
+CREATE TABLE passengers_journey_planners 
 (
-    journey_route_id INT(3) NOT NULL,
-    station_id VARCHAR(5) NOT NULL,
-    PRIMARY KEY (journey_route_id, station_id),
-    FOREIGN KEY (journey_route_id) REFERENCES journey_routes(journey_route_id),
-    FOREIGN KEY (station_id) REFERENCES stations(station_id)
+    user_id INT NOT NULL,
+    journey_planner_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (journey_planner_id) REFERENCES journey_planners(journey_planner_id),
+    UNIQUE (user_id, journey_planner_id)
 ); 
 
 
@@ -189,7 +191,7 @@ CREATE TABLE timetables
 (
     timetable_id INT NOT NULL AUTO_INCREMENT,
     route_id INT NOT NULL,
-    scheduled_day_type ENUM("Monday-Friday", "Saturday","Sunday") NOT NULL,
+    timetable_day_type ENUM("Monday-Friday", "Saturday","Sunday") NOT NULL,
     PRIMARY KEY (timetable_id),
     FOREIGN KEY (route_id) REFERENCES routes(route_id)
 );
@@ -749,18 +751,12 @@ ON schedules(timetable_id, row_number);
 
 DROP VIEW IF EXISTS all_users, all_cards;
 
--- /*CREATE A VIEW which shows passengers*/
--- CREATE VIEW passenger_details AS
--- SELECT users.user_id, users.email, users.password, passengers. universities.* FROM users
--- JOIN students_universities ON users.user_id = students_universities.user_id
--- JOIN universities ON students_universities.university_id = universities.university_id
--- WHERE users.user_type = "student"; 
-
 /*CREATE A VIEW which shows students*/
 CREATE VIEW all_users AS
-SELECT users.*, passengers.card_id, students_universities.university_id FROM users
+SELECT users.*, passengers_cards.card_id, students_universities.university_id FROM users
 LEFT JOIN students_universities ON users.user_id = students_universities.user_id
-LEFT JOIN passengers ON users.user_id = passengers.user_id;
+LEFT JOIN passengers_cards ON users.user_id = passengers_cards.user_id;
+
 
 CREATE VIEW all_cards AS
 SELECT cards.*, timer_cards.end_datetime, blue_cards.total_trips_allowed FROM cards
@@ -824,7 +820,7 @@ INSERT INTO cards (card_id, card_type, access_type, card_price) VALUES
 (4, 'tour card', 'All zones', 20.00);
 
 /* Insert sample data into passengers table */
-INSERT INTO passengers (user_id, card_id) VALUES
+INSERT INTO passengers_cards (user_id, card_id) VALUES
 (1, 1),
 (3, 2),
 (4, 4);
@@ -846,3 +842,4 @@ INSERT INTO timer_cards (card_id, end_datetime) VALUES
 INSERT INTO blue_cards (card_id, total_trips_allowed) VALUES
 (1, 10),
 (2, 5);
+
