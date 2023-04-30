@@ -3,13 +3,18 @@ package com.metroporto.cards;
 import com.metroporto.enums.CardAccessType;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class TourCard extends GreyCard
+public class TourCard extends BlueCard
 {
-
-    public TourCard(int cardId, CardAccessType accessType, double cardPrice, LocalDateTime endDateTime)
+    public TourCard(int cardId, CardAccessType cardAccessType, double cardPrice, int numberOfTrips)
     {
-        super(cardId, accessType, cardPrice, endDateTime);
+        super(cardId, cardAccessType, cardPrice, numberOfTrips);
+    }
+
+    public TourCard(CardAccessType cardAccessType, double cardPrice, int numberOfTrips)
+    {
+        super(cardAccessType, cardPrice, numberOfTrips);
     }
 }
