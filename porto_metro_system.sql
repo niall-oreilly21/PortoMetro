@@ -59,34 +59,16 @@ CREATE TABLE students_universities
 /*CREATE cards table*/
 CREATE TABLE cards
 (
-    card_id INT NOT NULL,
+    card_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
     card_type ENUM("blue card", "grey card", "student card", "tour card") NOT NULL,
     access_type ENUM("All zones", "3 zones") NOT NULL,
     card_price DECIMAL(5, 2),
-    PRIMARY KEY(card_id)
+    PRIMARY KEY(card_id),
+    UNIQUE (user_id),
+    FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
 
-
-/*CREATE users table*/
-CREATE TABLE passengers_cards
-(
-    user_id INT NOT NULL,
-    card_id INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (card_id) REFERENCES cards(card_id),
-    UNIQUE (user_id, card_id)
-);
-
--- /*CREATE table cards_prices*/
--- CREATE TABLE cards_prices
--- (
---     card_price_id INT NOT NULL AUTO_INCREMENT,
---     card_id INT NOT NULL,
---     access_type ENUM("All zones", "3 zones") NOT NULL,
---     card_price DECIMAL(5, 2),
---     FOREIGN KEY (card_id) REFERENCES cards(card_id),
---     PRIMARY KEY(card_price_id)
--- );
 
 /*CREATE table card_zones*/
 CREATE TABLE cards_zones
@@ -103,7 +85,7 @@ CREATE TABLE cards_zones
 CREATE TABLE timer_cards 
 (
     card_id INT NOT NULL,
-    end_datetime DATETIME NOT NULL,
+    end_date DATE NOT NULL,
     FOREIGN KEY (card_id) REFERENCES cards(card_id),
     UNIQUE(card_id)
 );
@@ -134,25 +116,16 @@ CREATE TABLE stations
 CREATE TABLE journey_planners
 (
     journey_planner_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
     start_station_id VARCHAR(3) NOT NULL,
     end_station_id VARCHAR(3) NOT NULL,
     start_time TIME NOT NULL,
     timetable_day_type ENUM("Monday-Friday", "Saturday","Sunday") NOT NULL,
     PRIMARY KEY (journey_planner_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (start_station_id) REFERENCES stations(station_id),
     FOREIGN KEY (end_station_id) REFERENCES stations(station_id)
 );
-
-
-/*CREATE passengers_journey_planners table*/
-CREATE TABLE passengers_journey_planners 
-(
-    user_id INT NOT NULL,
-    journey_planner_id INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (journey_planner_id) REFERENCES journey_planners(journey_planner_id),
-    UNIQUE (user_id, journey_planner_id)
-); 
 
 
 /*CREATE lines table*/
@@ -751,19 +724,19 @@ ON schedules(timetable_id, row_number);
 
 DROP VIEW IF EXISTS all_users, all_cards;
 
-/*CREATE A VIEW which shows students*/
+/*CREATE A VIEW which shows all users*/
 CREATE VIEW all_users AS
-SELECT users.*, passengers_cards.card_id, students_universities.university_id FROM users
-LEFT JOIN students_universities ON users.user_id = students_universities.user_id
-LEFT JOIN passengers_cards ON users.user_id = passengers_cards.user_id;
+SELECT users.*, cards.card_id, students_universities.university_id FROM users
+LEFT JOIN cards ON users.user_id = cards.user_id
+LEFT JOIN students_universities ON users.user_id = students_universities.user_id;
 
-
+/*CREATE A VIEW which shows all cards*/
 CREATE VIEW all_cards AS
-SELECT cards.*, timer_cards.end_datetime, blue_cards.total_trips_allowed FROM cards
+SELECT cards.*, timer_cards.end_date, blue_cards.total_trips_allowed FROM cards
 LEFT JOIN timer_cards ON cards.card_id = timer_cards.card_id
 LEFT JOIN blue_cards ON cards.card_id = blue_cards.card_id
 LEFT JOIN cards_zones ON cards.card_id = cards_zones.card_id;
-                    
+     
 
 /*CREATE A VIEW which shows blue_cards*/
 -- CREATE VIEW blue_cards_details AS
@@ -813,17 +786,12 @@ INSERT INTO students_universities (user_id, university_id) VALUES
 
 
 /* Insert sample data into cards table */
-INSERT INTO cards (card_id, card_type, access_type, card_price) VALUES
-(1, 'blue card', 'All zones', 10.00),
-(2, 'grey card', '3 zones', 15.00),
-(3, 'student card', '3 zones', 5.00),
-(4, 'tour card', 'All zones', 20.00);
+INSERT INTO cards (card_id, user_id, card_type, access_type, card_price) VALUES
+(1, 1, 'blue card', 'All zones', 10.00),
+(2, 2, 'grey card', '3 zones', 15.00),
+(3, 3, 'student card', '3 zones', 5.00),
+(4, 4, 'tour card', 'All zones', 20.00);
 
-/* Insert sample data into passengers table */
-INSERT INTO passengers_cards (user_id, card_id) VALUES
-(1, 1),
-(3, 2),
-(4, 4);
 
 /* Insert sample data into cards_zones table */
 INSERT INTO cards_zones (card_id, zone_id) VALUES
@@ -832,11 +800,11 @@ INSERT INTO cards_zones (card_id, zone_id) VALUES
 (2, 3);
 
 /* Insert sample data into timer_cards table */
-INSERT INTO timer_cards (card_id, end_datetime) VALUES
-(1, '2023-04-30 23:59:59'),
-(2, '2023-05-31 23:59:59'),
-(3, '2023-06-30 23:59:59'),
-(4, '2023-07-31 23:59:59');
+INSERT INTO timer_cards (card_id, end_date) VALUES
+(1, '2023-04-30'),
+(2, '2023-05-31'),
+(3, '2023-06-30'),
+(4, '2023-07-31');
 
 /* Insert sample data into blue_cards table */
 INSERT INTO blue_cards (card_id, total_trips_allowed) VALUES
