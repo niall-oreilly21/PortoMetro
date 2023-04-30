@@ -16,6 +16,14 @@ public class BlueCard extends Card
         checkExpiration();
     }
 
+    public BlueCard(CardAccessType cardAccessType, double cardPrice, int numberOfTrips)
+    {
+        super(cardAccessType, cardPrice);
+        this.numberOfTrips = numberOfTrips;
+        checkExpiration();
+    }
+
+
     public int getNumberOfTrips()
     {
         return numberOfTrips;
