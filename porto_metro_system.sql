@@ -632,150 +632,6 @@ INSERT INTO station_facilities (station_id, facility_id) VALUES
 ("PDR", 11); 
 
 
-/*-----------------------------------------------------------------INDEXES-------------------------------------------------------------------------------------*/
-
-ALTER TABLE users
-DROP INDEX IF EXISTS users_index;
-
-/*CREATES an index called users_index on user_id in users*/
-CREATE INDEX users_index
-ON users(user_id);
-
-
-ALTER TABLE students_universities 
-DROP INDEX IF EXISTS student_universities_index;
-
-/*CREATES an index called student_universities_index on user_id and university_id in students_universities*/
-CREATE INDEX student_universities_index
-ON students_universities(user_id, university_id);
-
-
--- ALTER TABLE cards 
--- DROP INDEX IF EXISTS cards_index;
-
-/*CREATES an index called cards_index on user_id in cards*/
--- CREATE INDEX cards_index
--- ON cards(user_id);
-
-
--- ALTER TABLE cards_prices
--- DROP INDEX IF EXISTS cards_prices_index;
-
--- /*CREATES an index called cards_prices_index on card_id in cards_prices*/
--- CREATE INDEX cards_prices_index
--- ON cards_prices(card_id);
-
-
-ALTER TABLE cards_zones
-DROP INDEX IF EXISTS cards_zones_index;
-
-/*CREATES an index called cards_prices_index on card_id and zone_id in cards_zones*/
-CREATE INDEX cards_zones_index
-ON cards_zones(card_id, zone_id);
-
-
-ALTER TABLE timer_cards
-DROP INDEX IF EXISTS timer_cards_index;
-
-/*CREATES an index called timer_cards_index on card_id in timer_cards*/
-CREATE INDEX timer_cards_index
-ON timer_cards(card_id);
-
-
--- ALTER TABLE blue_cards
--- DROP INDEX IF EXISTS blue_cards_index;
-
--- /*CREATES an index called blue_cards_index on card_id and zone_id in timer_cards*/
--- CREATE INDEX blue_cards_index
--- ON blue_cards(card_id, zone_id);
-
-
-ALTER TABLE facilities
-DROP INDEX IF EXISTS facilities_index;
-
-/*CREATES an index called facilities_index on facility_id in facilities*/
-CREATE INDEX facilities_index
-ON facilities(facility_id);
-
-
-ALTER TABLE station_facilities 
-DROP INDEX IF EXISTS station_facilities_index;
-
-/*CREATES an index called station_facilities_index on station_id and facility_id in station_facilities*/
-CREATE INDEX station_facilities_index
-ON station_facilities(station_id, facility_id);
-
-
--- ALTER TABLE stations_in_metro_lines  
--- DROP INDEX IF EXISTS stations_in_metro_lines_index;
-
--- /*CREATES an index called stations_in_metro_lines_index on station_id and line_id in stations_in_metro_lines*/
--- CREATE INDEX stations_in_metro_lines_index
--- ON stations_in_metro_lines(station_id, line_id);
-
-ALTER TABLE schedules
-DROP INDEX IF EXISTS schedules_index;
-
-/*CREATES an index called facilities_index on facility_id in facilities*/
-CREATE INDEX schedules_index
-ON schedules(timetable_id, row_number);
-
-/*-----------------------------------------------------------------VIEWS-------------------------------------------------------------------------------------*/
-
-
-DROP VIEW IF EXISTS all_users, all_cards;
-
-/*CREATE A VIEW which shows all users*/
-CREATE VIEW all_users AS
-SELECT users.*, cards.card_id, students_universities.university_id FROM users
-LEFT JOIN cards ON users.user_id = cards.user_id
-LEFT JOIN students_universities ON users.user_id = students_universities.user_id;
-
-/*CREATE A VIEW which shows all cards*/
-CREATE VIEW all_cards AS
-SELECT cards.*, timer_cards.end_date, blue_cards.total_trips_allowed FROM cards
-LEFT JOIN timer_cards ON cards.card_id = timer_cards.card_id
-LEFT JOIN blue_cards ON cards.card_id = blue_cards.card_id
-LEFT JOIN cards_zones ON cards.card_id = cards_zones.card_id;
-     
-
-/*CREATE A VIEW which shows blue_cards*/
--- CREATE VIEW blue_cards_details AS
--- SELECT cards.*, cards_prices.card_price_id, cards_prices.access_type, cards_prices.card_price, blue_cards.zone_id, blue_cards.total_trips_allowed  FROM cards
--- JOIN blue_cards ON cards.card_id = blue_cards.card_id
--- JOIN cards_prices ON cards.card_id = cards_prices.card_id
--- WHERE cards.card_type = "blue card";
-
-
-/*-----------------------------------------------------------------PROCEDURES-------------------------------------------------------------------------------------*/
-
-
-/*Create a procedure that gets the grey card details*/
-DROP PROCEDURE IF EXISTS get_timer_cards_details;
-
--- -- @DELIMITER //
--- CREATE PROCEDURE get_timer_cards_details(IN card_type ENUM("grey card", "student card", "tour card"))
--- BEGIN 
--- SELECT cards.*, cards_price_id, cards_prices.access_type, cards_prices.card_price, timer_cards.start_datetime, timer_cards.end_datetime, timer_cards.timer  FROM cards
--- JOIN timer_cards ON cards.card_id = timer_cards.card_id
--- JOIN cards_prices ON cards.card_id = cards_prices.card_id
--- WHERE cards.card_type = card_type;
--- END //
--- -- @DELIMITER ;
-
--- @DELIMITER //
-CREATE TRIGGER limit_card_id_rows
-BEFORE INSERT ON cards_zones FOR EACH ROW
-BEGIN
-  DECLARE card_count INT;
-  SELECT COUNT(*) INTO card_count FROM cards_zones WHERE card_id = NEW.card_id;
-  IF card_count >= 3 THEN
-    SIGNAL SQLSTATE '45000'
-      SET MESSAGE_TEXT = 'Exceeded limit for card_id in cards_zones table';
-  END IF;
-END// 
--- @DELIMITER ;
-
 INSERT INTO users (user_id, email, user_password, user_type, first_name, last_name) VALUES
 (1,"niall.blackrock@gmail.com", "12345", "student", "Niall", "O' Reilly"),
 (2, "luana.blackrock@gmail.com", "123454", "administrator", "Luana", "Kimley"),
@@ -811,4 +667,178 @@ INSERT INTO timer_cards (card_id, end_date) VALUES
 INSERT INTO blue_cards (card_id, total_trips_allowed) VALUES
 (1, 10),
 (2, 5);
+
+
+
+/*-----------------------------------------------------------------INDEXES-------------------------------------------------------------------------------------*/
+
+ALTER TABLE users
+DROP INDEX IF EXISTS users_index;
+
+/*CREATES an index called users_index on user_id in users*/
+CREATE INDEX users_index
+ON users(user_id);
+
+
+ALTER TABLE students_universities 
+DROP INDEX IF EXISTS student_universities_index;
+
+/*CREATES an index called student_universities_index on user_id and university_id in students_universities*/
+CREATE INDEX student_universities_index
+ON students_universities(user_id, university_id);
+
+
+ALTER TABLE cards 
+DROP INDEX IF EXISTS cards_index;
+
+/*CREATES an index called cards_index on card_id and user_id in cards*/
+CREATE INDEX cards_index
+ON cards(card_id, user_id);
+
+
+ALTER TABLE cards_zones
+DROP INDEX IF EXISTS cards_zones_index;
+
+/*CREATES an index called cards_prices_index on card_id and zone_id in cards_zones*/
+CREATE INDEX cards_zones_index
+ON cards_zones(card_id, zone_id);
+
+
+ALTER TABLE timer_cards
+DROP INDEX IF EXISTS timer_cards_index;
+
+/*CREATES an index called timer_cards_index on card_id in timer_cards*/
+CREATE INDEX timer_cards_index
+ON timer_cards(card_id);
+
+
+ALTER TABLE blue_cards
+DROP INDEX IF EXISTS blue_cards_index;
+
+/*CREATES an index called blue_cards_index on card_id  in blue_cards*/
+CREATE INDEX blue_cards_index
+ON blue_cards(card_id);
+
+
+ALTER TABLE facilities
+DROP INDEX IF EXISTS facilities_index;
+
+/*CREATES an index called facilities_index on facility_id in facilities*/
+CREATE INDEX facilities_index
+ON facilities(facility_id);
+
+
+ALTER TABLE station_facilities 
+DROP INDEX IF EXISTS station_facilities_index;
+
+/*CREATES an index called station_facilities_index on station_id and facility_id in station_facilities*/
+CREATE INDEX station_facilities_index
+ON station_facilities(station_id, facility_id);
+
+
+ALTER TABLE journey_planners  
+DROP INDEX IF EXISTS journey_planners_index;
+
+-- /*CREATES an index called journey_planners_index on user_id and journey_planners*/
+CREATE INDEX journey_planners_index
+ON journey_planners(user_id);
+
+
+ALTER TABLE schedules
+DROP INDEX IF EXISTS schedules_index;
+
+/*CREATES an index called facilities_index on timetable_id and row_number in schedules*/
+CREATE INDEX schedules_index
+ON schedules(timetable_id, row_number);
+
+/*-----------------------------------------------------------------VIEWS-------------------------------------------------------------------------------------*/
+
+
+DROP VIEW IF EXISTS all_users, all_cards;
+
+/*CREATE A VIEW which shows all users*/
+CREATE VIEW all_users AS
+SELECT users.*, cards.card_id, students_universities.university_id FROM users
+LEFT JOIN cards ON users.user_id = cards.user_id
+LEFT JOIN students_universities ON users.user_id = students_universities.user_id;
+
+/*CREATE A VIEW which shows all cards*/
+CREATE VIEW all_cards AS
+SELECT cards.*, timer_cards.end_date, blue_cards.total_trips_allowed FROM cards
+LEFT JOIN timer_cards ON cards.card_id = timer_cards.card_id
+LEFT JOIN blue_cards ON cards.card_id = blue_cards.card_id
+LEFT JOIN cards_zones ON cards.card_id = cards_zones.card_id;
+     
+
+/*-----------------------------------------------------------------TRIGGERS-------------------------------------------------------------------------------------*/
+
+
+/*DELETE TRIGGERS to remove card details*/
+DROP TRIGGER IF EXISTS delete_cards_foreign_key_timer_cards;
+
+CREATE TRIGGER delete_cards_foreign_key_timer_cards
+
+BEFORE DELETE ON cards
+FOR EACH ROW
+
+DELETE FROM timer_cards WHERE timer_cards.card_id = OLD.card_id;
+
+
+DROP TRIGGER IF EXISTS delete_cards_foreign_key_blue_cards;
+
+CREATE TRIGGER delete_cards_foreign_key_blue_cards
+
+BEFORE DELETE ON cards
+FOR EACH ROW
+
+DELETE FROM blue_cards WHERE blue_cards.card_id = OLD.card_id;
+
+
+DROP TRIGGER IF EXISTS delete_cards_foreign_key_cards_zones;
+
+CREATE TRIGGER delete_cards_foreign_key_cards_zones
+
+BEFORE DELETE ON cards
+FOR EACH ROW
+
+DELETE FROM cards_zones WHERE cards_zones.card_id = OLD.card_id;
+
+
+/*DELETE TRIGGERS to remove user details*/
+DROP TRIGGER IF EXISTS delete_users_foreign_key_students_universities;
+
+CREATE TRIGGER delete_users_foreign_key_students_universities
+
+BEFORE DELETE ON users
+FOR EACH ROW
+
+DELETE FROM students_universities WHERE students_universities.user_id = OLD.user_id;
+
+
+DROP TRIGGER IF EXISTS delete_users_foreign_key_cards;
+
+CREATE TRIGGER delete_users_foreign_key_cards
+
+BEFORE DELETE ON users
+FOR EACH ROW
+
+DELETE FROM cards WHERE cards.user_id = OLD.user_id;
+
+
+-- @DELIMITER //
+CREATE TRIGGER limit_card_id_rows
+BEFORE INSERT ON cards_zones FOR EACH ROW
+BEGIN
+  DECLARE card_count INT;
+  SELECT COUNT(*) INTO card_count FROM cards_zones WHERE card_id = NEW.card_id;
+  IF card_count >= 3 THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'Exceeded limit for card_id in cards_zones table';
+  END IF;
+END// 
+-- @DELIMITER ;
+
+
+
+
 
