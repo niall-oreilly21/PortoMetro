@@ -62,7 +62,6 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
     public boolean insertCardForPassenger(User user) throws DaoException
     {
         Card card = null;
-        boolean isInserted = false;
 
         try
         {
@@ -139,32 +138,11 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
             handleFinally("insertCardForPassenger() in MySqlCardDao()");
         }
 
-        if(insertCardDetails(card))
-        {
-            isInserted = true;
-        }
-
-        return isInserted;
+        return insertCardDetails(card);
     }
 
     private boolean insertCardDetails(Card card) throws DaoException
     {
-        boolean isInserted = false;
-
-        if(card instanceof GreyCard)
-        {
-            if(insertGreyCardDetails(card))
-            {
-                isInserted = true;
-            }
-        }
-        else
-        {
-            if(insertBlueCardDetails(card))
-            {
-                isInserted = true;
-            }
-        }
 
         if(card.getCardAccessType().equals(CardAccessType.THREE_ZONES))
         {
@@ -179,12 +157,18 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
 
         }
 
-        return isInserted;
+        if(card instanceof GreyCard)
+        {
+            return insertGreyCardDetails(card);
+        }
+        else
+        {
+            return insertBlueCardDetails(card);
+        }
     }
 
     private boolean insertGreyCardDetails(Card card) throws DaoException
     {
-        boolean isInserted = false;
         try
         {
             if(card instanceof GreyCard)
@@ -201,7 +185,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
 
                 if (rowsAffected > 0)
                 {
-                    isInserted = true;
+                    return true;
                 }
             }
 
@@ -215,12 +199,11 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
             handleFinally("insertGreyCardDetails() in MySqlCardDao()");
         }
 
-        return isInserted;
+        return false;
     }
 
     private boolean insertBlueCardDetails(Card card) throws DaoException
     {
-        boolean isInserted = false;
 
         try
         {
@@ -238,7 +221,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
 
                 if (rowsAffected > 0)
                 {
-                    isInserted = true;
+                    return true;
                 }
             }
 
@@ -251,7 +234,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
         {
             handleFinally("insertBlueCardDetails() in MySqlCardDao()");
         }
-        return isInserted;
+        return false;
     }
 
     @Override
@@ -316,5 +299,44 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
         }
 
         return card;
+    }
+
+    @Override
+    public boolean remove(Card card) throws DaoException
+    {
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            String query = "DELETE FROM cards WHERE card_id = ?";
+            ps = con.prepareStatement(query);
+            ps.setInt(1, card.getCardId());
+
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0)
+            {
+                query = "SELECT * FROM cards WHERE user_id = ?";
+                ps = con.prepareStatement(query);
+                ps.setInt(1, card.getCardId());
+                rs = ps.executeQuery();
+
+                if (!rs.next())
+                {
+                    return true;
+                }
+            }
+
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("remove() in MySqlCardDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("remove() in MySqlCardDao");
+        }
+
+        return false;
     }
 }
