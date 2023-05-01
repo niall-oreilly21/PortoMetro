@@ -321,7 +321,6 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
             {
                 card = new StudentCard(cardId, accessType, cardPrice, startDate, endDate);
             }
-
         }
         else if(cardType.equalsIgnoreCase("blue card")  || cardType.equalsIgnoreCase("tour card"))
         {
@@ -344,12 +343,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
             if(card.getCardAccessType().equals(CardAccessType.THREE_ZONES))
             {
                 zones = zoneDao.findAllZonesByZoneId(cardId);
-
-                for (Zone zone : zones)
-                {
-                    card.addZone(zone);
-                }
-
+                card.setZones(zones);
             }
         }
 

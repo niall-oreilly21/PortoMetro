@@ -22,7 +22,7 @@ public abstract class Card
         this.cardAccessType = cardAccessType;
         this.cardPrice = cardPrice;
         this.isActive = false;
-        setZones();
+        zones = null;
     }
 
     public Card(CardAccessType cardAccessType, CardPrice cardPrice)
@@ -31,7 +31,7 @@ public abstract class Card
         this.cardAccessType = cardAccessType;
         this.cardPrice = cardPrice;
         this.isActive = false;
-        setZones();
+        zones = null;
     }
 
     public String getCardId()
@@ -79,11 +79,11 @@ public abstract class Card
         this.cardPrice = cardPrice;
     }
 
-    private void setZones()
+    public void setZones(List<Zone> zones)
     {
         if(this.cardAccessType.equals(CardAccessType.THREE_ZONES))
         {
-            this.zones = new ArrayList<>(threeZonesSize);
+            this.zones = zones;
         }
         else
         {
