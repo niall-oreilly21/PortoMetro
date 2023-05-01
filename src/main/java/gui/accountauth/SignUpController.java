@@ -147,24 +147,48 @@ public class SignUpController extends Controller
 
             if (passengerType.equals("student"))
             {
-                User user = new Student(email, password, firstName, surname);
+                User user = new Student(email, firstName, surname);
                 try
                 {
-                    userDao.insertUser(user);
-                    app.setUser(user);
-                    redirectToPage(event, Folder.ORDER_CARD, Page.STUDENT_UNIVERSITY);
+                    user.setPassword(password);
+                    boolean successful = userDao.insertUser(user);
+
+                    if (successful)
+                    {
+                        emailLabel.setGraphic(null);
+                        errorText.setText("");
+                        app.setUser(user);
+                        redirectToPage(event, Folder.ORDER_CARD, Page.STUDENT_UNIVERSITY);
+                    } else
+                    {
+                        emailLabel.setGraphic(redAsterisk);
+                        errorText.setText("User with that email already exists");
+                    }
                 } catch (DaoException de)
                 {
                     de.printStackTrace();
                 }
             } else
             {
-                User user = new Passenger(email, password, firstName, surname);
+                User user = new Passenger(email, firstName, surname);
                 try
                 {
-                    userDao.insertUser(user);
-                    app.setUser(user);
-                    redirectToPage(event, Folder.ORDER_CARD, Page.PASSENGER_CARD);
+                    user.setPassword(password);
+                    boolean successful = userDao.insertUser(user);
+
+                    if (successful)
+                    {
+                        emailLabel.setGraphic(null);
+                        emailLabel.setContentDisplay(ContentDisplay.RIGHT);
+                        errorText.setText("");
+                        app.setUser(user);
+                        redirectToPage(event, Folder.ORDER_CARD, Page.PASSENGER_CARD);
+                    } else
+                    {
+                        emailLabel.setGraphic(redAsterisk);
+                        emailLabel.setContentDisplay(ContentDisplay.RIGHT);
+                        errorText.setText("User with that email already exists");
+                    }
                 } catch (DaoException de)
                 {
                     de.printStackTrace();

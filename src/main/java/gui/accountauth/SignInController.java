@@ -95,7 +95,7 @@ public class SignInController extends Controller
             {
                 User user = userDao.findUserByEmail(email);
 
-                if (user.getPassword().equals(password))
+                if (user.checkPassword(password))
                 {
                     errorText.setText("");
                     app.setUser(user);
