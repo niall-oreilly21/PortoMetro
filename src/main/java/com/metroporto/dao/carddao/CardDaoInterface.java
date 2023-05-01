@@ -8,6 +8,6 @@ import com.metroporto.users.User;
 
 public interface CardDaoInterface extends FindAllDaoInterface<Card>, RemoveDaoInterface<Card>
 {
-    Card findCardByCardId(int userId) throws DaoException;
+    Card findCardByUserId(int userId) throws DaoException;
     boolean insertCardForPassenger(User user) throws DaoException;
 }
