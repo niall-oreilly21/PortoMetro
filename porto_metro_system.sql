@@ -60,27 +60,8 @@ CREATE TABLE cards_prices
 (
     card_price_id INT NOT NULL AUTO_INCREMENT,
     physical_card_price DECIMAL(5, 2),
+    top_up_price DECIMAL(5, 2),
     PRIMARY KEY(card_price_id)
-);
-
-
-/*CREATE cards table*/
-CREATE TABLE grey_cards_prices
-(
-    card_price_id INT NOT NULL,
-    monthly_top_up_price DECIMAL(5, 2),
-    FOREIGN KEY (card_price_id) REFERENCES cards_prices(card_price_id),
-    UNIQUE(card_price_id)
-);
-
-
-/*CREATE cards table*/
-CREATE TABLE blue_cards_prices
-(
-    card_price_id INT NOT NULL,
-    trip_price DECIMAL(5, 2),
-    FOREIGN KEY (card_price_id) REFERENCES cards_prices(card_price_id),
-    UNIQUE(card_price_id)
 );
 
 
@@ -673,32 +654,11 @@ INSERT INTO students_universities (user_id, university_id) VALUES
 (1,"UOP");
 
 
-/*INSERTS data INTO the cards_zones table*/
-INSERT INTO cards_zones (card_id, zone_id) VALUES
-(2, 1),
-(2, 2),
-(2, 3);
-
-
 /*INSERTS data INTO the cards_prices table*/
-INSERT INTO cards_prices (physical_card_price) VALUES 
-(10.00), 
-(15.00), 
-(20.00);
-
-
-/*INSERTS data INTO the grey_cards_prices table*/
-INSERT INTO grey_cards_prices (card_price_id, monthly_top_up_price) VALUES 
-(1, 5.00), 
-(2, 10.00), 
-(3, 15.00);
-
-
-/*INSERTS data INTO the blue_cards_prices table*/
-INSERT INTO blue_cards_prices (card_price_id, trip_price) VALUES 
-(1, 2.50), 
-(2, 2.00), 
-(3, 1.50);
+INSERT INTO cards_prices (physical_card_price, top_up_price) VALUES 
+(10.00, 5.00), 
+(15.00, 10.00), 
+(20.00, 15.00);
 
 
 /*INSERTS data INTO the cards table*/
@@ -718,6 +678,12 @@ INSERT INTO blue_cards (card_id, total_trips) VALUES
 (1, 10), 
 (3, 5);
 
+
+/*INSERTS data INTO the cards_zones table*/
+INSERT INTO cards_zones (card_id, zone_id) VALUES
+(2, 1),
+(2, 2),
+(2, 3);
 
 /*-----------------------------------------------------------------INDEXES-------------------------------------------------------------------------------------*/
 
@@ -813,12 +779,10 @@ LEFT JOIN students_universities ON users.user_id = students_universities.user_id
 
 /*CREATE A VIEW which shows all cards*/
 CREATE VIEW all_cards AS
-SELECT cards.*, grey_cards.end_date, blue_cards.total_trips, cards_prices.physical_card_price, grey_cards_prices.monthly_top_up_price, blue_cards_prices.trip_price FROM cards
+SELECT cards.*, grey_cards.end_date, blue_cards.total_trips, cards_prices.physical_card_price, cards_prices.top_up_price FROM cards
 LEFT JOIN grey_cards ON cards.card_id = grey_cards.card_id
 LEFT JOIN blue_cards ON cards.card_id = blue_cards.card_id
-LEFT JOIN cards_prices ON cards.card_price_id = cards_prices.card_price_id
-LEFT JOIN grey_cards_prices ON cards_prices.card_price_id = grey_cards_prices.card_price_id
-LEFT JOIN blue_cards_prices ON cards_prices.card_price_id = blue_cards_prices.card_price_id;
+LEFT JOIN cards_prices ON cards.card_price_id = cards_prices.card_price_id;
      
 
 /*-----------------------------------------------------------------TRIGGERS-------------------------------------------------------------------------------------*/
