@@ -5,35 +5,41 @@ import com.metroporto.JourneyRoute;
 import com.metroporto.cards.Card;
 import com.metroporto.cards.StudentCard;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Passenger extends User
 {
     private Card metroCard;
-    private List<JourneyPlanner> journeyPlanners;
+    private Set<JourneyPlanner> journeyPlanners;
 
     public Passenger(int userId, String email, String password, String firstName, String lastName, Card metroCard)
     {
         super(userId, email, password, firstName, lastName);
         checkMetroCard(metroCard);
+        this.journeyPlanners = new HashSet<>();
     }
 
     public Passenger(int userId, String email, String password, String firstName, String lastName)
     {
         super(userId, email, password, firstName, lastName);
-        this.metroCard = null;;
-    }
-
-    public Passenger(String email, String password, String firstName, String lastName, Card metroCard)
-    {
-        super(email, password, firstName,  lastName);
-        checkMetroCard(metroCard);
-    }
-
-    public Passenger(String email, String password, String firstName, String lastName)
-    {
-        super(email, password, firstName,  lastName);
         this.metroCard = null;
+        this.journeyPlanners = new HashSet<>();
+    }
+
+    public Passenger(String email, String firstName, String lastName, Card metroCard)
+    {
+        super(email, firstName,  lastName);
+        checkMetroCard(metroCard);
+        this.journeyPlanners = new HashSet<>();
+    }
+
+    public Passenger(String email, String firstName, String lastName)
+    {
+        super(email, firstName,  lastName);
+        this.metroCard = null;
+        this.journeyPlanners = new HashSet<>();
     }
 
     private void checkMetroCard(Card metroCard)
@@ -61,15 +67,12 @@ public class Passenger extends User
 
     public boolean addJourneyPlanner(JourneyPlanner journeyPlannerToBeAdded)
     {
-        for(JourneyPlanner journeyPlanner : journeyPlanners)
-        {
-            if(!journeyPlanner.getStartStation().equals(journeyPlannerToBeAdded.getStartStation()) && !journeyPlanner.getEndStation().equals(journeyPlannerToBeAdded.getEndStation()))
-            {
-                journeyPlanners.add(journeyPlannerToBeAdded);
-                return true;
-            }
-        }
-        return false;
+        return journeyPlanners.add(journeyPlannerToBeAdded);
+    }
+
+    public Set<JourneyPlanner> getJourneyPlanners()
+    {
+        return journeyPlanners;
     }
 
     @Override

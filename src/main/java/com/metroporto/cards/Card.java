@@ -21,6 +21,24 @@ public abstract class Card
         this.cardId = cardId;
         this.cardAccessType = cardAccessType;
         this.cardPrice = cardPrice;
+        this.isActive = false;
+
+        if(this.cardAccessType.equals(CardAccessType.THREE_ZONES))
+        {
+            this.zones = new ArrayList<>(THREE_ZONES_SIZE);
+        }
+        else
+        {
+            this.zones = null;
+        }
+    }
+
+    public Card(CardAccessType cardAccessType, double cardPrice)
+    {
+        this.cardId = 0;
+        this.cardAccessType = cardAccessType;
+        this.cardPrice = cardPrice;
+        this.isActive = false;
 
         if(this.cardAccessType.equals(CardAccessType.THREE_ZONES))
         {
@@ -52,9 +70,14 @@ public abstract class Card
         isActive = active;
     }
 
-    public CardAccessType getAccessType()
+    public CardAccessType getCardAccessType()
     {
         return cardAccessType;
+    }
+
+    public List<Zone> getZones()
+    {
+        return zones;
     }
 
     public void setAccessType(CardAccessType accessType)
@@ -93,4 +116,5 @@ public abstract class Card
                 ", zones=" + zones +
                 '}';
     }
+
 }

@@ -5,13 +5,14 @@ import com.metroporto.enums.TimeTableType;
 import com.metroporto.metro.Schedule;
 import com.metroporto.metro.Station;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class JourneyPlanner implements StartInterface
 {
+    private int journeyPlannerId;
     private List<JourneyRoute> journeyRoutes;
     private Station startStation;
     private Station endStation;
@@ -19,14 +20,26 @@ public class JourneyPlanner implements StartInterface
     private TimeTableType timetableType;
     private MetroSystem metroSystem;
 
-    public JourneyPlanner(Station startStation, Station endStation, LocalTime startTime, TimeTableType timetableType)
+    public JourneyPlanner(int journeyPlannerId, Station startStation, Station endStation, LocalTime startTime, TimeTableType timetableDayType)
     {
-        this.journeyRoutes = new ArrayList<>();
+        this.journeyPlannerId = journeyPlannerId;
         this.startStation = startStation;
         this.endStation = endStation;
-        metroSystem = null;
         this.startTime = startTime;
-        this.timetableType = timetableType;
+        this.timetableType = timetableDayType;
+        this.journeyRoutes = new ArrayList<>();
+        metroSystem = null;
+    }
+
+    public JourneyPlanner(Station startStation, Station endStation, LocalTime startTime, TimeTableType timetableDayType)
+    {
+        this.journeyPlannerId = 0;
+        this.startStation = startStation;
+        this.endStation = endStation;
+        this.startTime = startTime;
+        this.timetableType = timetableDayType;
+        this.journeyRoutes = new ArrayList<>();
+        metroSystem = null;
     }
 
     public JourneyPlanner()
@@ -42,6 +55,36 @@ public class JourneyPlanner implements StartInterface
     public List<JourneyRoute> getJourneyRoutes()
     {
         return journeyRoutes;
+    }
+
+    public int getJourneyPlannerId()
+    {
+        return journeyPlannerId;
+    }
+
+    public LocalTime getStartTime()
+    {
+        return startTime;
+    }
+
+    public TimeTableType getTimetableDayType()
+    {
+        return timetableType;
+    }
+
+    public void setJourneyPlannerId(int journeyPlannerId)
+    {
+        this.journeyPlannerId = journeyPlannerId;
+    }
+
+    public void setStartTime(LocalTime startTime)
+    {
+        this.startTime = startTime;
+    }
+
+    public void setTimetableDayType(TimeTableType timetableDayType)
+    {
+        this.timetableType = timetableDayType;
     }
 
     public void setJourneyRoutes(List<JourneyRoute> journeyRoutes)
@@ -97,6 +140,30 @@ public class JourneyPlanner implements StartInterface
         }
     }
 
+    public int getTotalJourneyDuration()
+    {
+        Schedule currentSchedule;
+        Schedule nextSchedule;
+        List<Schedule>schedules;
+        int totalMinutes = 0;
+
+        for(JourneyRoute journeyRoute : journeyRoutes)
+        {
+            schedules = journeyRoute.getSchedules();
+
+            for (int i = 0; i < schedules.size() - 1; i++)
+            {
+                currentSchedule = schedules.get(i);
+                nextSchedule = schedules.get(i + 1);
+
+                Duration duration = Duration.between(currentSchedule.getDepartureTime(), nextSchedule.getDepartureTime());
+                totalMinutes += duration.toMinutes();
+            }
+        }
+
+        return totalMinutes;
+    }
+
     public void displayJourneyPlanner()
     {
         for(JourneyRoute journeyRoute : journeyRoutes)
@@ -131,4 +198,17 @@ public class JourneyPlanner implements StartInterface
         }
     }
 
+    @Override
+    public String toString()
+    {
+        return "JourneyPlanner{" +
+                "journeyPlannerId=" + journeyPlannerId +
+                ", journeyRoutes=" + journeyRoutes +
+                ", startStation=" + startStation +
+                ", endStation=" + endStation +
+                ", startTime=" + startTime +
+                ", timetableDayType=" + timetableType +
+                ", metroSystem=" + metroSystem +
+                '}';
+    }
 }
