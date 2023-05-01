@@ -322,13 +322,14 @@ public class ProfileController extends Controller
             newPasswordLabel.setGraphic(null);
             errorText.setText("");
 
-            if (currentPassword.equals(user.getPassword()))
+            if (user.checkPassword(currentPassword))
             {
                 try
                 {
                     user.setPassword(newPassword);
                     userDao.updatePassword(user);
 
+                    currentPasswordLabel.setGraphic(null);
                     currentPasswordText.setText("");
                     newPasswordText.setText("");
                 } catch (DaoException de)
@@ -337,7 +338,9 @@ public class ProfileController extends Controller
                 }
             } else
             {
-                errorText.setText("Wrong password");
+                currentPasswordLabel.setGraphic(redAsterisk);
+                currentPasswordLabel.setContentDisplay(ContentDisplay.RIGHT);
+                errorText.setText(asterisk + " Wrong password");
             }
         }
     }
