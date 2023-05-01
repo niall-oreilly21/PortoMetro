@@ -237,7 +237,11 @@ public class StationController extends Controller
         }
 
         searchedFilteredStations.addAll(filteredByFacilitiesStations);
-        drawStationsBox(searchedFilteredStations);
+
+        if (searchedFilteredStations.isEmpty())
+            initialiseNoResults();
+        else
+            drawStationsBox(searchedFilteredStations);
     }
 
     private void handleZoneFilter()
@@ -254,7 +258,11 @@ public class StationController extends Controller
         }
 
         searchedFilteredStations.addAll(filteredByZoneStations);
-        drawStationsBox(searchedFilteredStations);
+
+        if (searchedFilteredStations.isEmpty())
+            initialiseNoResults();
+        else
+            drawStationsBox(searchedFilteredStations);
     }
 
     private void handleSearchStation()
@@ -271,7 +279,11 @@ public class StationController extends Controller
         }
 
         searchedFilteredStations.addAll(searchedStations);
-        drawStationsBox(searchedFilteredStations);
+
+        if (searchedFilteredStations.isEmpty())
+            initialiseNoResults();
+        else
+            drawStationsBox(searchedFilteredStations);
     }
 
     private void handleFacilitiesFilterSearch()
@@ -304,7 +316,10 @@ public class StationController extends Controller
                 .collect(Collectors
                         .toList());
 
-        drawStationsBox(searchedFilteredStations);
+        if (searchedFilteredStations.isEmpty())
+            initialiseNoResults();
+        else
+            drawStationsBox(searchedFilteredStations);
     }
 
     private void handleZoneFilterSearch()
@@ -331,7 +346,10 @@ public class StationController extends Controller
                 .collect(Collectors
                         .toList());
 
-        drawStationsBox(searchedFilteredStations);
+        if (searchedFilteredStations.isEmpty())
+            initialiseNoResults();
+        else
+            drawStationsBox(searchedFilteredStations);
     }
 
     private void handleFacilitiesZoneFilter()
@@ -364,7 +382,10 @@ public class StationController extends Controller
                 .collect(Collectors
                         .toList());
 
-        drawStationsBox(searchedFilteredStations);
+        if (searchedFilteredStations.isEmpty())
+            initialiseNoResults();
+        else
+            drawStationsBox(searchedFilteredStations);
     }
 
     private void handleFacilitiesZoneFilterSearch()
@@ -408,7 +429,10 @@ public class StationController extends Controller
                 .collect(Collectors
                         .toList());
 
-        drawStationsBox(searchedFilteredStations);
+        if (searchedFilteredStations.isEmpty())
+            initialiseNoResults();
+        else
+            drawStationsBox(searchedFilteredStations);
     }
 
     private void initialiseFilterByFacilities()
@@ -607,5 +631,24 @@ public class StationController extends Controller
         {
             drawStationsBox(stations);
         }
+    }
+
+    private void initialiseNoResults()
+    {
+        stationsBox.getChildren().clear();
+        stationsBox.setAlignment(Pos.CENTER);
+        stationsBox.setSpacing(20);
+        stationsBox.setPadding(new Insets(50, 0, 0, 0));
+
+        ImageView sadFace = new ImageView(new Image("/img/sad-face.png"));
+        sadFace.setFitWidth(50);
+        sadFace.setFitHeight(50);
+
+        Label text = new Label();
+        text.setText("No stations found");
+        text.getStyleClass().add("subheader-label");
+        text.setTextFill(Color.web("#00305f"));
+
+        stationsBox.getChildren().addAll(sadFace, text);
     }
 }
