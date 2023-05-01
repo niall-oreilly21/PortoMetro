@@ -38,6 +38,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import org.apache.pdfbox.contentstream.operator.state.SetLineWidth;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -129,6 +130,10 @@ public class AdministratorController extends Controller
     {
         initialiseLogo();
 
+        cards.get(3).setActive(false);
+        cards.get(5).setActive(false);
+        cards.get(9).setActive(false);
+
         Image adminImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/administrator.png")));
         administratorIcon.setImage(adminImage);
 
@@ -197,6 +202,7 @@ public class AdministratorController extends Controller
         TableColumn<Train, TrainModel> trainModel = new TableColumn<>("Train Model");
         TableColumn<Train, Integer> trainCarriages = new TableColumn<>("Carriages");
         TableColumn<Train, Integer> trainCapacity = new TableColumn<>("Capacity");
+        TableColumn<Train, String> trainLine = new TableColumn<>("Line");
 
         trainId.setCellValueFactory(new PropertyValueFactory<>("trainId"));
         trainModel.setCellValueFactory(new PropertyValueFactory<>("trainModel"));
@@ -218,12 +224,30 @@ public class AdministratorController extends Controller
                 });
         trainCarriages.setCellValueFactory(new PropertyValueFactory<>("carriages"));
         trainCapacity.setCellValueFactory(new PropertyValueFactory<>("capacity"));
+        trainLine.setCellValueFactory(cellData -> {
+            Train train = cellData.getValue();
+            try
+            {
+                for (Line line : lines)
+                {
+                    if (trainDao.findAllTrainsByLineId(line.getLineId()).contains(train))
+                        return new SimpleStringProperty(line.getLineId() + " | " + line.getLineName());
+                }
+
+            } catch (DaoException de)
+            {
+                de.printStackTrace();
+            }
+
+            return null;
+        });
 
         double tableWidth = trainsTable.getPrefWidth();
         trainId.setPrefWidth(tableWidth * 0.2);
         trainModel.setPrefWidth(tableWidth * 0.375);
-        trainCarriages.setPrefWidth(tableWidth * 0.2);
-        trainCapacity.setPrefWidth(tableWidth * 0.3);
+        trainCarriages.setPrefWidth(tableWidth * 0.165);
+        trainCapacity.setPrefWidth(tableWidth * 0.165);
+        trainLine.setPrefWidth(tableWidth * 0.165);
 
         trainsTableData = FXCollections.observableArrayList(trains);
         trainsTable.setItems(trainsTableData);
@@ -232,6 +256,7 @@ public class AdministratorController extends Controller
         trainsTable.getColumns().add(trainModel);
         trainsTable.getColumns().add(trainCarriages);
         trainsTable.getColumns().add(trainCapacity);
+        trainsTable.getColumns().add(trainLine);
 
         for (RadioMenuItem radioMenuItem : radioMenuItems)
         {
@@ -239,7 +264,7 @@ public class AdministratorController extends Controller
             {
                 filterTrainsByLine.setText(radioMenuItem.getText());
 
-                String lineId = radioMenuItem.getText().split(" | ")[0];
+                String lineId = radioMenuItem.getText().split("\\|")[0];
 
                 try
                 {
@@ -331,12 +356,27 @@ public class AdministratorController extends Controller
         TableColumn<User, String> email = new TableColumn<>("E-mail");
         TableColumn<User, String> firstName = new TableColumn<>("First Name");
         TableColumn<User, String> surname = new TableColumn<>("Surname");
+        TableColumn<User, String> userType = new TableColumn<>("User Type");
         TableColumn<User, Void> deleteUserButton = new TableColumn<>();
 
         userId.setCellValueFactory(new PropertyValueFactory<>("userId"));
         email.setCellValueFactory(new PropertyValueFactory<>("email"));
         firstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         surname.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        userType.setCellValueFactory(cellData ->
+        {
+            User user = cellData.getValue();
+            if (user instanceof Passenger)
+                if (user instanceof Student)
+                    return new SimpleStringProperty("Student");
+                else
+                    return new SimpleStringProperty("Passenger");
+
+            if (user instanceof Administrator)
+                return new SimpleStringProperty("Administrator");
+
+            return null;
+        });
 
         Callback<TableColumn<User, Void>, TableCell<User, Void>> cellFactory =
                 new Callback<>()
@@ -360,7 +400,17 @@ public class AdministratorController extends Controller
                                 {
                                     button.setOnAction(event ->
                                     {
-                                        System.out.println("Delete user");
+                                        int index = getIndex();
+                                        User user = usersTable.getItems().get(index);
+                                        try
+                                        {
+                                            userDao.remove(user);
+                                            usersTable.getItems().remove(user);
+                                            users = userDao.findAll();
+                                        } catch (DaoException de)
+                                        {
+                                            de.printStackTrace();
+                                        }
                                     });
                                     button.getStyleClass().add("form-button");
                                     ImageView trash = new ImageView();
@@ -380,10 +430,10 @@ public class AdministratorController extends Controller
 
 
         double tableWidth = trainsTable.getPrefWidth();
-        userId.setPrefWidth(tableWidth * 0.1);
-        email.setPrefWidth(tableWidth * 0.375);
-        firstName.setPrefWidth(tableWidth * 0.25);
-        surname.setPrefWidth(tableWidth * 0.25);
+        userId.setPrefWidth(tableWidth * 0.075);
+        email.setPrefWidth(tableWidth * 0.365);
+        firstName.setPrefWidth(tableWidth * 0.18);
+        surname.setPrefWidth(tableWidth * 0.18);
         deleteUserButton.setPrefWidth(tableWidth * 0.1);
 
         usersTableData = FXCollections.observableArrayList(users);
@@ -393,6 +443,7 @@ public class AdministratorController extends Controller
         usersTable.getColumns().add(email);
         usersTable.getColumns().add(firstName);
         usersTable.getColumns().add(surname);
+        usersTable.getColumns().add(userType);
         usersTable.getColumns().add(deleteUserButton);
 
         for (RadioMenuItem radioMenuItem : radioMenuItems)
@@ -501,7 +552,8 @@ public class AdministratorController extends Controller
         cardsTable.setPrefWidth(700);
 
         TableColumn<Card, Integer> userId = new TableColumn<>("ID");
-        TableColumn<Card, Boolean> isActive = new TableColumn<>("Activity");
+        TableColumn<Card, String> cardType = new TableColumn<>("Card Type");
+        TableColumn<Card, String> isActive = new TableColumn<>("Activity");
         TableColumn<Card, String> accessType = new TableColumn<>("Access Type");
         TableColumn<Card, Double> price = new TableColumn<>("Price");
         TableColumn<Card, LocalDate> endDateTime = new TableColumn<>("End date");
@@ -509,6 +561,7 @@ public class AdministratorController extends Controller
         TableColumn<Card, Void> deleteCardButton = new TableColumn<>();
 
         cardsTable.getColumns().add(userId);
+        cardsTable.getColumns().add(cardType);
         cardsTable.getColumns().add(isActive);
         cardsTable.getColumns().add(accessType);
         cardsTable.getColumns().add(price);
@@ -517,16 +570,45 @@ public class AdministratorController extends Controller
         cardsTable.getColumns().add(deleteCardButton);
 
         double tableWidth = trainsTable.getPrefWidth();
-        userId.setPrefWidth(tableWidth * 0.1);
-        isActive.setPrefWidth(tableWidth * 0.175);
-        accessType.setPrefWidth(tableWidth * 0.175);
-        price.setPrefWidth(tableWidth * 0.125);
-        endDateTime.setPrefWidth(tableWidth * 0.2);
-        numberOfTrips.setPrefWidth(tableWidth * 0.2);
+        userId.setPrefWidth(tableWidth * 0.075);
+        isActive.setPrefWidth(tableWidth * 0.15);
+        accessType.setPrefWidth(tableWidth * 0.15);
+        price.setPrefWidth(tableWidth * 0.1);
+        endDateTime.setPrefWidth(tableWidth * 0.17);
+        numberOfTrips.setPrefWidth(tableWidth * 0.16);
         deleteCardButton.setPrefWidth(tableWidth * 0.1);
 
         userId.setCellValueFactory(new PropertyValueFactory<>("cardId"));
-        isActive.setCellValueFactory(new PropertyValueFactory<>("isActive"));
+
+        cardType.setCellValueFactory(cellData ->
+        {
+            Card card = cellData.getValue();
+            if (card instanceof GreyCard)
+                if (card instanceof StudentCard)
+                    return new SimpleStringProperty("Student card");
+                else
+                    return new SimpleStringProperty("Grey card");
+
+            if (card instanceof BlueCard)
+                if (card instanceof TourCard)
+                    return new SimpleStringProperty("Tour card");
+                else
+                    return new SimpleStringProperty("Blue card");
+
+            return null;
+        });
+
+        isActive.setCellValueFactory(cellData ->
+        {
+            Card card = cellData.getValue();
+            if (card.getIsActive())
+            {
+                return new SimpleStringProperty("Active");
+            } else
+            {
+                return new SimpleStringProperty("Inactive");
+            }
+        });
 
         accessType.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getCardAccessType().getLabel())
@@ -581,7 +663,17 @@ public class AdministratorController extends Controller
                                 {
                                     button.setOnAction(event ->
                                     {
-                                        System.out.println("Delete card");
+                                        int index = getIndex();
+                                        Card card = cardsTable.getItems().get(index);
+                                        try
+                                        {
+                                            cardDao.remove(card);
+                                            cardsTable.getItems().remove(card);
+//                                            cards = cardDao.findAll();
+                                        } catch (DaoException de)
+                                        {
+                                            de.printStackTrace();
+                                        }
                                     });
                                     button.getStyleClass().add("form-button");
                                     ImageView trash = new ImageView();
@@ -606,11 +698,28 @@ public class AdministratorController extends Controller
         {
             radioMenuItem.setOnAction(event ->
             {
+                cardsTableData = FXCollections.observableArrayList();
+
                 filterCardsByActivity.setText(radioMenuItem.getText());
 
+                for (Card card : cards)
+                {
+                    switch (radioMenuItem.getText())
+                    {
+                        case "Active":
+                            if (card.getIsActive())
+                                cardsTableData.add(card);
+                            break;
+                        case "Inactive":
+                            if (!card.getIsActive())
+                                cardsTableData.add(card);
+                            break;
+                        default:
+                            break;
+                    }
+                }
 
-                // Filter by activity
-
+                cardsTable.setItems(cardsTableData);
             });
         }
 
