@@ -24,17 +24,17 @@ public class ComparatorSchedulesClosestTime implements Comparator<Schedule>
         Duration scheduleOneTimeDiff = Duration.between(startTime, scheduleOneTime);
         Duration scheduleTwoTimeDiff = Duration.between(startTime, scheduleTwoTime);
 
-        // If the departure time is before the start time, make the difference negative
+        // If the departure time is before the current time, add one day to the difference
         if (scheduleOneTime.isBefore(startTime))
         {
-            scheduleOneTimeDiff = scheduleOneTimeDiff.negated();
+            scheduleOneTimeDiff = scheduleOneTimeDiff.plusDays(1);
         }
         if (scheduleTwoTime.isBefore(startTime))
         {
-            scheduleTwoTimeDiff = scheduleTwoTimeDiff.negated();
+            scheduleTwoTimeDiff = scheduleTwoTimeDiff.plusDays(1);
         }
 
-        // Compare the differences between departure times and start time
+        // Compare the differences between departure times and the current time
         return scheduleOneTimeDiff.compareTo(scheduleTwoTimeDiff);
     }
 }

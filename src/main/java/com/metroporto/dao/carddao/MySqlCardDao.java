@@ -6,6 +6,7 @@ import com.metroporto.dao.zonedao.MySqlZoneDao;
 import com.metroporto.dao.zonedao.ZoneDaoInterface;
 import com.metroporto.enums.CardAccessType;
 import com.metroporto.exceptions.DaoException;
+import com.metroporto.metro.Facility;
 import com.metroporto.metro.Zone;
 import com.metroporto.users.Passenger;
 import com.metroporto.users.User;
@@ -13,6 +14,7 @@ import com.metroporto.users.User;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
@@ -25,7 +27,40 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
     }
 
     @Override
-    public Card findCardByCardId(int cardIdToBeFound) throws DaoException
+    public List<Card> findAll() throws DaoException
+    {
+        List<Card> cards = new ArrayList<>();
+
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query =
+                    "SELECT * FROM all_cards;";
+
+            ps = con.prepareStatement(query);
+
+            //Use the prepared statement to execute the sql
+            rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                cards.add(createDto());
+            }
+        } catch (SQLException sqe)
+        {
+            throw new DaoException("findAll() in MySqlCardDao" + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("findAll() in MySqlCardDao");
+        }
+
+        return cards;
+    }
+
+    @Override
+    public Card findCardByCardId(int userId) throws DaoException
     {
         Card card = null;
 
@@ -33,10 +68,10 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
         {
             //Get a connection to the database
             con = this.getConnection();
-            query = "SELECT * FROM all_cards WHERE card_id = ?";
+            query = "SELECT * FROM all_cards WHERE user_id = ?";
 
             ps = con.prepareStatement(query);
-            ps.setInt(1, cardIdToBeFound);
+            ps.setInt(1, userId);
 
             //Use the prepared statement to execute the sql
             rs = ps.executeQuery();
@@ -107,7 +142,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
 
                     ps.setString(2, cardType);
                     ps.setString(3, card.getCardAccessType().getLabel());
-                    ps.setDouble(4, card.getCardPrice());
+                    //ps.setDouble(4, card.getCardPrice());
                 }
 
             }
@@ -175,7 +210,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
             {
                 //Get a connection to the database
                 con = this.getConnection();
-                String query = "INSERT INTO timer_cards (card_id, end_datetime) VALUES\n" +
+                String query = "INSERT INTO grey_cards (card_id, end_datetime) VALUES\n" +
                         "(?, ?)";
 
                 ps = con.prepareStatement(query);
@@ -216,7 +251,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
 
                 ps = con.prepareStatement(query);
                 ps.setInt(1, card.getCardId());
-                ps.setInt(2, ((BlueCard) card).getNumberOfTrips());
+                ps.setInt(2, ((BlueCard) card).getTotalTrips());
                 int rowsAffected = ps.executeUpdate();
 
                 if (rowsAffected > 0)
@@ -245,57 +280,57 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
         int cardId = rs.getInt("card_id");
         String cardType = rs.getString("card_type");
         CardAccessType accessType = enumLabelConverter.fromLabel(rs.getString("access_type"), CardAccessType.class);
-        double cardPrice = rs.getDouble("card_price");
 
-        Timestamp endTimestamp = rs.getTimestamp("end_date");
-        LocalDate endDate = null;
 
-        if (endTimestamp != null)
+        int cardPriceId = rs.getInt("card_price_id");
+        double physicalCardPrice = rs.getDouble("physical_card_price");
+        double topUpPrice = rs.getDouble("top_up_price");
+
+        CardPrice cardPrice = new CardPrice(cardPriceId, physicalCardPrice, topUpPrice);
+
+        if(cardType.equalsIgnoreCase("grey card")  || cardType.equalsIgnoreCase("student card"))
         {
-            endDate = endTimestamp.toLocalDateTime().toLocalDate();
+            LocalDate endDate = rs.getTimestamp("end_date").toLocalDateTime().toLocalDate();
+
+            if(cardType.equalsIgnoreCase("grey card"))
+            {
+                card = new GreyCard(cardId, accessType, cardPrice, endDate);
+            }
+            else
+            {
+                card = new StudentCard(cardId, accessType, cardPrice, endDate);
+            }
+
         }
-
-        switch (cardType.toLowerCase())
+        else if(cardType.equalsIgnoreCase("blue card")  || cardType.equalsIgnoreCase("tour card"))
         {
-            case "blue card":
-                int numberOfTrips = rs.getInt("total_trips_allowed");
+            int numberOfTrips = rs.getInt("total_trips");
+            double tripPrice = rs.getDouble("trip_price");
+
+            if(cardType.equalsIgnoreCase("blue card"))
+            {
                 card = new BlueCard(cardId, accessType, cardPrice, numberOfTrips);
-                break;
-
-            case "grey card":
-                card = new GreyCard(cardId, accessType, cardPrice, endDate);
-                break;
-
-            case "student card":
-                card = new GreyCard(cardId, accessType, cardPrice, endDate);
-                break;
-
-            case "tour card":
-                card = new GreyCard(cardId, accessType, cardPrice, endDate);
-                break;
-
-            default:
-                break;
+            }
+            else
+            {
+                card = new TourCard(cardId, accessType, cardPrice, numberOfTrips);
+            }
         }
 
         List<Zone> zones;
 
-        switch (accessType)
+        if(card != null)
         {
-            case THREE_ZONES:
+            if(card.getCardAccessType().equals(CardAccessType.THREE_ZONES))
+            {
                 zones = zoneDao.findAllZonesByZoneId(cardId);
 
-                for(Zone zone : zones)
+                for (Zone zone : zones)
                 {
-                    if (card != null)
-                    {
-                        card.addZone(zone);
-                    }
+                    card.addZone(zone);
                 }
-                break;
 
-            case ALL_ZONES:
-                break;
+            }
         }
 
         return card;
@@ -339,4 +374,5 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
 
         return false;
     }
+
 }
