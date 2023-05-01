@@ -6,20 +6,28 @@ import java.time.LocalDate;
 
 public class GreyCard extends Card
 {
+    private LocalDate startDate;
     private LocalDate endDate;
 
-    public GreyCard(int cardId, CardAccessType accessType, CardPrice cardPrice, LocalDate endDate)
+    public GreyCard(String cardId, CardAccessType accessType, CardPrice cardPrice, LocalDate startDate, LocalDate endDate)
     {
         super(cardId, accessType, cardPrice);
+        this.startDate = startDate;
         this.endDate = endDate;
         checkExpiration();
     }
 
-    public GreyCard(CardAccessType accessType, CardPrice cardPrice, LocalDate endDate)
+    public GreyCard(CardAccessType accessType, CardPrice cardPrice, LocalDate startDate, LocalDate endDate)
     {
         super(accessType, cardPrice);
+        this.startDate = startDate;
         this.endDate = endDate;
         checkExpiration();
+    }
+
+    public LocalDate getStartDate()
+    {
+        return startDate;
     }
 
     public LocalDate getEndDate()
@@ -31,7 +39,7 @@ public class GreyCard extends Card
     protected void checkExpiration()
     {
         LocalDate now = LocalDate.now();
-        isActive = endDate.isAfter(now);
+        isActive = (now.isAfter(startDate)) && (now.isBefore(endDate));
     }
 
     @Override
