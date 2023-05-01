@@ -117,11 +117,6 @@ public class JourneyPlanner implements StartInterface
         this.metroSystem = metroSystem;
     }
 
-    public LocalTime getStartTime()
-    {
-        return startTime;
-    }
-
     public TimeTableType getTimetableType()
     {
         return timetableType;
@@ -130,11 +125,11 @@ public class JourneyPlanner implements StartInterface
     @Override
     public void start()
     {
-        if(!this.journeyRoutes.isEmpty())
+        if (!this.journeyRoutes.isEmpty())
         {
             this.journeyRoutes.clear();
         }
-        if(metroSystem != null)
+        if (metroSystem != null)
         {
             journeyRoutes.addAll(metroSystem.findShortestPath(startStation, endStation, startTime, timetableType));
         }
@@ -144,10 +139,10 @@ public class JourneyPlanner implements StartInterface
     {
         Schedule currentSchedule;
         Schedule nextSchedule;
-        List<Schedule>schedules;
+        List<Schedule> schedules;
         int totalMinutes = 0;
 
-        for(JourneyRoute journeyRoute : journeyRoutes)
+        for (JourneyRoute journeyRoute : journeyRoutes)
         {
             schedules = journeyRoute.getSchedules();
 
@@ -166,10 +161,10 @@ public class JourneyPlanner implements StartInterface
 
     public void displayJourneyPlanner()
     {
-        for(JourneyRoute journeyRoute : journeyRoutes)
+        for (JourneyRoute journeyRoute : journeyRoutes)
         {
             int i = 0;
-            System.out.println("-----LINE: " +journeyRoute.getLine().getLineName() + "-----");
+            System.out.println("-----LINE: " + journeyRoute.getLine().getLineName() + "-----");
             System.out.println("-----ROUTE: " + journeyRoute.getRoute().getEndStation().getStationName() + "-----");
 
             for (Schedule schedule : journeyRoute.getSchedules())
@@ -181,13 +176,11 @@ public class JourneyPlanner implements StartInterface
                         System.out.println("------Connection: " + schedule.getStation().getStationName() + "------");
                         System.out.println("Arrival time: " + ((ConnectionSchedule) schedule).getArrivalTime());
                         System.out.println("Transfer time: " + ((ConnectionSchedule) schedule).getTransferTime() + " mins");
-                    }
-                    else
+                    } else
                     {
                         System.out.println("Departure time: " + (schedule.getDepartureTime()));
                     }
-                }
-                else
+                } else
                 {
                     System.out.println("Stop: " + schedule.getStation().getStationName());
                     System.out.println("Departure time: " + schedule.getDepartureTime());

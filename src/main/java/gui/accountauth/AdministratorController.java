@@ -9,7 +9,6 @@ import com.metroporto.dao.traindao.MySqlTrainDao;
 import com.metroporto.dao.traindao.TrainDaoInterface;
 import com.metroporto.dao.userdao.MySqlUserDao;
 import com.metroporto.dao.userdao.UserDaoInterface;
-import com.metroporto.enums.CardAccessType;
 import com.metroporto.enums.Folder;
 import com.metroporto.enums.Page;
 import com.metroporto.enums.TrainModel;
@@ -40,11 +39,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
-import org.apache.pdfbox.contentstream.operator.state.SetLineWidth;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -97,18 +94,7 @@ public class AdministratorController extends Controller
     private TableView<Card> cardsTable;
     private MenuButton filterCardsByActivity;
     private ObservableList<Card> cardsTableData;
-    private List<Card> cards = List.of(
-            new BlueCard(1, CardAccessType.ALL_ZONES, 10.0, 2),
-            new BlueCard(2, CardAccessType.ALL_ZONES, 15.0, 4),
-            new GreyCard(3, CardAccessType.THREE_ZONES, 20.0, LocalDate.now().plusDays(7)),
-            new GreyCard(4, CardAccessType.THREE_ZONES, 25.0, LocalDate.now().plusDays(14)),
-            new StudentCard(5, CardAccessType.ALL_ZONES, 5.0, LocalDate.now().plusMonths(6)),
-            new StudentCard(6, CardAccessType.THREE_ZONES, 7.0, LocalDate.now().plusMonths(9)),
-            new TourCard(7, CardAccessType.ALL_ZONES, 5.0, 10),
-            new TourCard(8, CardAccessType.ALL_ZONES, 7.5, 20),
-            new TourCard(9, CardAccessType.THREE_ZONES, 10.0, 30),
-            new TourCard(10, CardAccessType.THREE_ZONES, 15.0, 40)
-    );
+    private List<Card> cards;
 
     public AdministratorController()
     {
@@ -123,7 +109,7 @@ public class AdministratorController extends Controller
             trains = trainDao.findAll();
             lines = lineDao.findAll();
             users = userDao.findAll();
-//            cards = cardDao.findAll();
+            cards = cardDao.findAll();
         } catch (DaoException de)
         {
             de.printStackTrace();
@@ -606,7 +592,7 @@ public class AdministratorController extends Controller
         isActive.setCellValueFactory(cellData ->
         {
             Card card = cellData.getValue();
-            if (card.getIsActive())
+            if (card.isActive())
             {
                 return new SimpleStringProperty("Active");
             } else
@@ -638,7 +624,7 @@ public class AdministratorController extends Controller
 
             if (card instanceof BlueCard)
             {
-                int numberOfTripsValue = ((BlueCard) card).getNumberOfTrips();
+                int numberOfTripsValue = ((BlueCard) card).getTotalTrips();
                 return new SimpleObjectProperty<>(numberOfTripsValue);
             } else
             {
@@ -712,11 +698,11 @@ public class AdministratorController extends Controller
                     switch (radioMenuItem.getText())
                     {
                         case "Active":
-                            if (card.getIsActive())
+                            if (card.isActive())
                                 cardsTableData.add(card);
                             break;
                         case "Inactive":
-                            if (!card.getIsActive())
+                            if (!card.isActive())
                                 cardsTableData.add(card);
                             break;
                         default:
