@@ -63,6 +63,14 @@
                 <padding>
                     <Insets top="20"/>
                 </padding>
+                <ImageView fx:id="cardsIcon" fitWidth="20" fitHeight="20"/>
+                <Label text="Cards" fx:id="cardsLabel" textFill="white"
+                       onMouseClicked="#initialiseCardsEvent" styleClass="text-underline"/>
+            </HBox>
+            <HBox spacing="15">
+                <padding>
+                    <Insets top="20"/>
+                </padding>
                 <ImageView fx:id="signOut" fitWidth="20" fitHeight="20"/>
                 <Label text="Sign out" textFill="white" styleClass="text-underline"/>
             </HBox>

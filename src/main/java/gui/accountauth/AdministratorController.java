@@ -1,11 +1,15 @@
 package gui.accountauth;
 
+import com.metroporto.cards.*;
+import com.metroporto.dao.carddao.CardDaoInterface;
+import com.metroporto.dao.carddao.MySqlCardDao;
 import com.metroporto.dao.linedao.LineDaoInterface;
 import com.metroporto.dao.linedao.MySqlLineDao;
 import com.metroporto.dao.traindao.MySqlTrainDao;
 import com.metroporto.dao.traindao.TrainDaoInterface;
 import com.metroporto.dao.userdao.MySqlUserDao;
 import com.metroporto.dao.userdao.UserDaoInterface;
+import com.metroporto.enums.CardAccessType;
 import com.metroporto.enums.TrainModel;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Line;
@@ -15,6 +19,8 @@ import com.metroporto.users.Passenger;
 import com.metroporto.users.Student;
 import com.metroporto.users.User;
 import gui.Controller;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -33,6 +39,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,31 +48,29 @@ import java.util.Objects;
 public class AdministratorController extends Controller
 {
     private TrainDaoInterface trainDao;
-
     private LineDaoInterface lineDao;
-
     private UserDaoInterface userDao;
+    private CardDaoInterface cardDao;
 
     private Administrator admin;
 
     @FXML
     private Label trainsLabel;
-
     @FXML
     private Label usersLabel;
-
+    @FXML
+    private Label cardsLabel;
     @FXML
     private Label greet;
 
     @FXML
     private ImageView administratorIcon;
-
     @FXML
     private ImageView trainsIcon;
-
     @FXML
     private ImageView usersIcon;
-
+    @FXML
+    private ImageView cardsIcon;
     @FXML
     private ImageView signOut;
 
@@ -72,28 +78,38 @@ public class AdministratorController extends Controller
     private VBox contentBox;
 
     private List<Train> trains;
-
     private List<Line> lines;
-
     private MenuButton filterTrainsByLine;
-
     private TableView<Train> trainsTable;
-
     private ObservableList<Train> trainsTableData;
 
     private MenuButton filterUsersByType;
-
     private TableView<User> usersTable;
-
     private ObservableList<User> usersTableData;
-
     private List<User> users;
+
+    private TableView<Card> cardsTable;
+    private MenuButton filterCardsByActivity;
+    private ObservableList<Card> cardsTableData;
+    private List<Card> cards = List.of(
+            new BlueCard(1, CardAccessType.ALL_ZONES, 10.0, 2),
+            new BlueCard(2, CardAccessType.ALL_ZONES, 15.0, 4),
+            new GreyCard(3, CardAccessType.THREE_ZONES, 20.0, LocalDate.now().plusDays(7)),
+            new GreyCard(4, CardAccessType.THREE_ZONES, 25.0, LocalDate.now().plusDays(14)),
+            new StudentCard(5, CardAccessType.ALL_ZONES, 5.0, LocalDate.now().plusMonths(6)),
+            new StudentCard(6, CardAccessType.THREE_ZONES, 7.0, LocalDate.now().plusMonths(9)),
+            new TourCard(7, CardAccessType.ALL_ZONES, 5.0, 10),
+            new TourCard(8, CardAccessType.ALL_ZONES, 7.5, 20),
+            new TourCard(9, CardAccessType.THREE_ZONES, 10.0, 30),
+            new TourCard(10, CardAccessType.THREE_ZONES, 15.0, 40)
+    );
 
     public AdministratorController()
     {
         trainDao = new MySqlTrainDao();
         lineDao = new MySqlLineDao();
         userDao = new MySqlUserDao();
+        cardDao = new MySqlCardDao();
         admin = (Administrator) app.getUser();
 
         try
@@ -101,6 +117,7 @@ public class AdministratorController extends Controller
             trains = trainDao.findAll();
             lines = lineDao.findAll();
             users = userDao.findAll();
+//            cards = cardDao.findAll();
         } catch (DaoException de)
         {
             de.printStackTrace();
@@ -121,6 +138,9 @@ public class AdministratorController extends Controller
         Image usersImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/group.png")));
         usersIcon.setImage(usersImage);
 
+        Image cardsImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/card-white.png")));
+        cardsIcon.setImage(cardsImage);
+
         Image signOutImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/sign-out.png")));
         signOut.setImage(signOutImage);
 
@@ -136,6 +156,7 @@ public class AdministratorController extends Controller
 
         trainsLabel.getStyleClass().add("nav-active");
         usersLabel.getStyleClass().remove("nav-active");
+        cardsLabel.getStyleClass().remove("nav-active");
 
         HBox heading = new HBox();
         heading.setPadding(new Insets(0, 10, 20, 10));
@@ -267,6 +288,7 @@ public class AdministratorController extends Controller
 
         usersLabel.getStyleClass().add("nav-active");
         trainsLabel.getStyleClass().remove("nav-active");
+        cardsLabel.getStyleClass().remove("nav-active");
 
         HBox heading = new HBox();
         heading.setPadding(new Insets(0, 10, 20, 10));
@@ -317,37 +339,43 @@ public class AdministratorController extends Controller
         surname.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 
         Callback<TableColumn<User, Void>, TableCell<User, Void>> cellFactory =
-                new Callback<>() {
-            @Override
-            public TableCell<User, Void> call(final TableColumn<User, Void> param) {
-                return new TableCell<>() {
-
-                    private final Button button = new Button();
-
+                new Callback<>()
+                {
                     @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            button.setOnAction(event ->
+                    public TableCell<User, Void> call(final TableColumn<User, Void> param)
+                    {
+                        return new TableCell<>()
+                        {
+
+                            private final Button button = new Button();
+
+                            @Override
+                            public void updateItem(Void item, boolean empty)
                             {
-                                System.out.println("Delete user");
-                            });
-                            button.getStyleClass().add("form-button");
-                            ImageView trash = new ImageView();
-                            trash.setFitHeight(15);
-                            trash.setFitWidth(15);
-                            Image trashImage = new Image(Objects.requireNonNull(getClass()
-                                    .getResourceAsStream("/img/trash-can.png")));
-                            trash.setImage(trashImage);
-                            button.setGraphic(trash);
-                            setGraphic(button);
-                        }
+                                super.updateItem(item, empty);
+                                if (empty)
+                                {
+                                    setGraphic(null);
+                                } else
+                                {
+                                    button.setOnAction(event ->
+                                    {
+                                        System.out.println("Delete user");
+                                    });
+                                    button.getStyleClass().add("form-button");
+                                    ImageView trash = new ImageView();
+                                    trash.setFitHeight(15);
+                                    trash.setFitWidth(15);
+                                    Image trashImage = new Image(Objects.requireNonNull(getClass()
+                                            .getResourceAsStream("/img/trash-can.png")));
+                                    trash.setImage(trashImage);
+                                    button.setGraphic(trash);
+                                    setGraphic(button);
+                                }
+                            }
+                        };
                     }
                 };
-            }
-        };
         deleteUserButton.setCellFactory(cellFactory);
 
 
@@ -419,5 +447,189 @@ public class AdministratorController extends Controller
 
         usersTableData = FXCollections.observableArrayList(users);
         usersTable.setItems(usersTableData);
+    }
+
+    public void initialiseCardsEvent(MouseEvent event)
+    {
+        initialiseCards();
+    }
+
+    private void initialiseCards()
+    {
+        if (!contentBox.getChildren().isEmpty())
+            contentBox.getChildren().clear();
+
+        usersLabel.getStyleClass().remove("nav-active");
+        trainsLabel.getStyleClass().remove("nav-active");
+        cardsLabel.getStyleClass().add("nav-active");
+
+        HBox heading = new HBox();
+        heading.setPadding(new Insets(0, 10, 20, 10));
+        heading.setAlignment(Pos.CENTER);
+
+        Label title = new Label();
+        title.getStyleClass().add("subheader-label-large");
+        title.setText("Cards");
+        title.setTextFill(Color.web("#00305f"));
+
+        Region region = new Region();
+        HBox.setHgrow(region, Priority.ALWAYS);
+
+        filterCardsByActivity = new MenuButton();
+        filterCardsByActivity.setText("Filter by Activity");
+        List<RadioMenuItem> radioMenuItems = new ArrayList<>();
+        ToggleGroup toggleGroup = new ToggleGroup();
+
+        String[] activityTypes = {"Active", "Inactive"};
+
+        for (String type : activityTypes)
+        {
+            RadioMenuItem radioMenuItem = new RadioMenuItem(type);
+            radioMenuItem.setToggleGroup(toggleGroup);
+            radioMenuItems.add(radioMenuItem);
+        }
+
+        filterCardsByActivity.getItems().addAll(radioMenuItems);
+
+        Button clear = new Button("Clear");
+        clear.setOnAction(this::clearCardTypeFilter);
+        clear.getStyleClass().add("form-button");
+
+        heading.getChildren().addAll(title, region, filterCardsByActivity, clear);
+
+        cardsTable = new TableView<>();
+        cardsTable.setPrefWidth(700);
+
+        TableColumn<Card, Integer> userId = new TableColumn<>("ID");
+        TableColumn<Card, Boolean> isActive = new TableColumn<>("Activity");
+        TableColumn<Card, String> accessType = new TableColumn<>("Access Type");
+        TableColumn<Card, Double> price = new TableColumn<>("Price");
+        TableColumn<Card, LocalDate> endDateTime = new TableColumn<>("End date");
+        TableColumn<Card, Integer> numberOfTrips = new TableColumn<>("Num Trips");
+        TableColumn<Card, Void> deleteCardButton = new TableColumn<>();
+
+        cardsTable.getColumns().add(userId);
+        cardsTable.getColumns().add(isActive);
+        cardsTable.getColumns().add(accessType);
+        cardsTable.getColumns().add(price);
+        cardsTable.getColumns().add(endDateTime);
+        cardsTable.getColumns().add(numberOfTrips);
+        cardsTable.getColumns().add(deleteCardButton);
+
+        double tableWidth = trainsTable.getPrefWidth();
+        userId.setPrefWidth(tableWidth * 0.1);
+        isActive.setPrefWidth(tableWidth * 0.175);
+        accessType.setPrefWidth(tableWidth * 0.175);
+        price.setPrefWidth(tableWidth * 0.125);
+        endDateTime.setPrefWidth(tableWidth * 0.2);
+        numberOfTrips.setPrefWidth(tableWidth * 0.2);
+        deleteCardButton.setPrefWidth(tableWidth * 0.1);
+
+        userId.setCellValueFactory(new PropertyValueFactory<>("cardId"));
+        isActive.setCellValueFactory(new PropertyValueFactory<>("isActive"));
+
+        accessType.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getAccessType().getLabel())
+        );
+
+        price.setCellValueFactory(new PropertyValueFactory<>("cardPrice"));
+
+        endDateTime.setCellValueFactory(cellData ->
+        {
+            Card card = cellData.getValue();
+            if (card instanceof GreyCard)
+            {
+                LocalDate endDate = ((GreyCard) card).getEndDate();
+                return new SimpleObjectProperty<>(endDate);
+            }
+            return null;
+        });
+
+        numberOfTrips.setCellValueFactory(cellData ->
+        {
+            Card card = cellData.getValue();
+
+            if (card instanceof BlueCard)
+            {
+                int numberOfTripsValue = ((BlueCard) card).getNumberOfTrips();
+                return new SimpleObjectProperty<>(numberOfTripsValue);
+            } else
+            {
+                return null;
+            }
+        });
+
+        Callback<TableColumn<Card, Void>, TableCell<Card, Void>> cellFactory =
+                new Callback<>()
+                {
+                    @Override
+                    public TableCell<Card, Void> call(final TableColumn<Card, Void> param)
+                    {
+                        return new TableCell<>()
+                        {
+
+                            private final Button button = new Button();
+
+                            @Override
+                            public void updateItem(Void item, boolean empty)
+                            {
+                                super.updateItem(item, empty);
+                                if (empty)
+                                {
+                                    setGraphic(null);
+                                } else
+                                {
+                                    button.setOnAction(event ->
+                                    {
+                                        System.out.println("Delete card");
+                                    });
+                                    button.getStyleClass().add("form-button");
+                                    ImageView trash = new ImageView();
+                                    trash.setFitHeight(15);
+                                    trash.setFitWidth(15);
+                                    Image trashImage = new Image(Objects.requireNonNull(getClass()
+                                            .getResourceAsStream("/img/trash-can.png")));
+                                    trash.setImage(trashImage);
+                                    button.setGraphic(trash);
+                                    setGraphic(button);
+                                }
+                            }
+                        };
+                    }
+                };
+        deleteCardButton.setCellFactory(cellFactory);
+
+        cardsTableData = FXCollections.observableArrayList(cards);
+        cardsTable.setItems(cardsTableData);
+
+        for (RadioMenuItem radioMenuItem : radioMenuItems)
+        {
+            radioMenuItem.setOnAction(event ->
+            {
+                filterCardsByActivity.setText(radioMenuItem.getText());
+
+
+                // Filter by activity
+
+            });
+        }
+
+        contentBox.getChildren().addAll(heading, cardsTable);
+    }
+
+    private void clearCardTypeFilter(ActionEvent event)
+    {
+        filterCardsByActivity.setText("Filter by Activity");
+
+        ObservableList<MenuItem> items = filterCardsByActivity.getItems();
+
+        for (MenuItem item : items)
+        {
+            RadioMenuItem radioItem = (RadioMenuItem) item;
+            radioItem.setSelected(false);
+        }
+
+        cardsTableData = FXCollections.observableArrayList(cards);
+        cardsTable.setItems(cardsTableData);
     }
 }
