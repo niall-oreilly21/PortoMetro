@@ -74,16 +74,8 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
 
         if(userType.equalsIgnoreCase("student") || userType.equalsIgnoreCase("passenger"))
         {
-            int cardId = rs.getInt("card_id");
 
-            Card card = null;
-
-            if (rs.wasNull())
-            {
-                cardId = 0;
-                card = cardDao.findCardByCardId(cardId);
-            }
-
+            Card card = cardDao.findCardByCardId(userId);
 
             if(userType.equalsIgnoreCase("student"))
             {
@@ -91,26 +83,11 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
 
                 University university = universityDao.findUniversityByUniversityId(universityId);
 
-                if(cardId != 0)
-                {
-                    user = new Student(userId, email, password, firstName, lastName, card, university);
-                }
-                else
-                {
-                    user = new Student(userId, email, password, firstName, lastName, university);
-                }
-
+                user = new Student(userId, email, password, firstName, lastName, card, university);
             }
             else
             {
-                if(cardId != 0)
-                {
-                    user = new Passenger(userId, email, password, firstName, lastName, card);
-                }
-                else
-                {
-                    user = new Passenger(userId, email, password, firstName, lastName);
-                }
+                user = new Passenger(userId, email, password, firstName, lastName, card);
             }
         }
         else if(userType.equalsIgnoreCase("administrator"))
@@ -224,25 +201,6 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
            handleFinally("insertUser() in MySqlUserDao");
         }
 
-        if(!isInserted)
-        {
-            if(user instanceof Passenger)
-            {
-                if(((Passenger) user).getMetroCard() != null)
-                {
-                    cardDao.insertCardForPassenger(user);
-
-
-                    if(user instanceof Student)
-                    {
-                        if(((Passenger) user).getMetroCard() != null)
-                        {
-                            universityDao.insertUniversityForStudent(user);
-                        }
-                    }
-                }
-            }
-        }
         return isInserted;
     }
 
@@ -266,6 +224,11 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
                 return true;
             }
 
+        }
+        catch (SQLIntegrityConstraintViolationException e)
+        {
+            // Handle duplicate entry error
+            System.out.println("Duplicate entry found in the database");
         }
         catch (SQLException sqe)
         {
@@ -300,6 +263,11 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             }
 
         }
+        catch (SQLIntegrityConstraintViolationException e)
+        {
+            // Handle duplicate entry error
+            System.out.println("Duplicate entry found in the database");
+        }
         catch (SQLException sqe)
         {
             throw new DaoException("updatePassword() in MySqlUserDao " + sqe.getMessage());
@@ -333,6 +301,11 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             }
 
         }
+        catch (SQLIntegrityConstraintViolationException e)
+        {
+            // Handle duplicate entry error
+            System.out.println("Duplicate entry found in the database");
+        }
         catch (SQLException sqe)
         {
             throw new DaoException("updateFirstName() in MySqlUserDao " + sqe.getMessage());
@@ -365,6 +338,11 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
                 return true;
             }
 
+        }
+        catch (SQLIntegrityConstraintViolationException e)
+        {
+            // Handle duplicate entry error
+            System.out.println("Duplicate entry found in the database");
         }
         catch (SQLException sqe)
         {
