@@ -8,14 +8,14 @@ public class GreyCard extends Card
 {
     private LocalDate endDate;
 
-    public GreyCard(int cardId, CardAccessType accessType, GreyCardPrice cardPrice, LocalDate endDate)
+    public GreyCard(int cardId, CardAccessType accessType, CardPrice cardPrice, LocalDate endDate)
     {
         super(cardId, accessType, cardPrice);
         this.endDate = endDate;
         checkExpiration();
     }
 
-    public GreyCard(CardAccessType accessType, GreyCardPrice cardPrice, LocalDate endDate)
+    public GreyCard(CardAccessType accessType, CardPrice cardPrice, LocalDate endDate)
     {
         super(accessType, cardPrice);
         this.endDate = endDate;

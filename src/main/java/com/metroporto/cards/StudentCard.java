@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class StudentCard extends GreyCard
 {
 
-    public StudentCard(int cardId, CardAccessType accessType, GreyCardPrice cardPrice, LocalDate endDate)
+    public StudentCard(int cardId, CardAccessType accessType, CardPrice cardPrice, LocalDate endDate)
     {
         super(cardId, accessType, cardPrice, endDate);
     }

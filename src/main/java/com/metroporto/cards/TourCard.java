@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 public class TourCard extends BlueCard
 {
 
-    public TourCard(int cardId, CardAccessType cardAccessType, BlueCardsPrice cardPrice, int totalTrips)
+    public TourCard(int cardId, CardAccessType cardAccessType, CardPrice cardPrice, int totalTrips)
     {
         super(cardId, cardAccessType, cardPrice, totalTrips);
     }
 
-    public TourCard(CardAccessType cardAccessType, BlueCardsPrice cardPrice, int totalTrips)
+    public TourCard(CardAccessType cardAccessType, CardPrice cardPrice, int totalTrips)
     {
         super(cardAccessType, cardPrice, totalTrips);
     }

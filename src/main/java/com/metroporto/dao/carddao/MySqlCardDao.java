@@ -281,24 +281,24 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
         String cardType = rs.getString("card_type");
         CardAccessType accessType = enumLabelConverter.fromLabel(rs.getString("access_type"), CardAccessType.class);
 
-        CardPrice cardPrice;
+
         int cardPriceId = rs.getInt("card_price_id");
         double physicalCardPrice = rs.getDouble("physical_card_price");
+        double topUpPrice = rs.getDouble("top_up_price");
+
+        CardPrice cardPrice = new CardPrice(cardPriceId, physicalCardPrice, topUpPrice);
 
         if(cardType.equalsIgnoreCase("grey card")  || cardType.equalsIgnoreCase("student card"))
         {
             LocalDate endDate = rs.getTimestamp("end_date").toLocalDateTime().toLocalDate();
-            double monthlyTopUpPrice = rs.getDouble("monthly_top_up_price");
-
-            cardPrice = new GreyCardPrice(cardPriceId, physicalCardPrice, monthlyTopUpPrice);
 
             if(cardType.equalsIgnoreCase("grey card"))
             {
-                card = new GreyCard(cardId, accessType, (GreyCardPrice) cardPrice, endDate);
+                card = new GreyCard(cardId, accessType, cardPrice, endDate);
             }
             else
             {
-                card = new StudentCard(cardId, accessType, (GreyCardPrice) cardPrice, endDate);
+                card = new StudentCard(cardId, accessType, cardPrice, endDate);
             }
 
         }
@@ -307,15 +307,13 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
             int numberOfTrips = rs.getInt("total_trips");
             double tripPrice = rs.getDouble("trip_price");
 
-            cardPrice = new BlueCardsPrice(cardPriceId, physicalCardPrice, tripPrice);
-
             if(cardType.equalsIgnoreCase("blue card"))
             {
-                card = new BlueCard(cardId, accessType, (BlueCardsPrice) cardPrice, numberOfTrips);
+                card = new BlueCard(cardId, accessType, cardPrice, numberOfTrips);
             }
             else
             {
-                card = new TourCard(cardId, accessType, (BlueCardsPrice) cardPrice, numberOfTrips);
+                card = new TourCard(cardId, accessType, cardPrice, numberOfTrips);
             }
         }
 

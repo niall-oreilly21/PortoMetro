@@ -1,20 +1,31 @@
 package com.metroporto.cards;
 
-import com.metroporto.enums.CardAccessType;
-import com.metroporto.metro.Zone;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public abstract class CardPrice
+public class CardPrice
 {
     private int cardPriceId;
     private double physicalCardPrice;
+    private double topUpPrice;
 
-    public CardPrice(int cardPriceId, double physicalCardPrice)
+    public CardPrice(int cardPriceId, double physicalCardPrice, double topUpPrice)
     {
         this.cardPriceId = cardPriceId;
         this.physicalCardPrice = physicalCardPrice;
+        this.topUpPrice = topUpPrice;
+    }
+
+    public int getCardPriceId()
+    {
+        return cardPriceId;
+    }
+
+    public double getPhysicalCardPrice()
+    {
+        return physicalCardPrice;
+    }
+
+    public double getTopUpPrice()
+    {
+        return topUpPrice;
     }
 
     @Override

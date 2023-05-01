@@ -6,14 +6,14 @@ public class BlueCard extends Card
 {
     private int totalTrips;
 
-    public BlueCard(int cardId, CardAccessType cardAccessType, BlueCardsPrice cardPrice, int totalTrips)
+    public BlueCard(int cardId, CardAccessType cardAccessType, CardPrice cardPrice, int totalTrips)
     {
         super(cardId, cardAccessType, cardPrice);
         this.totalTrips = totalTrips;
         checkExpiration();
     }
 
-    public BlueCard(CardAccessType cardAccessType, BlueCardsPrice cardPrice, int totalTrips)
+    public BlueCard(CardAccessType cardAccessType, CardPrice cardPrice, int totalTrips)
     {
         super(cardAccessType, cardPrice);
         this.totalTrips = totalTrips;
