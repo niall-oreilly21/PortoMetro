@@ -39,11 +39,15 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class AdministratorController extends Controller
@@ -120,10 +124,6 @@ public class AdministratorController extends Controller
     public void initialize()
     {
         initialiseLogo();
-
-        cards.get(3).setActive(false);
-        cards.get(5).setActive(false);
-        cards.get(9).setActive(false);
 
         Image adminImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/administrator.png")));
         administratorIcon.setImage(adminImage);
@@ -215,7 +215,8 @@ public class AdministratorController extends Controller
                 });
         trainCarriages.setCellValueFactory(new PropertyValueFactory<>("carriages"));
         trainCapacity.setCellValueFactory(new PropertyValueFactory<>("capacity"));
-        trainLine.setCellValueFactory(cellData -> {
+        trainLine.setCellValueFactory(cellData ->
+        {
             Train train = cellData.getValue();
             try
             {
@@ -545,10 +546,11 @@ public class AdministratorController extends Controller
         TableColumn<Card, Integer> userId = new TableColumn<>("ID");
         TableColumn<Card, String> cardType = new TableColumn<>("Card Type");
         TableColumn<Card, String> isActive = new TableColumn<>("Activity");
-        TableColumn<Card, String> accessType = new TableColumn<>("Access Type");
+        TableColumn<Card, String> accessType = new TableColumn<>("Access");
         TableColumn<Card, Double> price = new TableColumn<>("Price");
-        TableColumn<Card, LocalDate> endDateTime = new TableColumn<>("End date");
+        TableColumn<Card, LocalDate> endDateTime = new TableColumn<>("End Date");
         TableColumn<Card, Integer> numberOfTrips = new TableColumn<>("Num Trips");
+        TableColumn<Card, Double> topUpPrice = new TableColumn<>("Top Up");
         TableColumn<Card, Void> deleteCardButton = new TableColumn<>();
 
         cardsTable.getColumns().add(userId);
@@ -558,16 +560,17 @@ public class AdministratorController extends Controller
         cardsTable.getColumns().add(price);
         cardsTable.getColumns().add(endDateTime);
         cardsTable.getColumns().add(numberOfTrips);
+        cardsTable.getColumns().add(topUpPrice);
         cardsTable.getColumns().add(deleteCardButton);
 
         double tableWidth = trainsTable.getPrefWidth();
-        userId.setPrefWidth(tableWidth * 0.075);
-        isActive.setPrefWidth(tableWidth * 0.15);
-        accessType.setPrefWidth(tableWidth * 0.15);
+        userId.setPrefWidth(tableWidth * 0.06);
+        isActive.setPrefWidth(tableWidth * 0.12);
+        accessType.setPrefWidth(tableWidth * 0.12);
         price.setPrefWidth(tableWidth * 0.1);
-        endDateTime.setPrefWidth(tableWidth * 0.17);
-        numberOfTrips.setPrefWidth(tableWidth * 0.16);
-        deleteCardButton.setPrefWidth(tableWidth * 0.1);
+        endDateTime.setPrefWidth(tableWidth * 0.16);
+        numberOfTrips.setPrefWidth(tableWidth * 0.13);
+        topUpPrice.setPrefWidth(tableWidth * 0.11);
 
         userId.setCellValueFactory(new PropertyValueFactory<>("cardId"));
 
@@ -605,7 +608,40 @@ public class AdministratorController extends Controller
                 new SimpleStringProperty(cellData.getValue().getCardAccessType().getLabel())
         );
 
-        price.setCellValueFactory(new PropertyValueFactory<>("cardPrice"));
+        price.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getCardPrice().getPhysicalCardPrice()));
+
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.getDefault()));
+        StringConverter<Double> converter = new StringConverter<>()
+        {
+            @Override
+            public String toString(Double object)
+            {
+                return "€" + df.format(object);
+            }
+
+            @Override
+            public Double fromString(String string)
+            {
+                return null;
+            }
+        };
+        price.setCellFactory(col -> new TableCell<>()
+        {
+            @Override
+            protected void updateItem(Double price, boolean empty)
+            {
+                super.updateItem(price, empty);
+                if (empty)
+                {
+                    setText(null);
+                } else
+                {
+                    setText(converter.toString(price));
+                }
+            }
+        });
 
         endDateTime.setCellValueFactory(cellData ->
         {
@@ -629,6 +665,25 @@ public class AdministratorController extends Controller
             } else
             {
                 return null;
+            }
+        });
+
+        topUpPrice.setCellValueFactory(cellData ->
+                new SimpleObjectProperty<>(cellData.getValue().getCardPrice().getTopUpPrice()));
+
+        topUpPrice.setCellFactory(col -> new TableCell<>()
+        {
+            @Override
+            protected void updateItem(Double price, boolean empty)
+            {
+                super.updateItem(price, empty);
+                if (empty)
+                {
+                    setText(null);
+                } else
+                {
+                    setText(converter.toString(price));
+                }
             }
         });
 
@@ -660,7 +715,7 @@ public class AdministratorController extends Controller
                                         {
                                             cardDao.remove(card);
                                             cardsTable.getItems().remove(card);
-//                                            cards = cardDao.findAll();
+                                            cards = cardDao.findAll();
                                         } catch (DaoException de)
                                         {
                                             de.printStackTrace();
