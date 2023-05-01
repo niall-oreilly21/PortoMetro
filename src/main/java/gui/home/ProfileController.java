@@ -2,6 +2,8 @@ package gui.home;
 
 import com.metroporto.dao.userdao.MySqlUserDao;
 import com.metroporto.dao.userdao.UserDaoInterface;
+import com.metroporto.enums.Folder;
+import com.metroporto.enums.Page;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.users.Passenger;
 import com.metroporto.users.User;
@@ -18,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,6 +47,8 @@ public class ProfileController extends Controller
     private Label editProfileLabel;
     @FXML
     private Label changePasswordLabel;
+    @FXML
+    private Label signOutLabel;
 
     private Label firstNameLabel;
     private TextField firstNameText;
@@ -343,5 +348,15 @@ public class ProfileController extends Controller
                 errorText.setText(asterisk + " Wrong password");
             }
         }
+    }
+
+    public void signOut(MouseEvent event) throws IOException
+    {
+        editProfileLabel.getStyleClass().remove("nav-active");
+        changePasswordLabel.getStyleClass().remove("nav-active");
+        signOutLabel.getStyleClass().add("nav-active");
+
+        app.setUser(null);
+        redirectToPage(event, Folder.ACCOUNT_AUTH, Page.SIGN_IN);
     }
 }

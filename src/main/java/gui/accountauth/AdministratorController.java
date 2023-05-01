@@ -10,6 +10,8 @@ import com.metroporto.dao.traindao.TrainDaoInterface;
 import com.metroporto.dao.userdao.MySqlUserDao;
 import com.metroporto.dao.userdao.UserDaoInterface;
 import com.metroporto.enums.CardAccessType;
+import com.metroporto.enums.Folder;
+import com.metroporto.enums.Page;
 import com.metroporto.enums.TrainModel;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Line;
@@ -40,6 +42,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.apache.pdfbox.contentstream.operator.state.SetLineWidth;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -61,6 +64,8 @@ public class AdministratorController extends Controller
     private Label usersLabel;
     @FXML
     private Label cardsLabel;
+    @FXML
+    private Label signOutLabel;
     @FXML
     private Label greet;
 
@@ -740,5 +745,16 @@ public class AdministratorController extends Controller
 
         cardsTableData = FXCollections.observableArrayList(cards);
         cardsTable.setItems(cardsTableData);
+    }
+
+    public void signOut(MouseEvent event) throws IOException
+    {
+        trainsLabel.getStyleClass().remove("nav-active");
+        usersLabel.getStyleClass().remove("nav-active");
+        cardsLabel.getStyleClass().remove("nav-active");
+        signOutLabel.getStyleClass().add("nav-active");
+
+        app.setUser(null);
+        redirectToPage(event, Folder.ACCOUNT_AUTH, Page.SIGN_IN);
     }
 }

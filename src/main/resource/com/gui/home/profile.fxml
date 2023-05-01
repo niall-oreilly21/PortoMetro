@@ -76,7 +76,8 @@
                     <Insets top="20"/>
                 </padding>
                 <ImageView fx:id="signOut" fitWidth="20" fitHeight="20"/>
-                <Label text="Sign out" textFill="white" styleClass="text-underline"/>
+                <Label fx:id="signOutLabel" text="Sign out" onMouseClicked="#signOut"
+                       textFill="white" styleClass="text-underline"/>
             </HBox>
         </VBox>
         <VBox fx:id="contentBox">
