@@ -1,50 +1,47 @@
 package com.metroporto.cards;
 
 import com.metroporto.enums.CardAccessType;
-import com.metroporto.metro.Zone;
-
-import java.sql.Time;
 
 public class BlueCard extends Card
 {
-    private int numberOfTrips;
+    private int totalTrips;
 
-    public BlueCard(int cardId, CardAccessType cardAccessType, double cardPrice, int numberOfTrips)
+    public BlueCard(int cardId, CardAccessType cardAccessType, BlueCardsPrice cardPrice, int totalTrips)
     {
         super(cardId, cardAccessType, cardPrice);
-        this.numberOfTrips = numberOfTrips;
+        this.totalTrips = totalTrips;
         checkExpiration();
     }
 
-    public BlueCard(CardAccessType cardAccessType, double cardPrice, int numberOfTrips)
+    public BlueCard(CardAccessType cardAccessType, BlueCardsPrice cardPrice, int totalTrips)
     {
         super(cardAccessType, cardPrice);
-        this.numberOfTrips = numberOfTrips;
+        this.totalTrips = totalTrips;
         checkExpiration();
     }
 
 
-    public int getNumberOfTrips()
+    public int getTotalTrips()
     {
-        return numberOfTrips;
+        return totalTrips;
     }
 
-    public void setNumberOfTrips(int numberOfTrips)
+    public void setTotalTrips(int totalTrips)
     {
-        this.numberOfTrips = numberOfTrips;
+        this.totalTrips = totalTrips;
     }
 
     @Override
     protected void checkExpiration()
     {
-        isActive = numberOfTrips > 0;
+        isActive = totalTrips > 0;
     }
 
     @Override
     public String toString()
     {
         return "BlueCard{" +
-                "numberOfTrips=" + numberOfTrips +
+                "numberOfTrips=" + totalTrips +
                 "} " + super.toString();
     }
 }
