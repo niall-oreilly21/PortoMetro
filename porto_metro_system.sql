@@ -10,8 +10,7 @@ CREATE DATABASE IF NOT EXISTS porto_metro_system DEFAULT CHARACTER SET utf8 COLL
 USE porto_metro_system;
 
 /*DROPS any of the tables that may already exists*/
-DROP TABLE IF EXISTS station_facilities, facilities, schedules, timetables, routes, trains,  metro_lines, passengers_journey_planners, journey_planners, stations, blue_cards, timer_cards, cards_zones, cards_prices, passengers_cards, cards, students_universities, universities, users, zones;
-
+DROP TABLE IF EXISTS station_facilities, facilities, schedules, timetables, routes, trains, metro_lines, passengers_journey_planners, journey_planners, stations, cards_zones, blue_cards, grey_cards, cards, blue_cards_prices, grey_cards_prices, cards_prices, students_universities, universities, users, zones;
 
 /*CREATE zones table*/
 CREATE TABLE zones 
@@ -57,32 +56,51 @@ CREATE TABLE students_universities
 
 
 /*CREATE cards table*/
+CREATE TABLE cards_prices
+(
+    card_price_id INT NOT NULL AUTO_INCREMENT,
+    physical_card_price DECIMAL(5, 2),
+    PRIMARY KEY(card_price_id)
+);
+
+
+/*CREATE cards table*/
+CREATE TABLE grey_cards_prices
+(
+    card_price_id INT NOT NULL,
+    monthly_top_up_price DECIMAL(5, 2),
+    FOREIGN KEY (card_price_id) REFERENCES cards_prices(card_price_id),
+    UNIQUE(card_price_id)
+);
+
+
+/*CREATE cards table*/
+CREATE TABLE blue_cards_prices
+(
+    card_price_id INT NOT NULL,
+    trip_price DECIMAL(5, 2),
+    FOREIGN KEY (card_price_id) REFERENCES cards_prices(card_price_id),
+    UNIQUE(card_price_id)
+);
+
+
+/*CREATE cards table*/
 CREATE TABLE cards
 (
     card_id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
+    card_price_id INT NOT NULL,
     card_type ENUM("blue card", "grey card", "student card", "tour card") NOT NULL,
     access_type ENUM("All zones", "3 zones") NOT NULL,
-    card_price DECIMAL(5, 2),
     PRIMARY KEY(card_id),
+    FOREIGN KEY (card_price_id) REFERENCES cards_prices(card_price_id),
     UNIQUE (user_id),
     FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
 
 
-/*CREATE table card_zones*/
-CREATE TABLE cards_zones
-(
-    card_id INT NOT NULL,
-    zone_id INT NOT NULL,
-    FOREIGN KEY (card_id) REFERENCES cards(card_id),
-    FOREIGN KEY (zone_id) REFERENCES zones(zone_id),
-    UNIQUE (card_id, zone_id)
-);
-
-
 /*CREATE blue card table*/
-CREATE TABLE timer_cards 
+CREATE TABLE grey_cards 
 (
     card_id INT NOT NULL,
     end_date DATE NOT NULL,
@@ -95,9 +113,20 @@ CREATE TABLE timer_cards
 CREATE TABLE blue_cards
 (
     card_id INT NOT NULL,
-    total_trips_allowed INT,
+    total_trips INT,
     FOREIGN KEY (card_id) REFERENCES cards(card_id),
     UNIQUE(card_id)
+);
+
+
+/*CREATE table card_zones*/
+CREATE TABLE cards_zones
+(
+    card_id INT NOT NULL,
+    zone_id INT NOT NULL,
+    FOREIGN KEY (card_id) REFERENCES cards(card_id),
+    FOREIGN KEY (zone_id) REFERENCES zones(zone_id),
+    UNIQUE (card_id, zone_id)
 );
 
 
@@ -368,7 +397,7 @@ INSERT INTO trains (train_id, line_id, train_model, carriages, capacity) VALUES
 ("TP27", "D", "Eurotram", 2, 134),
 ("ON09", "F", "Eurotram", 2, 134);
 
--- /*INSERTS data INTO the routes table*/
+/*INSERTS data INTO the routes table*/
 INSERT INTO routes(line_id, end_station_id) VALUES
 ("A", "SEM"),
 ("A", "DRG"),
@@ -632,42 +661,62 @@ INSERT INTO station_facilities (station_id, facility_id) VALUES
 ("PDR", 11); 
 
 
+/*INSERTS data INTO the users table*/
 INSERT INTO users (user_id, email, user_password, user_type, first_name, last_name) VALUES
 (1,"niall.blackrock@gmail.com", "12345", "student", "Niall", "O' Reilly"),
-(2, "luana.blackrock@gmail.com", "123454", "administrator", "Luana", "Kimley"),
+(2, "luana.kimley@gmail.com", "123454", "administrator", "Luana", "Kimley"),
 (3, "johndoe@gmail.com", "abcdef", "passenger", "John", "Doe"),
 (4, "janedoe@gmail.com", "ghijkl", "passenger", "Jane", "Doe");
 
+/*INSERTS data INTO the students_universities table*/
 INSERT INTO students_universities (user_id, university_id) VALUES
 (1,"UOP");
 
 
-/* Insert sample data into cards table */
-INSERT INTO cards (card_id, user_id, card_type, access_type, card_price) VALUES
-(1, 1, 'blue card', 'All zones', 10.00),
-(2, 2, 'grey card', '3 zones', 15.00),
-(3, 3, 'student card', '3 zones', 5.00),
-(4, 4, 'tour card', 'All zones', 20.00);
-
-
-/* Insert sample data into cards_zones table */
+/*INSERTS data INTO the cards_zones table*/
 INSERT INTO cards_zones (card_id, zone_id) VALUES
 (2, 1),
 (2, 2),
 (2, 3);
 
-/* Insert sample data into timer_cards table */
-INSERT INTO timer_cards (card_id, end_date) VALUES
-(1, '2023-04-30'),
-(2, '2023-05-31'),
-(3, '2023-06-30'),
-(4, '2023-07-31');
 
-/* Insert sample data into blue_cards table */
-INSERT INTO blue_cards (card_id, total_trips_allowed) VALUES
-(1, 10),
-(2, 5);
+/*INSERTS data INTO the cards_prices table*/
+INSERT INTO cards_prices (physical_card_price) VALUES 
+(10.00), 
+(15.00), 
+(20.00);
 
+
+/*INSERTS data INTO the grey_cards_prices table*/
+INSERT INTO grey_cards_prices (card_price_id, monthly_top_up_price) VALUES 
+(1, 5.00), 
+(2, 10.00), 
+(3, 15.00);
+
+
+/*INSERTS data INTO the blue_cards_prices table*/
+INSERT INTO blue_cards_prices (card_price_id, trip_price) VALUES 
+(1, 2.50), 
+(2, 2.00), 
+(3, 1.50);
+
+
+/*INSERTS data INTO the cards table*/
+INSERT INTO cards (user_id, card_price_id, card_type, access_type) VALUES 
+(1, 1, 'blue card', 'All zones'), 
+(2, 2, 'grey card', '3 zones'), 
+(3, 3, 'student card', 'All zones');
+
+
+/*INSERTS data INTO the grey_cards table*/
+INSERT INTO grey_cards (card_id, end_date) VALUES 
+(2, '2023-06-01'), 
+(3, '2023-07-01');
+
+/*INSERTS data INTO the blue_cards table*/
+INSERT INTO blue_cards (card_id, total_trips) VALUES 
+(1, 10), 
+(3, 5);
 
 
 /*-----------------------------------------------------------------INDEXES-------------------------------------------------------------------------------------*/
@@ -704,12 +753,12 @@ CREATE INDEX cards_zones_index
 ON cards_zones(card_id, zone_id);
 
 
-ALTER TABLE timer_cards
-DROP INDEX IF EXISTS timer_cards_index;
+ALTER TABLE grey_cards
+DROP INDEX IF EXISTS grey_cards_index;
 
-/*CREATES an index called timer_cards_index on card_id in timer_cards*/
-CREATE INDEX timer_cards_index
-ON timer_cards(card_id);
+/*CREATES an index called timer_cards_index on card_id in grey_cards*/
+CREATE INDEX grey_cards_index
+ON grey_cards(card_id);
 
 
 ALTER TABLE blue_cards
@@ -758,16 +807,18 @@ DROP VIEW IF EXISTS all_users, all_cards;
 
 /*CREATE A VIEW which shows all users*/
 CREATE VIEW all_users AS
-SELECT users.*, cards.card_id, students_universities.university_id FROM users
+SELECT users.*, students_universities.university_id FROM users
 LEFT JOIN cards ON users.user_id = cards.user_id
 LEFT JOIN students_universities ON users.user_id = students_universities.user_id;
 
 /*CREATE A VIEW which shows all cards*/
 CREATE VIEW all_cards AS
-SELECT cards.*, timer_cards.end_date, blue_cards.total_trips_allowed FROM cards
-LEFT JOIN timer_cards ON cards.card_id = timer_cards.card_id
+SELECT cards.*, grey_cards.end_date, blue_cards.total_trips, cards_prices.physical_card_price, grey_cards_prices.monthly_top_up_price, blue_cards_prices.trip_price FROM cards
+LEFT JOIN grey_cards ON cards.card_id = grey_cards.card_id
 LEFT JOIN blue_cards ON cards.card_id = blue_cards.card_id
-LEFT JOIN cards_zones ON cards.card_id = cards_zones.card_id;
+LEFT JOIN cards_prices ON cards.card_price_id = cards_prices.card_price_id
+LEFT JOIN grey_cards_prices ON cards_prices.card_price_id = grey_cards_prices.card_price_id
+LEFT JOIN blue_cards_prices ON cards_prices.card_price_id = blue_cards_prices.card_price_id;
      
 
 /*-----------------------------------------------------------------TRIGGERS-------------------------------------------------------------------------------------*/
@@ -781,7 +832,7 @@ CREATE TRIGGER delete_cards_foreign_key_timer_cards
 BEFORE DELETE ON cards
 FOR EACH ROW
 
-DELETE FROM timer_cards WHERE timer_cards.card_id = OLD.card_id;
+DELETE FROM grey_cards WHERE grey_cards.card_id = OLD.card_id;
 
 
 DROP TRIGGER IF EXISTS delete_cards_foreign_key_blue_cards;
