@@ -529,7 +529,7 @@ public class AdministratorController extends Controller
         isActive.setCellValueFactory(new PropertyValueFactory<>("isActive"));
 
         accessType.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getAccessType().getLabel())
+                new SimpleStringProperty(cellData.getValue().getCardAccessType().getLabel())
         );
 
         price.setCellValueFactory(new PropertyValueFactory<>("cardPrice"));
