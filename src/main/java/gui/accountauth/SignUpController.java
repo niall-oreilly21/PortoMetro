@@ -187,7 +187,7 @@ public class SignUpController extends Controller
                     {
                         emailLabel.setGraphic(redAsterisk);
                         emailLabel.setContentDisplay(ContentDisplay.RIGHT);
-                        errorText.setText("User with that email already exists");
+                        errorText.setText(asterisk + " User with that email already exists");
                     }
                 } catch (DaoException de)
                 {

@@ -30,10 +30,8 @@ public class ProfileController extends Controller
 
     @FXML
     private ImageView editProfile;
-
     @FXML
     private ImageView password;
-
     @FXML
     private ImageView signOut;
 
@@ -42,31 +40,25 @@ public class ProfileController extends Controller
 
     @FXML
     private Label greetLabel;
-
     @FXML
     private Label editProfileLabel;
-
     @FXML
     private Label changePasswordLabel;
 
     private Label firstNameLabel;
-
     private TextField firstNameText;
 
     private Label surnameLabel;
-
     private TextField surnameText;
 
     private Label emailLabel;
-
     private TextField emailText;
+    private String previousEmail;
 
     private Label currentPasswordLabel;
-
     private PasswordField currentPasswordText;
 
     private Label newPasswordLabel;
-
     private PasswordField newPasswordText;
 
     public ProfileController()
@@ -133,7 +125,8 @@ public class ProfileController extends Controller
         emailLabel = new Label();
         emailText = new TextField();
         emailText.getStyleClass().add("form-text-field");
-        emailText.setText(user.getEmail());
+        previousEmail = user.getEmail();
+        emailText.setText(previousEmail);
         emailLabel.setText("E-mail");
         emailBox.getChildren().addAll(emailLabel, emailText);
 
@@ -231,22 +224,19 @@ public class ProfileController extends Controller
             errorText.setText(asterisk + " Invalid first name");
             firstNameLabel.setGraphic(redAsterisk);
             firstNameLabel.setContentDisplay(ContentDisplay.RIGHT);
-        }
-        else if (surname.isEmpty())
+        } else if (surname.isEmpty())
         {
             firstNameLabel.setGraphic(null);
             errorText.setText(asterisk + " Invalid surname");
             surnameLabel.setGraphic(redAsterisk);
             surnameLabel.setContentDisplay(ContentDisplay.RIGHT);
-        }
-        else if (email.isEmpty() || !emailMatcher.matches())
+        } else if (email.isEmpty() || !emailMatcher.matches())
         {
             surnameLabel.setGraphic(null);
             errorText.setText(asterisk + " Invalid email address");
             emailLabel.setGraphic(redAsterisk);
             emailLabel.setContentDisplay(ContentDisplay.RIGHT);
-        }
-        else
+        } else
         {
             firstNameLabel.setGraphic(null);
             surnameLabel.setGraphic(null);
@@ -282,7 +272,19 @@ public class ProfileController extends Controller
                 try
                 {
                     user.setEmail(email);
-                    userDao.updateEmail(user);
+                    boolean successful = userDao.updateEmail(user);
+
+                    if (successful)
+                    {
+                        emailLabel.setGraphic(null);
+                        errorText.setText("");
+                    } else
+                    {
+                        user.setEmail(previousEmail);
+                        errorText.setText(asterisk + " User with that email already exists");
+                        emailLabel.setGraphic(redAsterisk);
+                        emailLabel.setContentDisplay(ContentDisplay.RIGHT);
+                    }
                 } catch (DaoException de)
                 {
                     de.printStackTrace();
@@ -308,15 +310,13 @@ public class ProfileController extends Controller
             errorText.setText(asterisk + " Invalid password");
             currentPasswordLabel.setGraphic(redAsterisk);
             currentPasswordLabel.setContentDisplay(ContentDisplay.RIGHT);
-        }
-        else if (newPassword.isEmpty())
+        } else if (newPassword.isEmpty())
         {
             currentPasswordLabel.setGraphic(null);
             errorText.setText(asterisk + " Invalid password");
             newPasswordLabel.setGraphic(redAsterisk);
             newPasswordLabel.setContentDisplay(ContentDisplay.RIGHT);
-        }
-        else
+        } else
         {
             currentPasswordLabel.setGraphic(null);
             newPasswordLabel.setGraphic(null);
