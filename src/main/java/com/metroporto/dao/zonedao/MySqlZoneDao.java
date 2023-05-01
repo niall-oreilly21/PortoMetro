@@ -115,6 +115,39 @@ public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
     }
 
     @Override
+    public Zone findZoneByZoneName(String zoneName) throws DaoException
+    {
+        Zone zone = null;
+
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "SELECT * FROM zones WHERE zone_name = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, zoneName);
+
+            //Use the prepared statement to execute the sql
+            rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                zone = createDto();
+            }
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("findZoneByZoneName() in MySqlZoneDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("findZoneByZoneName() in MySqlZoneDao");
+        }
+
+        return zone;
+    }
+
+    @Override
     public void insertZonesForCard(String cardId, int zoneId) throws DaoException
     {
         try

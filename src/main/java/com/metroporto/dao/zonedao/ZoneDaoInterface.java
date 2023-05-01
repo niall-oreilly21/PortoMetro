@@ -10,6 +10,7 @@ import java.util.List;
 public interface ZoneDaoInterface extends FindAllDaoInterface<Zone>
 {
     Zone findZoneByZoneId(int zoneId) throws DaoException;
+    Zone findZoneByZoneName(String zoneName) throws DaoException;
     List<Zone> findAllZonesByZoneId(String cardId) throws DaoException;
     void insertZonesForCard(String cardId, int zoneId) throws DaoException;
 }
