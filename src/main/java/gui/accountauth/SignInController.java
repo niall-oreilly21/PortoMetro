@@ -95,21 +95,27 @@ public class SignInController extends Controller
             {
                 User user = userDao.findUserByEmail(email);
 
-                if (user.checkPassword(password))
+                if (user != null)
                 {
-                    errorText.setText("");
-                    app.setUser(user);
-
-                    if (user instanceof Passenger)
+                    if (user.checkPassword(password))
                     {
-                        redirectToPage(event, Folder.HOME, Page.HOME);
-                    }
+                        errorText.setText("");
+                        app.setUser(user);
 
-                    if (user instanceof Administrator)
+                        if (user instanceof Passenger)
+                        {
+                            redirectToPage(event, Folder.HOME, Page.HOME);
+                        }
+
+                        if (user instanceof Administrator)
+                        {
+                            redirectToPage(event, Folder.ACCOUNT_AUTH, Page.ADMINISTRATOR);
+                        }
+
+                    } else
                     {
-                        redirectToPage(event, Folder.ACCOUNT_AUTH, Page.ADMINISTRATOR);
+                        errorText.setText("Incorrect email or password");
                     }
-
                 }
                 else
                 {
