@@ -97,7 +97,9 @@
         </HBox>
         <VBox fx:id="searchRouteBox" visible="false" spacing="20" alignment="CENTER">
             <HBox spacing="5" alignment="CENTER">
-                <Label text="Zones: "/>
+                <Label text="Direction: "/>
+                <Label fx:id="journeyDirection" styleClass="bold" textFill="#00305f"/>
+                <Label text=" | Zones: "/>
                 <Label fx:id="journeyZones" styleClass="bold" textFill="#00305f"/>
                 <Label text=" | Total trip duration: "/>
                 <Label fx:id="journeyDuration" styleClass="bold" textFill="#00305f"/>
