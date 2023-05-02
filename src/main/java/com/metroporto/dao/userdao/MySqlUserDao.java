@@ -75,7 +75,7 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         if(userType.equalsIgnoreCase("student") || userType.equalsIgnoreCase("passenger"))
         {
 
-            Card card = cardDao.findCardByCardId(userId);
+            Card card = cardDao.findCardByUserId(userId);
 
             if(userType.equalsIgnoreCase("student"))
             {

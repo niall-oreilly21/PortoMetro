@@ -9,37 +9,37 @@ import java.util.List;
 
 public abstract class Card
 {
-    private int cardId;
+    private String cardId;
     protected boolean isActive;
     private CardAccessType cardAccessType;
     private CardPrice cardPrice;
     private List<Zone> zones;
     private static final int threeZonesSize = 3;
 
-    public Card(int cardId, CardAccessType cardAccessType, CardPrice cardPrice)
+    public Card(String cardId, CardAccessType cardAccessType, CardPrice cardPrice)
     {
         this.cardId = cardId;
         this.cardAccessType = cardAccessType;
         this.cardPrice = cardPrice;
         this.isActive = false;
-        setZones();
+        zones = null;
     }
 
     public Card(CardAccessType cardAccessType, CardPrice cardPrice)
     {
-        this.cardId = 0;
+        this.cardId = "";
         this.cardAccessType = cardAccessType;
         this.cardPrice = cardPrice;
         this.isActive = false;
-        setZones();
+        zones = null;
     }
 
-    public int getCardId()
+    public String getCardId()
     {
         return cardId;
     }
 
-    public void setCardId(int cardId)
+    public void setCardId(String cardId)
     {
         this.cardId = cardId;
     }
@@ -79,11 +79,11 @@ public abstract class Card
         this.cardPrice = cardPrice;
     }
 
-    private void setZones()
+    public void setZones(List<Zone> zones)
     {
         if(this.cardAccessType.equals(CardAccessType.THREE_ZONES))
         {
-            this.zones = new ArrayList<>(threeZonesSize);
+            this.zones = zones;
         }
         else
         {

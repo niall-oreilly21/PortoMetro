@@ -82,7 +82,7 @@ public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
     }
 
     @Override
-    public List<Zone> findAllZonesByZoneId(int cardId) throws DaoException
+    public List<Zone> findAllZonesByZoneId(String cardId) throws DaoException
     {
         List<Zone> zones = new ArrayList<>();
 
@@ -92,7 +92,7 @@ public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
             con = this.getConnection();
             query = "SELECT * FROM zones JOIN cards_zones ON zones.zone_id = cards_zones.zone_id WHERE cards_zones.card_id = ?";
             ps = con.prepareStatement(query);
-            ps.setInt(1, cardId);
+            ps.setString(1, cardId);
 
             //Use the prepared statement to execute the sql
             rs = ps.executeQuery();
@@ -115,7 +115,40 @@ public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
     }
 
     @Override
-    public void insertZonesForCard(int cardId, int zoneId) throws DaoException
+    public Zone findZoneByZoneName(String zoneName) throws DaoException
+    {
+        Zone zone = null;
+
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "SELECT * FROM zones WHERE zone_name = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, zoneName);
+
+            //Use the prepared statement to execute the sql
+            rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                zone = createDto();
+            }
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("findZoneByZoneName() in MySqlZoneDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("findZoneByZoneName() in MySqlZoneDao");
+        }
+
+        return zone;
+    }
+
+    @Override
+    public void insertZonesForCard(String cardId, int zoneId) throws DaoException
     {
         try
         {
@@ -125,7 +158,7 @@ public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
                     "(?, ?)";
 
             ps = con.prepareStatement(query);
-            ps.setInt(1, cardId);
+            ps.setString(1, cardId);
             ps.setInt(2, zoneId);
             ps.executeUpdate();
 
