@@ -6,6 +6,7 @@ import com.metroporto.enums.Folder;
 import com.metroporto.enums.Page;
 import com.metroporto.metro.Schedule;
 import com.metroporto.metro.Station;
+import com.metroporto.users.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,6 +35,8 @@ import java.util.Objects;
 
 public abstract class Controller
 {
+    protected User user;
+
     @FXML
     protected ImageView logo;
 
@@ -122,21 +125,24 @@ public abstract class Controller
         Parent root = loader.load();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Scene previousScene = stage.getScene();
-        Scene scene = new Scene(root, previousScene.getWidth(), previousScene.getHeight());
-        boolean isFullscreen = stage.isFullScreen();
 
-        Controller controller = loader.getController();
-        controller.setScene(scene);
-        controller.setApp(App.getApplication());
+        if (stage != null)
+        {
+            Scene previousScene = stage.getScene();
+            Scene scene = new Scene(root, previousScene.getWidth(), previousScene.getHeight());
+            boolean isFullscreen = stage.isFullScreen();
+            Controller controller = loader.getController();
+            controller.setScene(scene);
+            controller.setApp(App.getApplication());
 
-        stage.setTitle("Porto Metro");
-        stage.setScene(scene);
+            stage.setTitle("Porto Metro");
+            stage.setScene(scene);
 
-        if (isFullscreen)
-            stage.setFullScreen(true);
+            if (isFullscreen)
+                stage.setFullScreen(true);
 
-        stage.show();
+            stage.show();
+        }
     }
 
     protected void setApp(App application)
