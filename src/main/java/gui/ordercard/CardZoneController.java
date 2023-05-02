@@ -1,6 +1,13 @@
 package gui.ordercard;
 
+import com.metroporto.dao.carddao.CardDaoInterface;
+import com.metroporto.dao.carddao.MySqlCardDao;
+import com.metroporto.dao.zonedao.MySqlZoneDao;
+import com.metroporto.dao.zonedao.ZoneDaoInterface;
 import com.metroporto.enums.Folder;
+import com.metroporto.exceptions.DaoException;
+import com.metroporto.metro.Zone;
+import com.metroporto.users.Student;
 import gui.Controller;
 import com.metroporto.enums.Page;
 import javafx.event.ActionEvent;
@@ -20,6 +27,9 @@ import java.util.List;
 
 public class CardZoneController extends Controller
 {
+    private ZoneDaoInterface zoneDao;
+    private CardDaoInterface cardDao;
+
     @FXML
     private RadioButton allZonesRadioButton;
 
@@ -35,17 +45,29 @@ public class CardZoneController extends Controller
     @FXML
     private Label zoneSelectionLabel;
 
-    // TODO: this should be fetched from database
-    private List<String> checkboxTexts = List.of("PV_VC", "VCD3", "VCD8", "MTS1", "MAI1", "MAI2", "MAI4",
-            "PRT1", "PRT2", "PRT3", "GDM1", "VNG1");
+    private List<Zone> zones;
 
     private int numSelected = 0;
 
+    public CardZoneController()
+    {
+        user = app.getUser();
+
+        zoneDao = new MySqlZoneDao();
+        cardDao = new MySqlCardDao();
+
+        try
+        {
+            zones = zoneDao.findAll();
+        } catch (DaoException de)
+        {
+            de.printStackTrace();
+        }
+    }
+
     public void initialize()
     {
-        initialiseLogo();
-        // TODO: Change picture to zone map picture
-        initialiseMetroImage("metro_4");
+        initialiseMetroImage("zone-map");
 
         zoneToggleGroup = new ToggleGroup();
         allZonesRadioButton.setToggleGroup(zoneToggleGroup);
@@ -66,26 +88,26 @@ public class CardZoneController extends Controller
     public void addCheckboxes()
     {
         int count = 0;
-        HBox currentHBox = new HBox(20); // Start by adding checkboxes to the first HBox
+        HBox currentHBox = new HBox(20);
 
-        if (zonesOptionBox.getChildren().size() > 0) {
-            zonesOptionBox.getChildren().clear(); // Remove existing checkboxes
+        if (zonesOptionBox.getChildren().size() > 0)
+        {
+            zonesOptionBox.getChildren().clear();
         }
 
         zonesOptionBox.getChildren().add(currentHBox);
-        for (String checkboxText : checkboxTexts)
+        for (Zone zone : zones)
         {
-            CheckBox checkBox = new CheckBox(checkboxText);
+            CheckBox checkBox = new CheckBox(zone.getZoneName());
             checkBox.setOnAction(this::handleCheckBoxAction);
             currentHBox.getChildren().add(checkBox);
             HBox.setMargin(checkBox, new Insets(15, 0, 0, 0));
             count++;
             if (count == 3)
             {
-                // Create a new HBox and add checkboxes to that
-                currentHBox = new HBox(20); // 20 is the spacing between checkboxes
+                currentHBox = new HBox(20);
                 zonesOptionBox.getChildren().add(currentHBox);
-                count = 0; // Reset the count
+                count = 0;
             }
         }
     }
@@ -154,15 +176,21 @@ public class CardZoneController extends Controller
         }
     }
 
-    public List<CheckBox> getSelectedCheckboxes() {
+    public List<CheckBox> getSelectedCheckboxes()
+    {
         List<CheckBox> selected = new ArrayList<>();
-        for (Node hBoxNode : zonesOptionBox.getChildren()) {
-            if (hBoxNode instanceof HBox) {
+        for (Node hBoxNode : zonesOptionBox.getChildren())
+        {
+            if (hBoxNode instanceof HBox)
+            {
                 HBox hBox = (HBox) hBoxNode;
-                for (Node checkboxNode : hBox.getChildren()) {
-                    if (checkboxNode instanceof CheckBox) {
+                for (Node checkboxNode : hBox.getChildren())
+                {
+                    if (checkboxNode instanceof CheckBox)
+                    {
                         CheckBox checkBox = (CheckBox) checkboxNode;
-                        if (checkBox.isSelected()) {
+                        if (checkBox.isSelected())
+                        {
                             selected.add(checkBox);
                         }
                     }
@@ -175,7 +203,7 @@ public class CardZoneController extends Controller
     public void setScene(Scene scene)
     {
         scene.heightProperty().addListener((observable, oldValue, newValue) ->
-            metro1.fitHeightProperty().setValue(newValue)
+                metro1.fitHeightProperty().setValue(newValue)
         );
     }
 
@@ -194,11 +222,20 @@ public class CardZoneController extends Controller
             errorText.setText(asterisk + " Choose 3 zones");
             zoneSelectionLabel.setGraphic(redAsterisk);
             zoneSelectionLabel.setContentDisplay(ContentDisplay.RIGHT);
-        }
-        else
+        } else
         {
             zoneSelectionLabel.setGraphic(null);
             errorText.setText("");
+
+            if (user instanceof Student)
+            {
+//                Card card = new StudentCard();
+
+                // if 3 zones -> card.setZones(zonesList)
+
+                // user.setCard(card)
+                // cardDao.insertCardForUser(user)
+            }
 
             for (CheckBox checkBox : selectedZones)
             {
