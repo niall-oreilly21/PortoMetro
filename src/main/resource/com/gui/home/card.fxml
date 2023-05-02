@@ -20,58 +20,56 @@
         <HBox alignment="CENTER_LEFT" spacing="20">
             <Label text="Home" textFill="#0253a3" onMouseClicked="#redirectToHome" styleClass="text-underline"/>
             <Label text="Schedule" textFill="#0253a3" onMouseClicked="#redirectToSchedule" styleClass="text-underline"/>
-            <Label text="Journey Route" textFill="#0253a3" onMouseClicked="#redirectToJourneyRoute" styleClass="text-underline"/>
+            <Label text="Journey Route" textFill="#0253a3" onMouseClicked="#redirectToJourneyRoute"
+                   styleClass="text-underline"/>
             <Label text="Stations" textFill="#0253a3" onMouseClicked="#redirectToStation" styleClass="text-underline"/>
             <padding>
                 <Insets right="20"/>
             </padding>
         </HBox>
-        <Region HBox.hgrow="ALWAYS" />
+        <Region HBox.hgrow="ALWAYS"/>
         <HBox alignment="CENTER_RIGHT" spacing="20">
             <HBox spacing="10" alignment="CENTER_RIGHT">
                 <ImageView fx:id="profile" fitHeight="25" fitWidth="25" onMouseClicked="#redirectToProfile"/>
-                <Label text="My Profile" textFill="#0253a3" onMouseClicked="#redirectToProfile" styleClass="text-underline"/>
+                <Label text="My Profile" textFill="#0253a3" onMouseClicked="#redirectToProfile"
+                       styleClass="text-underline"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER_RIGHT">
                 <ImageView fx:id="card" fitHeight="25" fitWidth="25"/>
                 <Label text="Card Details" styleClass="nav-active" textFill="#0253a3"/>
             </HBox>
             <padding>
-                <Insets right="20" />
+                <Insets right="20"/>
             </padding>
         </HBox>
         <padding>
-            <Insets left="20" />
+            <Insets left="20"/>
         </padding>
     </HBox>
-    <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
-        AnchorPane.topAnchor="90" AnchorPane.bottomAnchor="0" spacing="50" alignment="TOP_CENTER">
+    <VBox fx:id="cardBox" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+          AnchorPane.topAnchor="90" AnchorPane.bottomAnchor="0" spacing="50" alignment="TOP_CENTER">
         <padding>
             <Insets top="130"/>
         </padding>
         <Label styleClass="subheader-label-large" text="Your Andante card" textFill="#00305f"/>
         <HBox spacing="50" alignment="CENTER">
-            <ImageView fx:id="cardType" preserveRatio="true" fitWidth="350"/>
-            <VBox alignment="CENTER">
+            <ImageView fx:id="cardTypeImageView" preserveRatio="true" fitWidth="350"/>
+            <VBox alignment="CENTER" spacing="5">
                 <HBox alignment="CENTER_LEFT">
                     <Label textFill="#00305f" text="Card ID: " styleClass="subheader-label"/>
-                    <Label text="MTRP2023000001"/>
+                    <Label fx:id="cardIdLabel"/>
                 </HBox>
-                <HBox alignment="CENTER_LEFT">
+                <HBox alignment="CENTER_LEFT" spacing="5">
                     <Label textFill="#00305f" text="Type: " styleClass="subheader-label"/>
-                    <Label text="Tour card"/>
+                    <Label fx:id="cardTypeLabel"/>
                 </HBox>
-                <HBox alignment="CENTER_LEFT">
-                    <Label textFill="#00305f" text="Expiry date: " styleClass="subheader-label"/>
-                    <Label text="30/09/2023"/>
-                </HBox>
-                <HBox alignment="CENTER_LEFT">
+                <HBox alignment="CENTER_LEFT" spacing="5">
                     <Label textFill="#00305f" text="Zones: " styleClass="subheader-label"/>
-                    <Label text="3 zones (PRT1, PRT3, VNG1)"/>
+                    <Label fx:id="accessTypeLabel"/>
                 </HBox>
-                <HBox alignment="CENTER_LEFT">
-                    <Label textFill="#00305f" text="Number of top ups: " styleClass="subheader-label"/>
-                    <Label text="9 trips"/>
+                <HBox alignment="CENTER_LEFT" spacing="5">
+                    <Label textFill="#00305f" fx:id="topUpTitleLabel" styleClass="subheader-label"/>
+                    <Label fx:id="topUpLabel"/>
                 </HBox>
             </VBox>
         </HBox>
