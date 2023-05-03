@@ -564,7 +564,7 @@ public class AdministratorController extends Controller
         cardsTable.getColumns().add(deleteCardButton);
 
         double tableWidth = trainsTable.getPrefWidth();
-        userId.setPrefWidth(tableWidth * 0.06);
+        userId.setPrefWidth(tableWidth * 0.07);
         isActive.setPrefWidth(tableWidth * 0.12);
         accessType.setPrefWidth(tableWidth * 0.12);
         price.setPrefWidth(tableWidth * 0.1);
