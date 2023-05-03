@@ -91,6 +91,68 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
     }
 
     @Override
+    public CardPrice findCardPriceForCard(Card card) throws DaoException
+    {
+        CardPrice cardPrice = null;
+
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "SELECT * FROM cards_prices WHERE card_type = ? AND access_type = ?";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, getCardType(card));
+            ps.setString(2, card.getCardAccessType().getLabel());
+
+            //Use the prepared statement to execute the sql
+            rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                cardPrice = createCardPriceDto();
+            }
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("findCardPriceByAccessType() in MySqlCardDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("findCardPriceByAccessType() in MySqlCardDao");
+        }
+
+        return cardPrice;
+    }
+
+    private String getCardType(Card card)
+    {
+        String cardType;
+
+        if (card instanceof GreyCard)
+        {
+            if (card instanceof StudentCard)
+            {
+                cardType = "student card";
+            } else
+            {
+                cardType = "grey card";
+            }
+        }
+        else
+        {
+            if (card instanceof TourCard)
+            {
+                cardType = "tour card";
+            } else
+            {
+                cardType = "blue card";
+            }
+        }
+
+        return cardType;
+    }
+    @Override
     public boolean insertCardForPassenger(User user) throws DaoException
     {
         Card card = null;
@@ -106,7 +168,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
 
                 //Get a connection to the database
                 con = this.getConnection();
-                query = "INSERT INTO cards (card_id, user_id, card_price_id, card_type, access_type) VALUES\n" +
+                query = "INSERT INTO cards (card_id, user_id, card_price_id) VALUES\n" +
                         "(?, ?, ?, ?, ?)";
 
                 ps = con.prepareStatement(query);
@@ -123,31 +185,6 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
                 ps.setString(1, card.getCardId());
                 ps.setInt(2, user.getUserId());
                 ps.setInt(3, card.getCardPrice().getCardPriceId());
-
-
-                if (card instanceof GreyCard)
-                {
-                    if (card instanceof StudentCard)
-                    {
-                        cardType = "student card";
-                    } else
-                    {
-                        cardType = "grey card";
-                    }
-                } else
-                {
-                    if (card instanceof TourCard)
-                    {
-                        cardType = "tour card";
-                    } else
-                    {
-                        cardType = "blue card";
-                    }
-                }
-
-                ps.setString(4, cardType);
-                ps.setString(5, card.getCardAccessType().getLabel());
-
                 ps.executeUpdate();
             }
         }
@@ -293,6 +330,14 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
         return maxCardId;
     }
 
+    private CardPrice createCardPriceDto() throws SQLException
+    {
+        int cardPriceId = rs.getInt("card_price_id");
+        double physicalCardPrice = rs.getDouble("physical_card_price");
+        double topUpPrice = rs.getDouble("top_up_price");
+
+        return new CardPrice(cardPriceId, physicalCardPrice, topUpPrice);
+    }
     @Override
     protected Card createDto() throws SQLException
     {
@@ -301,12 +346,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
         String cardId = rs.getString("card_id");
         String cardType = rs.getString("card_type");
         CardAccessType accessType = enumLabelConverter.fromLabel(rs.getString("access_type"), CardAccessType.class);
-
-        int cardPriceId = rs.getInt("card_price_id");
-        double physicalCardPrice = rs.getDouble("physical_card_price");
-        double topUpPrice = rs.getDouble("top_up_price");
-
-        CardPrice cardPrice = new CardPrice(cardPriceId, physicalCardPrice, topUpPrice);
+        CardPrice cardPrice = createCardPriceDto();
 
         if(cardType.equalsIgnoreCase("grey card")  || cardType.equalsIgnoreCase("student card"))
         {
