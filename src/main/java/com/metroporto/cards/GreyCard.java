@@ -17,9 +17,8 @@ public class GreyCard extends Card
         checkExpiration();
     }
 
-    public GreyCard(CardAccessType accessType, CardPrice cardPrice, LocalDate startDate, LocalDate endDate)
+    public GreyCard(LocalDate startDate, LocalDate endDate)
     {
-        super(accessType, cardPrice);
         this.startDate = startDate;
         this.endDate = endDate;
         checkExpiration();

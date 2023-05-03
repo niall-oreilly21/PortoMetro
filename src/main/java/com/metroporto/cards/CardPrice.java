@@ -34,6 +34,7 @@ public class CardPrice
         return "CardPrice{" +
                 "cardPriceId=" + cardPriceId +
                 ", physicalCardPrice=" + physicalCardPrice +
+                ", topUpPrice=" + topUpPrice +
                 '}';
     }
 }

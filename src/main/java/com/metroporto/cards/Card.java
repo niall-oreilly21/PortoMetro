@@ -34,6 +34,15 @@ public abstract class Card
         zones = null;
     }
 
+    public Card()
+    {
+        this.cardId = "";
+        this.cardAccessType = CardAccessType.THREE_ZONES;
+        this.cardPrice = null;
+        this.isActive = false;
+        zones = null;
+    }
+
     public String getCardId()
     {
         return cardId;
