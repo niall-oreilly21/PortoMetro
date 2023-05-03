@@ -53,7 +53,7 @@
                     </HBox>
                 </VBox>
                 <VBox fx:id="greyCardBox">
-                    <Label text="Choose card validity period">
+                    <Label text="Choose card validity period" fx:id="cardValidityLabel">
                         <VBox.margin>
                             <Insets>
                                 <top>40</top>
