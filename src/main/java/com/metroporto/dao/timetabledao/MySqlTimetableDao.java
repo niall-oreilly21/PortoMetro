@@ -1,16 +1,13 @@
 package com.metroporto.dao.timetabledao;
 
 import com.metroporto.dao.MySqlDao;
-import com.metroporto.dao.routedao.MySqlRouteDao;
 import com.metroporto.dao.scheduledao.MySqlScheduleDao;
-import com.metroporto.enums.CardAccessType;
-import com.metroporto.enums.TimeTableType;
+import com.metroporto.enums.TimetableType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.*;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +59,7 @@ public class MySqlTimetableDao extends MySqlDao<Timetable> implements TimetableD
         {
             //Get a connection to the database
             con = this.getConnection();
-            query = "INSERT INTO timetables (route_id, scheduled_day_type) VALUES\n" +
+            query = "INSERT INTO timetables (route_id, timetable_day_type) VALUES\n" +
                     "(?, ?)";
 
             ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -89,11 +86,11 @@ public class MySqlTimetableDao extends MySqlDao<Timetable> implements TimetableD
         }
         catch (SQLException sqe)
         {
-            throw new DaoException("insert() in MySqlTimetableDao " + sqe.getMessage());
+            throw new DaoException("insertTimetableByRouteId() in MySqlTimetableDao " + sqe.getMessage());
         }
         finally
         {
-            handleFinally("insert() in MySqlTimetableDao");
+            handleFinally("insertTimetableByRouteId() in MySqlTimetableDao");
         }
     }
 
@@ -101,7 +98,7 @@ public class MySqlTimetableDao extends MySqlDao<Timetable> implements TimetableD
     protected Timetable createDto() throws SQLException
     {
         int timetableId = rs.getInt("timetable_id");
-        TimeTableType TimetableType = enumLabelConverter.fromLabel(rs.getString("scheduled_day_type"), TimeTableType.class);
+        TimetableType TimetableType = enumLabelConverter.fromLabel(rs.getString("timetable_day_type"), com.metroporto.enums.TimetableType.class);
         List<List<Schedule>> timetableSchedules = scheduleDao.findAllSchedulesByTimetableId(timetableId);
         return new Timetable(timetableId, TimetableType, timetableSchedules);
     }

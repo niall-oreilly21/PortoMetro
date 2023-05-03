@@ -1,10 +1,16 @@
 package com.metroporto.dao.zonedao;
 
+import com.metroporto.cards.Card;
+import com.metroporto.cards.GreyCard;
+import com.metroporto.cards.StudentCard;
+import com.metroporto.cards.TourCard;
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Zone;
+import com.metroporto.users.Passenger;
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,18 +71,18 @@ public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
         }
         catch (SQLException sqe)
         {
-            throw new DaoException("findElementsById() in MySqlZoneDao " + sqe.getMessage());
+            throw new DaoException("findZoneByZoneId() in MySqlZoneDao " + sqe.getMessage());
         }
         finally
         {
-            handleFinally("findElementsById() in MySqlZoneDao");
+            handleFinally("findZoneByZoneId() in MySqlZoneDao");
         }
 
         return zone;
     }
 
     @Override
-    public List<Zone> findAllZonesByZoneId(int cardId) throws DaoException
+    public List<Zone> findAllZonesByZoneId(String cardId) throws DaoException
     {
         List<Zone> zones = new ArrayList<>();
 
@@ -86,7 +92,7 @@ public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
             con = this.getConnection();
             query = "SELECT * FROM zones JOIN cards_zones ON zones.zone_id = cards_zones.zone_id WHERE cards_zones.card_id = ?";
             ps = con.prepareStatement(query);
-            ps.setInt(1, cardId);
+            ps.setString(1, cardId);
 
             //Use the prepared statement to execute the sql
             rs = ps.executeQuery();
@@ -98,14 +104,78 @@ public class MySqlZoneDao extends MySqlDao<Zone> implements ZoneDaoInterface
         }
         catch (SQLException sqe)
         {
-            throw new DaoException("findAllElementsById() in ZonesDao " + sqe.getMessage());
+            throw new DaoException("findAllZonesByZoneId() in ZonesDao " + sqe.getMessage());
         }
         finally
         {
-            handleFinally("findAllElementsById() in ZonesDao()");
+            handleFinally("findAllZonesByZoneId() in ZonesDao()");
         }
 
         return zones;
+    }
+
+    @Override
+    public Zone findZoneByZoneName(String zoneName) throws DaoException
+    {
+        Zone zone = null;
+
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            query = "SELECT * FROM zones WHERE zone_name = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, zoneName);
+
+            //Use the prepared statement to execute the sql
+            rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                zone = createDto();
+            }
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("findZoneByZoneName() in MySqlZoneDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("findZoneByZoneName() in MySqlZoneDao");
+        }
+
+        return zone;
+    }
+
+    @Override
+    public void insertZonesForCard(String cardId, int zoneId) throws DaoException
+    {
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            String query = "INSERT INTO cards_zones (card_id, zone_id) VALUES\n" +
+                    "(?, ?)";
+
+            ps = con.prepareStatement(query);
+            ps.setString(1, cardId);
+            ps.setInt(2, zoneId);
+            ps.executeUpdate();
+
+        }
+        catch (SQLIntegrityConstraintViolationException e)
+        {
+            // Handle duplicate entry error
+            System.out.println("Duplicate entry found in the database");
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("insertZonesForCard() in ZonesDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("insertZonesForCard() in ZonesDao()");
+        }
     }
 
     @Override

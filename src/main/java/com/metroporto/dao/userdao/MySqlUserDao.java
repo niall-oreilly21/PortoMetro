@@ -14,9 +14,8 @@ import com.metroporto.users.Passenger;
 import com.metroporto.users.Student;
 import com.metroporto.users.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,16 +74,8 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
 
         if(userType.equalsIgnoreCase("student") || userType.equalsIgnoreCase("passenger"))
         {
-            int cardId = rs.getInt("card_id");
 
-            Card card = null;
-
-            if (rs.wasNull())
-            {
-                cardId = 0;
-                card = cardDao.findCardByCardId(cardId);
-            }
-
+            Card card = cardDao.findCardByUserId(userId);
 
             if(userType.equalsIgnoreCase("student"))
             {
@@ -92,26 +83,11 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
 
                 University university = universityDao.findUniversityByUniversityId(universityId);
 
-                if(cardId != 0)
-                {
-                    user = new Student(userId, email, password, firstName, lastName, card, university);
-                }
-                else
-                {
-                    user = new Student(userId, email, password, firstName, lastName, university);
-                }
-
+                user = new Student(userId, email, password, firstName, lastName, card, university);
             }
             else
             {
-                if(cardId != 0)
-                {
-                    user = new Passenger(userId, email, password, firstName, lastName, card);
-                }
-                else
-                {
-                    user = new Passenger(userId, email, password, firstName, lastName);
-                }
+                user = new Passenger(userId, email, password, firstName, lastName, card);
             }
         }
         else if(userType.equalsIgnoreCase("administrator"))
@@ -156,8 +132,10 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
     }
 
     @Override
-    public void insertUser(User user) throws DaoException
+    public boolean insertUser(User user) throws DaoException
     {
+        boolean isInserted = false;
+
         try
         {
             //Get a connection to the database
@@ -193,12 +171,12 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             ps.setString(5, userType);
 
 
-            //Use the prepared statement to execute the sql
-            //Use the prepared statement to execute the sql
             int rowsAffected = ps.executeUpdate();
 
             if (rowsAffected > 0)
             {
+                isInserted = true;
+
                 // Retrieve the generated keys
                 rs = ps.getGeneratedKeys();
 
@@ -208,7 +186,11 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
                     user.setUserId(userId);
                 }
             }
-
+        }
+        catch (SQLIntegrityConstraintViolationException e)
+        {
+            // Handle duplicate entry error
+            System.out.println("Duplicate entry found in the database");
         }
         catch (SQLException sqe)
         {
@@ -219,26 +201,11 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
            handleFinally("insertUser() in MySqlUserDao");
         }
 
-        if(user instanceof Passenger)
-        {
-            if(((Passenger) user).getMetroCard() != null)
-            {
-                cardDao.insertCardForPassenger(user);
-
-
-                if(user instanceof Student)
-                {
-                    if(((Passenger) user).getMetroCard() != null)
-                    {
-                        universityDao.insertUniversityForStudent(user);
-                    }
-                }
-            }
-        }
+        return isInserted;
     }
 
     @Override
-    public void updateEmail(User user) throws DaoException
+    public boolean updateEmail(User user) throws DaoException
     {
         try
         {
@@ -250,8 +217,18 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             ps.setString(1, user.getEmail());
             ps.setInt(2, user.getUserId());
 
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
 
+            if (rowsAffected > 0)
+            {
+                return true;
+            }
+
+        }
+        catch (SQLIntegrityConstraintViolationException e)
+        {
+            // Handle duplicate entry error
+            System.out.println("Duplicate entry found in the database");
         }
         catch (SQLException sqe)
         {
@@ -261,10 +238,12 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         {
             handleFinally("updateEmail() in MySqlUserDao");
         }
+
+        return false;
     }
 
     @Override
-    public void updatePassword(User user) throws DaoException
+    public boolean updatePassword(User user) throws DaoException
     {
         try
         {
@@ -276,9 +255,18 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             ps.setString(1, user.getPassword());
             ps.setInt(2, user.getUserId());
 
+            int rowsAffected = ps.executeUpdate();
 
-            ps.executeUpdate();
+            if (rowsAffected > 0)
+            {
+                return true;
+            }
 
+        }
+        catch (SQLIntegrityConstraintViolationException e)
+        {
+            // Handle duplicate entry error
+            System.out.println("Duplicate entry found in the database");
         }
         catch (SQLException sqe)
         {
@@ -288,10 +276,12 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         {
             handleFinally("updatePassword() in MySqlUserDao");
         }
+
+        return false;
     }
 
     @Override
-    public void updateFirstName(User user) throws DaoException
+    public boolean updateFirstName(User user) throws DaoException
     {
         try
         {
@@ -303,8 +293,18 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             ps.setString(1, user.getFirstName());
             ps.setInt(2, user.getUserId());
 
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
 
+            if (rowsAffected > 0)
+            {
+                return true;
+            }
+
+        }
+        catch (SQLIntegrityConstraintViolationException e)
+        {
+            // Handle duplicate entry error
+            System.out.println("Duplicate entry found in the database");
         }
         catch (SQLException sqe)
         {
@@ -314,10 +314,12 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         {
             handleFinally("updateFirstName() in MySqlUserDao");
         }
+
+        return false;
     }
 
     @Override
-    public void updateLastName(User user) throws DaoException
+    public boolean updateLastName(User user) throws DaoException
     {
         try
         {
@@ -329,8 +331,18 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
             ps.setString(1, user.getLastName());
             ps.setInt(2, user.getUserId());
 
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
 
+            if (rowsAffected > 0)
+            {
+                return true;
+            }
+
+        }
+        catch (SQLIntegrityConstraintViolationException e)
+        {
+            // Handle duplicate entry error
+            System.out.println("Duplicate entry found in the database");
         }
         catch (SQLException sqe)
         {
@@ -340,5 +352,48 @@ public class MySqlUserDao extends MySqlDao<User> implements UserDaoInterface
         {
             handleFinally("updateLastName() in MySqlUserDao");
         }
+
+        return false;
     }
+
+
+    @Override
+    public boolean remove(User user) throws DaoException
+    {
+        try
+        {
+            //Get a connection to the database
+            con = this.getConnection();
+            String query = "DELETE FROM users WHERE user_id = ?";
+            ps = con.prepareStatement(query);
+            ps.setInt(1, user.getUserId());
+
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0)
+            {
+                query = "SELECT * FROM users WHERE user_id = ?";
+                ps = con.prepareStatement(query);
+                ps.setInt(1, user.getUserId());
+                rs = ps.executeQuery();
+
+                if (!rs.next())
+                {
+                    return true;
+                }
+            }
+
+        }
+        catch (SQLException sqe)
+        {
+            throw new DaoException("remove() in MySqlUserDao " + sqe.getMessage());
+        }
+        finally
+        {
+            handleFinally("remove() in MySqlUserDao");
+        }
+
+        return false;
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.metroporto.users;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 public abstract class User
 {
     private int userId;
@@ -17,11 +19,11 @@ public abstract class User
         this.lastName = lastName;
     }
 
-    public User(String email, String password, String firstName, String lastName)
+    public User(String email, String firstName, String lastName)
     {
         this.userId = 0;
         this.email = email;
-        this.password = password;
+        this.password = "";
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -56,16 +58,6 @@ public abstract class User
         return lastName;
     }
 
-    public void setPassword(String password)
-    {
-        this.password = password;
-    }
-
-    public void setEmail(String email)
-    {
-        this.email = email;
-    }
-
     public void setFirstName(String firstName)
     {
         this.firstName = firstName;
@@ -74,6 +66,23 @@ public abstract class User
     public void setLastName(String lastName)
     {
         this.lastName = lastName;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
+
+    public void setPassword(String password)
+    {
+        int cost = 4;
+        this.password = BCrypt.withDefaults().hashToString(cost, password.toCharArray());
+    }
+
+    public boolean checkPassword(String password)
+    {
+        BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), this.password);
+        return result.verified;
     }
 
     @Override

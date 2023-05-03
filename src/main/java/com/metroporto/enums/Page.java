@@ -2,11 +2,12 @@ package com.metroporto.enums;
 
 public enum Page implements LabelInterface
 {
+    ADMINISTRATOR("administrator"),
     CARD("card"),
     CARD_INVOICE("card_invoice"),
     CARD_ZONE("card_zone"),
     HOME("home"),
-    JOURNEY_ROUTE("journey_route"),
+    JOURNEY_PLANNER("journey_planner"),
     PASSENGER_CARD("passenger_card"),
     PROFILE("profile"),
     SCHEDULE("schedule"),

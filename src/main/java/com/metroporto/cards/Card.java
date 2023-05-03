@@ -9,35 +9,46 @@ import java.util.List;
 
 public abstract class Card
 {
-    private int cardId;
+    private String cardId;
     protected boolean isActive;
     private CardAccessType cardAccessType;
-    private double cardPrice;
+    private CardPrice cardPrice;
     private List<Zone> zones;
-    private static final int THREE_ZONES_SIZE = 3;
+    private static final int threeZonesSize = 3;
 
-    public Card(int cardId, CardAccessType cardAccessType, double cardPrice)
+    public Card(String cardId, CardAccessType cardAccessType, CardPrice cardPrice)
     {
         this.cardId = cardId;
         this.cardAccessType = cardAccessType;
         this.cardPrice = cardPrice;
-
-        if(this.cardAccessType.equals(CardAccessType.THREE_ZONES))
-        {
-            this.zones = new ArrayList<>(THREE_ZONES_SIZE);
-        }
-        else
-        {
-            this.zones = null;
-        }
+        this.isActive = false;
+        zones = null;
     }
 
-    public int getCardId()
+    public Card(CardAccessType cardAccessType, CardPrice cardPrice)
+    {
+        this.cardId = "";
+        this.cardAccessType = cardAccessType;
+        this.cardPrice = cardPrice;
+        this.isActive = false;
+        zones = null;
+    }
+
+    public Card()
+    {
+        this.cardId = "";
+        this.cardAccessType = CardAccessType.THREE_ZONES;
+        this.cardPrice = null;
+        this.isActive = false;
+        zones = null;
+    }
+
+    public String getCardId()
     {
         return cardId;
     }
 
-    public void setCardId(int cardId)
+    public void setCardId(String cardId)
     {
         this.cardId = cardId;
     }
@@ -52,9 +63,14 @@ public abstract class Card
         isActive = active;
     }
 
-    public CardAccessType getAccessType()
+    public CardAccessType getCardAccessType()
     {
         return cardAccessType;
+    }
+
+    public List<Zone> getZones()
+    {
+        return zones;
     }
 
     public void setAccessType(CardAccessType accessType)
@@ -62,14 +78,26 @@ public abstract class Card
         this.cardAccessType = accessType;
     }
 
-    public double getCardPrice()
+    public CardPrice getCardPrice()
     {
         return cardPrice;
     }
 
-    public void setCardPrice(double cardPrice)
+    public void setCardPrice(CardPrice cardPrice)
     {
         this.cardPrice = cardPrice;
+    }
+
+    public void setZones(List<Zone> zones)
+    {
+        if(this.cardAccessType.equals(CardAccessType.THREE_ZONES))
+        {
+            this.zones = zones;
+        }
+        else
+        {
+            this.zones = null;
+        }
     }
 
     public void addZone(Zone zone)
@@ -79,7 +107,6 @@ public abstract class Card
 
     protected void checkExpiration()
     {
-        this.isActive = false;
     }
 
     @Override

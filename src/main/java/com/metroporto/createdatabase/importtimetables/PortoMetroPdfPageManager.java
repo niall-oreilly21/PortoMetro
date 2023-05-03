@@ -1,18 +1,18 @@
 package com.metroporto.createdatabase.importtimetables;
 
-import com.metroporto.enums.TimeTableType;
+import com.metroporto.enums.TimetableType;
 
 public class PortoMetroPdfPageManager
 {
     private int pageIndex;
-    private TimeTableType scheduleDay;
+    private TimetableType scheduleDay;
     private boolean lineC;
     private String lineId;
 
     public PortoMetroPdfPageManager()
     {
         this.pageIndex = 0;
-        this.scheduleDay = TimeTableType.MONDAY_TO_FRIDAY;
+        this.scheduleDay = TimetableType.MONDAY_TO_FRIDAY;
         this.lineC = false;
         checkScheduleDayPage();
         this.lineId = "";
@@ -32,7 +32,7 @@ public class PortoMetroPdfPageManager
             case 20:
             case 25:
             case 26:
-                setScheduleDay(TimeTableType.MONDAY_TO_FRIDAY);
+                setScheduleDay(TimetableType.MONDAY_TO_FRIDAY);
                 break;
 
             case 3:
@@ -45,7 +45,7 @@ public class PortoMetroPdfPageManager
             case 22:
             case 27:
             case 28:
-                setScheduleDay(TimeTableType.SATURDAY);
+                setScheduleDay(TimetableType.SATURDAY);
                 break;
 
             case 5:
@@ -58,7 +58,7 @@ public class PortoMetroPdfPageManager
             case 24:
             case 29:
             case 30:
-                setScheduleDay(TimeTableType.SUNDAY);
+                setScheduleDay(TimetableType.SUNDAY);
                 break;
 
             default:
@@ -109,7 +109,7 @@ public class PortoMetroPdfPageManager
        }
     }
 
-    public TimeTableType getScheduleDay()
+    public TimetableType getScheduleDay()
     {
         return scheduleDay;
     }
@@ -119,7 +119,7 @@ public class PortoMetroPdfPageManager
         return lineId;
     }
 
-    private void setScheduleDay(TimeTableType scheduleDay)
+    private void setScheduleDay(TimetableType scheduleDay)
     {
         this.scheduleDay = scheduleDay;
     }

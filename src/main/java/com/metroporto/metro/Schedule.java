@@ -1,7 +1,5 @@
 package com.metroporto.metro;
 
-import com.metroporto.enums.TimeTableType;
-
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;

@@ -7,24 +7,16 @@ import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.stationdao.StationDaoInterface;
 import com.metroporto.dao.timetabledao.MySqlTimetableDao;
 import com.metroporto.dao.timetabledao.TimetableDaoInterface;
-import com.metroporto.enums.TimeTableType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.*;
 
 import java.util.List;
 
-//Run this class to insert Timetables to database
 
 public class ImportTimetables implements StartInterface
 {
-    private static List<Station>stations;
-    private static List<Line>lines;
-
-    public static void main(String[] args)
-    {
-        ImportTimetables importTimetables = new ImportTimetables();
-        importTimetables.start();
-    }
+    private List<Station>stations;
+    private List<Line>lines;
 
     @Override
     public void start()
@@ -34,9 +26,6 @@ public class ImportTimetables implements StartInterface
         retrieveTimetables();
 
        insertSchedulesTimetablesToDatabase();
-
-       //Used to test
-        displayTimetables();
     }
 
     private void setUpStationsLines()
@@ -62,32 +51,6 @@ public class ImportTimetables implements StartInterface
 
         ExcelReaderTimetables excelReaderTimetables = new ExcelReaderTimetables(stations, lines);
         excelReaderTimetables.start();
-    }
-
-    private void displayTimetables()
-    {
-        for (Line line : lines)
-        {
-            if (line.getLineId().equalsIgnoreCase("D"))
-            {
-                System.out.println("------" + line.getLineName() + "-----");
-
-                for (Route route : line.getRoutes())
-                {
-                    System.out.println("------" + route.getEndStation().getStationName() + "-----");
-                    for (Timetable timetable : route.getTimetables())
-                    {
-                        if(timetable.getTimeTableType().equals(TimeTableType.MONDAY_TO_FRIDAY))
-                        {
-                            timetable.displayTimeTable();
-                            System.out.println(timetable.getTimetableSchedules().size());
-                        }
-
-                    }
-                }
-            }
-
-        }
     }
 
     private void insertSchedulesTimetablesToDatabase()

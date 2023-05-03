@@ -21,7 +21,10 @@ public class Line implements Comparable<Line>
 
     private void setStations()
     {
-         stations = new ArrayList<>(routes.get(0).getTimetables().get(0).getStations());
+        if(!this.routes.get(0).getTimetables().isEmpty())
+        {
+            stations = routes.get(0).getTimetables().get(0).getStationsForTimetable();
+        }
     }
 
     public String getLineId()

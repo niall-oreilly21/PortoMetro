@@ -2,32 +2,50 @@ package com.metroporto.cards;
 
 import com.metroporto.enums.CardAccessType;
 
-import java.sql.Time;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class GreyCard extends Card
 {
-    private LocalDateTime endDateTime;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
-    public GreyCard(int cardId, CardAccessType accessType, double cardPrice, LocalDateTime endDateTime)
+    public GreyCard(String cardId, CardAccessType accessType, CardPrice cardPrice, LocalDate startDate, LocalDate endDate)
     {
         super(cardId, accessType, cardPrice);
-        this.endDateTime = endDateTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
         checkExpiration();
+    }
+
+    public GreyCard(LocalDate startDate, LocalDate endDate)
+    {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        checkExpiration();
+    }
+
+    public LocalDate getStartDate()
+    {
+        return startDate;
+    }
+
+    public LocalDate getEndDate()
+    {
+        return endDate;
     }
 
     @Override
     protected void checkExpiration()
     {
-        LocalDateTime now = LocalDateTime.now();
-        isActive = endDateTime.isAfter(now);
+        LocalDate now = LocalDate.now();
+        isActive = (now.isAfter(startDate)) && (now.isBefore(endDate));
     }
 
     @Override
     public String toString()
     {
         return "GreyCard{" +
-                "endDateTime=" + endDateTime +
+                "endDateTime=" + endDate +
                 "} " + super.toString();
     }
 }

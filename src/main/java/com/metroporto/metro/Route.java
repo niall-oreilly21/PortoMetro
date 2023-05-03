@@ -1,6 +1,6 @@
 package com.metroporto.metro;
 
-import com.metroporto.enums.TimeTableType;
+import com.metroporto.enums.TimetableType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class Route
         return endStation;
     }
 
-    public Timetable getTimetableByTimetableType(TimeTableType timeTableType)
+    public Timetable getTimetableByTimetableType(TimetableType timeTableType)
     {
         for (Timetable timetable : timetables)
         {
