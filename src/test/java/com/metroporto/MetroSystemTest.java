@@ -4,16 +4,16 @@ import com.metroporto.dao.linedao.LineDaoInterface;
 import com.metroporto.dao.linedao.MySqlLineDao;
 import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.stationdao.StationDaoInterface;
-import com.metroporto.enums.TimeTableType;
+import com.metroporto.enums.TimetableType;
 import com.metroporto.exceptions.DaoException;
+import com.metroporto.metro.JourneyPlanner;
 import com.metroporto.metro.Line;
+import com.metroporto.metro.MetroSystem;
 import com.metroporto.metro.Station;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Type;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,7 +45,7 @@ public class MetroSystemTest
         LocalTime startTime = LocalTime.of(14,40);
 
 
-        JourneyPlanner journeyPlanner = new JourneyPlanner(stationOne, stationTwo, startTime, TimeTableType.SATURDAY);
+        JourneyPlanner journeyPlanner = new JourneyPlanner(stationOne, stationTwo, startTime, TimetableType.SATURDAY);
         journeyPlanner.setMetroSystem(metroSystem);
         journeyPlanner.start();
 

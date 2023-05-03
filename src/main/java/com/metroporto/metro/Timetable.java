@@ -1,7 +1,7 @@
 package com.metroporto.metro;
 
-import com.metroporto.ComparatorSchedules;
-import com.metroporto.enums.TimeTableType;
+import com.metroporto.comparators.ComparatorSchedules;
+import com.metroporto.enums.TimetableType;
 
 import java.time.LocalTime;
 import java.util.*;
@@ -11,12 +11,12 @@ public class Timetable
     private int timetableId;
 
     private String scheduleDescription;
-    private TimeTableType timeTableType;
+    private TimetableType timeTableType;
     private List<List<Schedule>> timetableSchedules;
     private Map <Station, List<Schedule>> schedulesByStation;
     private Map <Station, Integer> stationsRowIndex;
 
-    public Timetable(int timetableId, TimeTableType timeTableType, List<List<Schedule>> timetableSchedules)
+    public Timetable(int timetableId, TimetableType timeTableType, List<List<Schedule>> timetableSchedules)
     {
         this.timetableId = timetableId;
         this.scheduleDescription = "";
@@ -29,7 +29,7 @@ public class Timetable
         setTimetableRowOrder();
     }
 
-    public Timetable(TimeTableType timeTableType)
+    public Timetable(TimetableType timeTableType)
     {
         this.timetableId = 0;
         this.scheduleDescription = "";
@@ -37,7 +37,7 @@ public class Timetable
         timetableSchedules = new ArrayList<>();
     }
 
-    public Timetable(int timetableId, TimeTableType timeTableType)
+    public Timetable(int timetableId, TimetableType timeTableType)
     {
         this.timetableId = timetableId;
         this.scheduleDescription = "";
@@ -49,7 +49,7 @@ public class Timetable
     {
         this.timetableId = 0;
         this.scheduleDescription = "";
-        this.timeTableType = TimeTableType.MONDAY_TO_FRIDAY;
+        this.timeTableType = TimetableType.MONDAY_TO_FRIDAY;
         timetableSchedules = new ArrayList<>();
     }
 
@@ -73,7 +73,7 @@ public class Timetable
         return scheduleDescription;
     }
 
-    public TimeTableType getTimeTableType()
+    public TimetableType getTimeTableType()
     {
         return timeTableType;
     }
@@ -83,7 +83,7 @@ public class Timetable
         return new ArrayList<>(schedulesByStation.keySet());
     }
 
-    public void setTimeTableType(TimeTableType timeTableType)
+    public void setTimeTableType(TimetableType timeTableType)
     {
         this.timeTableType = timeTableType;
     }

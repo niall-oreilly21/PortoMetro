@@ -1,12 +1,10 @@
 package com.metroporto.users;
 
-import com.metroporto.JourneyPlanner;
-import com.metroporto.JourneyRoute;
+import com.metroporto.metro.JourneyPlanner;
 import com.metroporto.cards.Card;
 import com.metroporto.cards.StudentCard;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Passenger extends User

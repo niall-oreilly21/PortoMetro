@@ -4,9 +4,11 @@ import com.metroporto.dao.linedao.LineDaoInterface;
 import com.metroporto.dao.linedao.MySqlLineDao;
 import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.stationdao.StationDaoInterface;
-import com.metroporto.enums.TimeTableType;
+import com.metroporto.enums.TimetableType;
 import com.metroporto.exceptions.DaoException;
+import com.metroporto.metro.JourneyRoute;
 import com.metroporto.metro.Line;
+import com.metroporto.metro.MetroSystem;
 import com.metroporto.metro.Station;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +43,7 @@ public class JourneyPlannerTest
         Station stationTwo = stationDao.findStationByStationId("FNZ");
         LocalTime startTime = LocalTime.of(14,40);
 
-        List<JourneyRoute> journeyRoutes = metroSystem.findShortestPath(stationOne, stationTwo, startTime, TimeTableType.SATURDAY);
+        List<JourneyRoute> journeyRoutes = metroSystem.findShortestPath(stationOne, stationTwo, startTime, TimetableType.SATURDAY);
         assertFalse(journeyRoutes.isEmpty());
     }
 }

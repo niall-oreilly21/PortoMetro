@@ -1,9 +1,8 @@
 package com.metroporto.dao.journeyplannerdao;
 
-import com.metroporto.JourneyPlanner;
+import com.metroporto.metro.JourneyPlanner;
 import com.metroporto.dao.RemoveDaoInterface;
 import com.metroporto.exceptions.DaoException;
-import com.metroporto.metro.Route;
 import com.metroporto.users.User;
 
 import java.util.List;

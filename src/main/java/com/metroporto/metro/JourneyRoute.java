@@ -1,135 +1,65 @@
 package com.metroporto.metro;
 
-import java.time.LocalDateTime;
+import com.metroporto.metro.Line;
+import com.metroporto.metro.Route;
+import com.metroporto.metro.Schedule;
+
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class JourneyRoute implements Comparable<JourneyRoute>
+
+public class JourneyRoute
 {
-    private int journeyRouteId;
-    private Station startStation;
-    private Station endStation;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private double fare;
-    private String journeyRouteDescription;
-    private List<Schedule> stops;
+    private Line line;
+    private Route route;
+    private List<Schedule> schedules;
 
-    public JourneyRoute(Station startStation, Station endStation)
+    public JourneyRoute(Line line, Route route)
     {
-        journeyRouteId = 0;
-        this.startStation = startStation;
-        this.endStation = endStation;
-        startTime = LocalDateTime.of(0 , 0, 0,0, 0);
-        endTime = LocalDateTime.of(0 , 0, 0,0, 0);
-        journeyRouteDescription = createJourneyRouteDescription();
-        fare = 0.0;
-        stops = new ArrayList<>();
+        this.line = line;
+        this.route = route;
+        this.schedules = new ArrayList<>();
     }
 
-    public int getJourneyRouteId()
+    public Line getLine()
     {
-        return journeyRouteId;
+        return line;
     }
 
-    public void setJourneyRouteId(int journeyRouteId)
+    public void setLine(Line line)
     {
-        this.journeyRouteId = journeyRouteId;
+        this.line = line;
     }
 
-    public Station getStartStation()
+    public Route getRoute()
     {
-        return startStation;
+        return route;
     }
 
-    public void setStartStation(Station startStation)
+    public void setRoute(Route route)
     {
-        this.startStation = startStation;
+        this.route = route;
     }
 
-    public Station getEndStation()
+    public List<Schedule> getSchedules()
     {
-        return endStation;
+        return schedules;
     }
 
-    public void setEndStation(Station endStation)
+    public void addSchedule(Schedule schedule)
     {
-        this.endStation = endStation;
-    }
-
-    public LocalDateTime getStartTime()
-    {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime)
-    {
-        this.startTime = startTime;
-    }
-
-    public LocalDateTime getEndTime()
-    {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime)
-    {
-        this.endTime = endTime;
-    }
-
-    public double getFare()
-    {
-        return fare;
-    }
-
-    public void setFare(double fare)
-    {
-        this.fare = fare;
-    }
-
-    public String getJourneyRouteDescription()
-    {
-        return journeyRouteDescription;
-    }
-
-    public void setJourneyRouteDescription(String journeyRouteDescription)
-    {
-        this.journeyRouteDescription = journeyRouteDescription;
-    }
-
-    public List<Schedule> getStops()
-    {
-        return stops;
-    }
-
-    public void setStops(List<Schedule> stops)
-    {
-        this.stops = stops;
-    }
-
-    public String createJourneyRouteDescription()
-    {
-        return startStation.getStationName() + " to " + endStation.getStationName();
+        schedules.add(schedule);
     }
 
     @Override
     public String toString()
     {
-        return "JourneyRoute{" +
-                "journeyRouteId=" + journeyRouteId +
-                ", startStation=" + startStation +
-                ", endStation=" + endStation +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", fare=" + fare +
-                ", journeyRouteDescription='" + journeyRouteDescription + '\'' +
-                ", stops=" + stops +
+        return "JourneyRoute" +
+                "{" +
+                "line=" + line +
+                ", route=" + route +
+                ", schedulesOnLine=" + schedules +
                 '}';
-    }
-
-    @Override
-    public int compareTo(JourneyRoute otherJourneyRoute)
-    {
-        return this.journeyRouteId - otherJourneyRoute.getJourneyRouteId();
     }
 }

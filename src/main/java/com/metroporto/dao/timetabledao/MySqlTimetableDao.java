@@ -2,8 +2,7 @@ package com.metroporto.dao.timetabledao;
 
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.dao.scheduledao.MySqlScheduleDao;
-import com.metroporto.enums.CardAccessType;
-import com.metroporto.enums.TimeTableType;
+import com.metroporto.enums.TimetableType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.*;
 
@@ -99,7 +98,7 @@ public class MySqlTimetableDao extends MySqlDao<Timetable> implements TimetableD
     protected Timetable createDto() throws SQLException
     {
         int timetableId = rs.getInt("timetable_id");
-        TimeTableType TimetableType = enumLabelConverter.fromLabel(rs.getString("timetable_day_type"), TimeTableType.class);
+        TimetableType TimetableType = enumLabelConverter.fromLabel(rs.getString("timetable_day_type"), com.metroporto.enums.TimetableType.class);
         List<List<Schedule>> timetableSchedules = scheduleDao.findAllSchedulesByTimetableId(timetableId);
         return new Timetable(timetableId, TimetableType, timetableSchedules);
     }

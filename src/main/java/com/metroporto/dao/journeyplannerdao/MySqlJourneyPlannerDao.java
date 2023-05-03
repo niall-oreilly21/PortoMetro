@@ -1,26 +1,19 @@
 package com.metroporto.dao.journeyplannerdao;
 
-import com.metroporto.JourneyPlanner;
+import com.metroporto.metro.JourneyPlanner;
 import com.metroporto.dao.MySqlDao;
 import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.stationdao.StationDaoInterface;
-import com.metroporto.enums.TimeTableType;
+import com.metroporto.enums.TimetableType;
 import com.metroporto.exceptions.DaoException;
-import com.metroporto.metro.Facility;
-import com.metroporto.metro.Schedule;
 import com.metroporto.metro.Station;
-import com.metroporto.metro.Zone;
 import com.metroporto.users.Passenger;
-import com.metroporto.users.Student;
 import com.metroporto.users.User;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.sql.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MySqlJourneyPlannerDao extends MySqlDao<JourneyPlanner> implements JourneyPlannerDaoInterface
 {
@@ -139,7 +132,7 @@ public class MySqlJourneyPlannerDao extends MySqlDao<JourneyPlanner> implements 
         Station startStation  = getCachedStation(rs.getString("start_station_id"), stationDao);
         Station endStation = getCachedStation(rs.getString("end_station_id"),stationDao);
         LocalTime startTime = rs.getTime("start_time").toLocalTime();
-        TimeTableType TimetableDayType = enumLabelConverter.fromLabel(rs.getString("timetable_day_type"), TimeTableType.class);
+        TimetableType TimetableDayType = enumLabelConverter.fromLabel(rs.getString("timetable_day_type"), TimetableType.class);
         return new JourneyPlanner(journeyPlannerId, startStation, endStation, startTime, TimetableDayType);
     }
 

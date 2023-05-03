@@ -1,16 +1,8 @@
 package com.metroporto;
 
-import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.enums.*;
-import com.metroporto.exceptions.DaoException;
-import com.metroporto.metro.Schedule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.sql.Time;
-import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -31,8 +23,8 @@ public class EnumLabelConverterTest
 
         String label = "saturday";
 
-        TimeTableType expected = TimeTableType.SATURDAY;
-        TimeTableType actual = enumLabelConverter.fromLabel(label, TimeTableType.class);
+        TimetableType expected = TimetableType.SATURDAY;
+        TimetableType actual = enumLabelConverter.fromLabel(label, TimetableType.class);
         assertEquals(expected,actual);
     }
 

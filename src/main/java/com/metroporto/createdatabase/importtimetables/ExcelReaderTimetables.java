@@ -1,7 +1,7 @@
 package com.metroporto.createdatabase.importtimetables;
 
 import com.metroporto.enums.EnumLabelConverter;
-import com.metroporto.enums.TimeTableType;
+import com.metroporto.enums.TimetableType;
 import com.metroporto.metro.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -65,7 +65,7 @@ public class ExcelReaderTimetables extends ImportReaderLinesStations
 
                 Row rowOne = sheet.getRow(range.getFirstRow());
 
-                TimeTableType timeTableType = getTimeTableTypeFromRegion(rowOne.getCell(0).getStringCellValue());
+                TimetableType timeTableType = getTimeTableTypeFromRegion(rowOne.getCell(0).getStringCellValue());
 
                 timetable.setTimeTableType(timeTableType);
 
@@ -129,10 +129,10 @@ public class ExcelReaderTimetables extends ImportReaderLinesStations
         return timetable;
     }
 
-    private TimeTableType getTimeTableTypeFromRegion(String stringCellValue)
+    private TimetableType getTimeTableTypeFromRegion(String stringCellValue)
     {
         EnumLabelConverter enumLabelConverter = new EnumLabelConverter();
-        return enumLabelConverter.fromLabel(stringCellValue, TimeTableType.class);
+        return enumLabelConverter.fromLabel(stringCellValue, TimetableType.class);
     }
 
     private Station getStation(String stationString)

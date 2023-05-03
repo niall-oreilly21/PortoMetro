@@ -1,5 +1,6 @@
 package com.metroporto;
 
+import com.metroporto.comparators.ComparatorSchedules;
 import com.metroporto.dao.stationdao.MySqlStationDao;
 import com.metroporto.dao.stationdao.StationDaoInterface;
 import com.metroporto.exceptions.DaoException;
