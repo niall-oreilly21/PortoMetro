@@ -28,7 +28,7 @@ public class App extends Application
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getClassLoader()
-                .getResource("com/gui/" + Folder.ACCOUNT_AUTH.getLabel() + "/" + Page.SIGN_UP.getLabel() + ".fxml")));
+                .getResource("com/gui/" + Folder.ACCOUNT_AUTH.getLabel() + "/" + Page.SIGN_IN.getLabel() + ".fxml")));
         Parent root = loader.load();
         Controller controller = loader.getController();
 
