@@ -7,6 +7,6 @@ import com.metroporto.users.User;
 
 public interface UniversityDaoInterface extends FindAllDaoInterface<University>
 {
-    University findUniversityByUniversityId(String universityIdToBeFound) throws DaoException;
+    University findUniversityByUniversityId(String universityId) throws DaoException;
     void insertUniversityForStudent(User user) throws DaoException;
 }

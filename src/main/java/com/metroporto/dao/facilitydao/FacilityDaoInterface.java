@@ -9,5 +9,4 @@ import java.util.List;
 public interface FacilityDaoInterface extends FindAllDaoInterface<Facility>
 {
     List<Facility> findAllFacilitiesByStationName(String stationName) throws DaoException;
-
 }
