@@ -61,6 +61,8 @@ CREATE TABLE cards_prices
     card_price_id INT NOT NULL AUTO_INCREMENT,
     physical_card_price DECIMAL(5, 2),
     top_up_price DECIMAL(5, 2),
+    card_type ENUM("blue card", "grey card", "student card", "tour card") NOT NULL,
+    access_type ENUM("All zones", "3 zones") NOT NULL,
     PRIMARY KEY(card_price_id)
 );
 
@@ -71,8 +73,6 @@ CREATE TABLE cards
     card_id VARCHAR(255),
     user_id INT NOT NULL,
     card_price_id INT NOT NULL,
-    card_type ENUM("blue card", "grey card", "student card", "tour card") NOT NULL,
-    access_type ENUM("All zones", "3 zones") NOT NULL,
     PRIMARY KEY(card_id),
     FOREIGN KEY (card_price_id) REFERENCES cards_prices(card_price_id),
     UNIQUE (user_id),
@@ -656,17 +656,22 @@ INSERT INTO students_universities (user_id, university_id) VALUES
 
 
 /*INSERTS data INTO the cards_prices table*/
-INSERT INTO cards_prices (physical_card_price, top_up_price) VALUES 
-(10.00, 5.00), 
-(15.00, 10.00), 
-(20.00, 15.00);
+INSERT INTO cards_prices (physical_card_price, top_up_price, card_type, access_type) VALUES 
+(0.60,  1.60,  "blue card", "3 zones"), 
+(0.60,  2.00,  "blue card", "All zones"), 
+(0.60,  5.55,  "tour card", "3 zones"),
+(0.60,  6.95,  "tour card", "All zones"), 
+(6.00,  30.00,  "grey card", "3 zones"), 
+(6.00,  40.00,  "grey card", "All zones"), 
+(3.00,  22.50,  "student card", "3 zones"), 
+(3.00,  30.00,  "student card", "All zones");
 
 
 /*INSERTS data INTO the cards table*/
-INSERT INTO cards (card_id, user_id, card_price_id, card_type, access_type) VALUES 
-("MTRP2023000001", 1, 1, 'blue card', 'All zones'), 
-("MTRP2023000002", 2, 2, 'grey card', '3 zones'), 
-("MTRP2023000003", 3, 3, 'student card', 'All zones');
+INSERT INTO cards (card_id, user_id, card_price_id) VALUES 
+("MTRP2023000001", 1, 1), 
+("MTRP2023000002", 2, 2), 
+("MTRP2023000003", 3, 3);
 
 
 /*INSERTS data INTO the grey_cards table*/
@@ -780,7 +785,7 @@ LEFT JOIN students_universities ON users.user_id = students_universities.user_id
 
 /*CREATE A VIEW which shows all cards*/
 CREATE VIEW all_cards AS
-SELECT cards.*, grey_cards.card_start_date, grey_cards.card_end_date, blue_cards.total_trips, cards_prices.physical_card_price, cards_prices.top_up_price FROM cards
+SELECT cards.*, grey_cards.card_start_date, grey_cards.card_end_date, blue_cards.total_trips, cards_prices.card_type, cards_prices.access_type, cards_prices.physical_card_price, cards_prices.top_up_price FROM cards
 LEFT JOIN grey_cards ON cards.card_id = grey_cards.card_id
 LEFT JOIN blue_cards ON cards.card_id = blue_cards.card_id
 LEFT JOIN cards_prices ON cards.card_price_id = cards_prices.card_price_id;
