@@ -271,7 +271,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
             {
                 //Get a connection to the database
                 con = this.getConnection();
-                String query = "INSERT INTO blue_cards (card_id, total_trips_allowed) VALUES\n" +
+                String query = "INSERT INTO blue_cards (card_id, total_trips) VALUES\n" +
                         "(?, ?)";
 
                 ps = con.prepareStatement(query);
