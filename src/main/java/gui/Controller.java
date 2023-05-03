@@ -1,8 +1,10 @@
 package gui;
 
+import com.metroporto.ConnectionSchedule;
 import com.metroporto.JourneyRoute;
 import com.metroporto.enums.Folder;
 import com.metroporto.enums.Page;
+import com.metroporto.metro.Schedule;
 import com.metroporto.metro.Station;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -94,13 +96,21 @@ public abstract class Controller
         Controller controller = loader.getController();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene previousScene = stage.getScene();
+        boolean isFullscreen = stage.isFullScreen(); // save the previous fullscreen state
         stage.setTitle("Porto Metro");
-        Scene scene = new Scene(root, 1200, 768);
+        Scene scene = new Scene(root, previousScene.getWidth(), previousScene.getHeight());
         stage.setScene(scene);
+
         stage.show();
 
         controller.setScene(scene);
         controller.setApp(App.getApplication());
+
+        if (isFullscreen)
+        {
+            stage.setFullScreen(true); // set back to fullscreen if it was fullscreen before
+        }
     }
 
     public void redirectToPage(MouseEvent event, Folder folder, Page page) throws IOException
@@ -111,23 +121,32 @@ public abstract class Controller
 
         Parent root = loader.load();
 
-        Controller controller = loader.getController();
-
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setTitle("Porto Metro");
-        Scene scene = new Scene(root, 1200, 768);
-        stage.setScene(scene);
-        stage.show();
+        Scene previousScene = stage.getScene();
+        Scene scene = new Scene(root, previousScene.getWidth(), previousScene.getHeight());
+        boolean isFullscreen = stage.isFullScreen();
 
+        Controller controller = loader.getController();
         controller.setScene(scene);
         controller.setApp(App.getApplication());
+
+        stage.setTitle("Porto Metro");
+        stage.setScene(scene);
+
+        if (isFullscreen)
+            stage.setFullScreen(true);
+
+        stage.show();
     }
 
-    protected void setApp(App application) {
+    protected void setApp(App application)
+    {
         app = application;
     }
 
-    protected void setScene(Scene scene) {}
+    protected void setScene(Scene scene)
+    {
+    }
 
     public String capitalise(String text)
     {
@@ -166,10 +185,12 @@ public abstract class Controller
 
     public void drawStationNodes(List<Station> currentLineStations,
                                  Paint[] colours, Pane stationsPane, Line stationsLine, int bigRadius, int smallRadius,
-                                 double spacing, double lineStartX, double lineEndX) {
+                                 double spacing, double lineStartX, double lineEndX)
+    {
         int numStations = currentLineStations.size();
         double lineWidth = lineEndX - lineStartX;
-        if (lineWidth == 0) {
+        if (lineWidth == 0)
+        {
             lineWidth = bigRadius + (numStations - 1) * (smallRadius + spacing);
             lineStartX = (stationsPane.getPrefWidth() - lineWidth) / 2.0;
             lineEndX = lineStartX + lineWidth;
@@ -178,13 +199,16 @@ public abstract class Controller
         }
 
         double increment = lineWidth / (numStations - 1);
-        double circleX = lineStartX + bigRadius/2.0;
+        double circleX = lineStartX + bigRadius / 2.0;
         double textX = lineStartX - 8;
 
-        if (stationsPane.getChildren().size() > 1 && stationsPane.getChildren().get(1) instanceof Group) {
+        if (stationsPane.getChildren().size() > 1 && stationsPane.getChildren().get(1) instanceof Group)
+        {
             List<Node> nodesToRemove = new ArrayList<>();
-            for (Node node : stationsPane.getChildren()) {
-                if (node instanceof Group) {
+            for (Node node : stationsPane.getChildren())
+            {
+                if (node instanceof Group)
+                {
                     nodesToRemove.add(node);
                 }
             }
@@ -194,7 +218,8 @@ public abstract class Controller
         Group group = new Group();
         stationsPane.getChildren().add(group);
 
-        for (int i = 0; i < numStations; i++) {
+        for (int i = 0; i < numStations; i++)
+        {
             int radius = (i == 0 || i == numStations - 1) ? bigRadius : smallRadius;
             int colourIndex = (i == 0 || i == numStations - 1) ? 0 : 1;
             boolean isBold = (i == 0 || i == numStations - 1);
@@ -206,16 +231,18 @@ public abstract class Controller
                     : textX + increment;
 
             drawStationNode(group, circleX, radius, currentLineStations.get(i).getStationId(),
-                    currentLineStations.get(i).getStationName(), textX, colours[colourIndex], isBold);
+                    currentLineStations.get(i).getStationName(), textX, colours[colourIndex], isBold, "");
         }
     }
 
     public void drawStationNodes(JourneyRoute currentJourneyRoute,
                                  Paint[] colours, Pane stationsPane, Line stationsLine, int bigRadius, int smallRadius,
-                                 double spacing, double lineStartX, double lineEndX) {
+                                 double spacing, double lineStartX, double lineEndX)
+    {
         int numSchedules = currentJourneyRoute.getSchedules().size();
         double lineWidth = lineEndX - lineStartX;
-        if (lineWidth == 0) {
+        if (lineWidth == 0)
+        {
             lineWidth = bigRadius + (numSchedules - 1) * (smallRadius + spacing);
             lineStartX = (stationsPane.getPrefWidth() - lineWidth) / 2.0;
             lineEndX = lineStartX + lineWidth;
@@ -224,13 +251,16 @@ public abstract class Controller
         }
 
         double increment = lineWidth / (numSchedules - 1);
-        double circleX = lineStartX + bigRadius/2.0;
-        double textX = lineStartX - 8;
+        double circleX = lineStartX + bigRadius / 2.0;
+        double textX = lineStartX - 10;
 
-        if (stationsPane.getChildren().size() > 1 && stationsPane.getChildren().get(1) instanceof Group) {
+        if (stationsPane.getChildren().size() > 1 && stationsPane.getChildren().get(1) instanceof Group)
+        {
             List<Node> nodesToRemove = new ArrayList<>();
-            for (Node node : stationsPane.getChildren()) {
-                if (node instanceof Group) {
+            for (Node node : stationsPane.getChildren())
+            {
+                if (node instanceof Group)
+                {
                     nodesToRemove.add(node);
                 }
             }
@@ -240,7 +270,8 @@ public abstract class Controller
         Group group = new Group();
         stationsPane.getChildren().add(group);
 
-        for (int i = 0; i < numSchedules; i++) {
+        for (int i = 0; i < numSchedules; i++)
+        {
             int radius = (i == 0 || i == numSchedules - 1) ? bigRadius : smallRadius;
             int colourIndex = (i == 0 || i == numSchedules - 1) ? 0 : 1;
             boolean isBold = (i == 0 || i == numSchedules - 1);
@@ -250,15 +281,43 @@ public abstract class Controller
             textX = lineWidth == 0 && i != 0 ? textX + smallRadius + spacing
                     : i == 0 ? textX
                     : textX + increment;
+            String timeTextValue = currentJourneyRoute.getSchedules().get(i).getDepartureTime().toString();
 
-            drawStationNode(group, circleX, radius, currentJourneyRoute.getSchedules().get(i).getStation().getStationId(),
-                    currentJourneyRoute.getSchedules().get(i).getStation().getStationName(),
-                    textX, colours[colourIndex], isBold);
+            Schedule schedule = currentJourneyRoute.getSchedules().get(i);
+            Station station = schedule.getStation();
+
+            if (i == 0)
+            {
+                if (schedule instanceof ConnectionSchedule)
+                {
+                    timeTextValue = schedule.getDepartureTime().toString();
+                }
+
+                drawStationNode(group, circleX, radius, schedule.getStation().getStationId(),
+                        station.getStationName() + " | " + station.getZone().getZoneName(),
+                        textX, colours[colourIndex], isBold, timeTextValue);
+            } else if (i == numSchedules - 1)
+            {
+                if (currentJourneyRoute.getSchedules().get(i) instanceof ConnectionSchedule)
+                {
+                    timeTextValue = ((ConnectionSchedule) schedule).getArrivalTime().toString();
+                }
+
+                drawStationNode(group, circleX, radius, station.getStationId(),
+                        station.getStationName() + " | " + station.getZone().getZoneName(),
+                        textX, colours[colourIndex], isBold, timeTextValue);
+            } else
+            {
+                drawStationNode(group, circleX, radius,
+                        station.getStationId(),
+                        station.getStationName() + " | " + timeTextValue + " | " + station.getZone().getZoneName(),
+                        textX, colours[colourIndex], isBold, "");
+            }
         }
     }
 
     public void drawStationNode(Group group, double circleX, double radius, String textValue,
-                                String tooltipText, double textX, Paint colour, boolean bold)
+                                String tooltipText, double textX, Paint colour, boolean bold, String timeTextValue)
     {
         Circle circle = new Circle();
         circle.setCenterX(circleX);
@@ -278,6 +337,13 @@ public abstract class Controller
         text.setRotate(-90);
         text.setText(textValue);
 
+        Label timeText = new Label();
+        timeText.getStyleClass().add("regular");
+        timeText.setLayoutX(textX);
+        timeText.setLayoutY(100);
+        timeText.setTextAlignment(TextAlignment.LEFT);
+        timeText.setText(timeTextValue);
+
         Tooltip tooltip = new Tooltip(tooltipText);
         Tooltip.install(text, tooltip);
 
@@ -285,6 +351,7 @@ public abstract class Controller
         {
             group.getChildren().add(circle);
             group.getChildren().add(text);
+            group.getChildren().add(timeText);
         }
     }
 }

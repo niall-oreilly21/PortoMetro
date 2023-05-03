@@ -21,8 +21,8 @@
         <Region HBox.hgrow="ALWAYS" />
         <HBox alignment="CENTER_RIGHT" spacing="20">
             <HBox spacing="10" alignment="CENTER_RIGHT">
-                <ImageView fx:id="administrator" fitHeight="25" fitWidth="25"/>
-                <Label text="Administrator" textFill="#0253a3"/>
+                <ImageView fx:id="administratorIcon" fitHeight="25" fitWidth="25"/>
+                <Label text="Administrator" styleClass="bold" textFill="#0253a3"/>
             </HBox>
             <padding>
                 <Insets right="50" />
@@ -38,7 +38,7 @@
             <padding>
                 <Insets left="30" top="30"/>
             </padding>
-            <Label text="Hi, Niall!" textFill="#fdc300" styleClass="subheader-label">
+            <Label fx:id="greet" textFill="#fdc300" styleClass="subheader-label">
                 <VBox.margin>
                     <Insets bottom="5"/>
                 </VBox.margin>
@@ -47,7 +47,7 @@
                 <padding>
                     <Insets top="20"/>
                 </padding>
-                <ImageView fx:id="trains" fitWidth="20" fitHeight="20"/>
+                <ImageView fx:id="trainsIcon" fitWidth="20" fitHeight="20"/>
                 <Label text="Trains" fx:id="trainsLabel" textFill="white"
                        onMouseClicked="#initialiseTrainsEvent" styleClass="text-underline"/>
             </HBox>
@@ -55,7 +55,7 @@
                 <padding>
                     <Insets top="20"/>
                 </padding>
-                <ImageView fx:id="users" fitWidth="20" fitHeight="20"/>
+                <ImageView fx:id="usersIcon" fitWidth="20" fitHeight="20"/>
                 <Label text="Users" fx:id="usersLabel" textFill="white"
                        onMouseClicked="#initialiseUsersEvent" styleClass="text-underline"/>
             </HBox>
@@ -63,13 +63,22 @@
                 <padding>
                     <Insets top="20"/>
                 </padding>
+                <ImageView fx:id="cardsIcon" fitWidth="20" fitHeight="20"/>
+                <Label text="Cards" fx:id="cardsLabel" textFill="white"
+                       onMouseClicked="#initialiseCardsEvent" styleClass="text-underline"/>
+            </HBox>
+            <HBox spacing="15">
+                <padding>
+                    <Insets top="20"/>
+                </padding>
                 <ImageView fx:id="signOut" fitWidth="20" fitHeight="20"/>
-                <Label text="Sign out" textFill="white" styleClass="text-underline"/>
+                <Label fx:id="signOutLabel" onMouseClicked="#signOut"
+                       text="Sign out" textFill="white" styleClass="text-underline"/>
             </HBox>
         </VBox>
-        <VBox fx:id="contentBox">
+        <VBox fx:id="contentBox" alignment="CENTER">
             <padding>
-                <Insets top="90" left="100"/>
+                <Insets left="50" right="50"/>
             </padding>
         </VBox>
     </SplitPane>

@@ -2,17 +2,21 @@ package gui.home;
 
 import com.metroporto.dao.linedao.LineDaoInterface;
 import com.metroporto.dao.linedao.MySqlLineDao;
+import com.metroporto.enums.EnumLabelConverter;
 import com.metroporto.enums.TimeTableType;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Route;
+import com.metroporto.metro.Schedule;
 import com.metroporto.metro.Station;
+import com.metroporto.metro.Timetable;
 import gui.Controller;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -20,6 +24,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 
+import java.time.LocalTime;
 import java.util.*;
 
 public class ScheduleController extends Controller
@@ -41,6 +46,9 @@ public class ScheduleController extends Controller
     @FXML
     private Label endStationLabel;
 
+    @FXML
+    private TableView<ObservableList<Schedule>> tableView;
+
     private List<com.metroporto.metro.Line> lines;
 
     private ImageView selectedImageView;
@@ -61,6 +69,8 @@ public class ScheduleController extends Controller
 
     private Route currentRoute;
 
+    private TimeTableType selectedDay;
+
     public ScheduleController()
     {
         lineDao = new MySqlLineDao();
@@ -68,15 +78,6 @@ public class ScheduleController extends Controller
         try
         {
             lines = lineDao.findAll();
-            for (com.metroporto.metro.Line line : lines)
-            {
-                Set<Station> stations = line.getRoutes().get(0).getTimetables().get(0).getStations();
-
-                for (Station station : stations)
-                {
-                    line.getStations().add(station);
-                }
-            }
             currentLineStations = lines.get(0).getStations();
             selectedColours = colours.get(lines.get(0).getLineId());
         } catch (DaoException de)
@@ -135,6 +136,8 @@ public class ScheduleController extends Controller
                 selectedColours = colours.get(line.getLineId());
                 drawStationNodes(currentLineStations, selectedColours,
                         stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
+
+                initialiseTimetable();
             });
 
             linesBox.getChildren().add(lineImageView);
@@ -163,11 +166,15 @@ public class ScheduleController extends Controller
                 TimeTableType.SATURDAY.getLabel(), TimeTableType.SUNDAY.getLabel());
         daysComboBox.getItems().addAll(days);
         daysComboBox.getSelectionModel().selectFirst();
+        daysComboBox.onActionProperty().setValue(event ->
+                initialiseTimetable()
+        );
+
+        initialiseTimetable();
     }
 
     public void initialiseInitialLine() throws DaoException
     {
-        // Set the first image as the default selected image
         setCurrentLine("A");
         selectedImageView = (ImageView) linesBox.getChildren().get(0);
         selectedImageView.setOpacity(selectedOpacity);
@@ -186,6 +193,66 @@ public class ScheduleController extends Controller
         }
     }
 
+    private void initialiseTimetable()
+    {
+        if (!tableView.getColumns().isEmpty())
+        {
+            tableView.getColumns().clear();
+        }
+
+
+        for (int i = 0; i < currentLineStations.size(); i++)
+        {
+            TableColumn<ObservableList<Schedule>, String> column = new TableColumn<>(currentLineStations.get(i).getStationId());
+
+            int j = i;
+            column.setCellValueFactory(cellData ->
+            {
+                ObservableList<Schedule> scheduleList = cellData.getValue();
+                if (scheduleList.size() > j)
+                {
+                    Schedule schedule = scheduleList.get(j);
+                    if (schedule.getDepartureTime().equals(LocalTime.of(4, 0)))
+                        return new SimpleStringProperty("-");
+                    return new SimpleStringProperty(schedule.getDepartureTime().toString());
+                } else
+                {
+                    return new SimpleStringProperty("");
+                }
+            });
+
+            tableView.getColumns().add(column);
+        }
+
+        ObservableList<ObservableList<Schedule>> rows = FXCollections.observableArrayList();
+        EnumLabelConverter labelConverter = new EnumLabelConverter();
+        TimeTableType selectedDay = labelConverter.fromLabel(daysComboBox.getSelectionModel().getSelectedItem(), TimeTableType.class);
+
+        for (Timetable currentTimetable : currentRoute.getTimetables())
+        {
+            if (currentTimetable.getTimeTableType().equals(selectedDay))
+            {
+                List<List<Schedule>> schedules = currentTimetable.getTimetableSchedules();
+
+                for (List<Schedule> schedule : schedules)
+                {
+                    rows.add(FXCollections.observableArrayList(schedule));
+                }
+
+            }
+        }
+
+        tableView.setItems(rows);
+
+        tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        tableView.getColumns().forEach(col ->
+        {
+            col.setReorderable(false);
+            col.setPrefWidth(60);
+        });
+        tableView.setMaxWidth((60 * currentLineStations.size() + 40));
+    }
+
     @Override
     public void setScene(Scene scene)
     {
@@ -193,6 +260,10 @@ public class ScheduleController extends Controller
         scene.widthProperty().addListener((observable, oldValue, newValue) ->
         {
             lineEndX = stationsPane.getPrefWidth() - 50;
+
+            stationsLine.setStartX(lineStartX);
+            stationsLine.setEndX(lineEndX);
+
             drawStationNodes(currentLineStations, selectedColours,
                     stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
         });
@@ -214,6 +285,7 @@ public class ScheduleController extends Controller
             drawStationNodes(currentLineStations, selectedColours,
                     stationsPane, stationsLine, 10, 6, 0, lineStartX, lineEndX);
             endStationLabel.setText(currentRoute.getEndStation().getStationName());
+            initialiseTimetable();
         }
     }
 }

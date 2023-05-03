@@ -23,28 +23,31 @@
         <HBox alignment="CENTER_LEFT" spacing="20">
             <Label text="Home" textFill="#0253a3" onMouseClicked="#redirectToHome" styleClass="text-underline"/>
             <Label text="Schedule" styleClass="nav-active" textFill="#0253a3"/>
-            <Label text="Journey Route" textFill="#0253a3" onMouseClicked="#redirectToJourneyRoute" styleClass="text-underline"/>
+            <Label text="Journey Route" textFill="#0253a3" onMouseClicked="#redirectToJourneyRoute"
+                   styleClass="text-underline"/>
             <Label text="Stations" textFill="#0253a3" onMouseClicked="#redirectToStation" styleClass="text-underline"/>
             <padding>
                 <Insets right="20"/>
             </padding>
         </HBox>
-        <Region HBox.hgrow="ALWAYS" />
+        <Region HBox.hgrow="ALWAYS"/>
         <HBox alignment="CENTER_RIGHT" spacing="20">
             <HBox spacing="10" alignment="CENTER_RIGHT">
                 <ImageView fx:id="profile" fitHeight="25" fitWidth="25" onMouseClicked="#redirectToProfile"/>
-                <Label text="My Profile" textFill="#0253a3" onMouseClicked="#redirectToProfile" styleClass="text-underline"/>
+                <Label text="My Profile" textFill="#0253a3" onMouseClicked="#redirectToProfile"
+                       styleClass="text-underline"/>
             </HBox>
             <HBox spacing="10" alignment="CENTER_RIGHT">
                 <ImageView fx:id="card" fitHeight="25" fitWidth="25" onMouseClicked="#redirectToCard"/>
-                <Label text="Card Details" textFill="#0253a3" onMouseClicked="#redirectToCard" styleClass="text-underline"/>
+                <Label text="Card Details" textFill="#0253a3" onMouseClicked="#redirectToCard"
+                       styleClass="text-underline"/>
             </HBox>
             <padding>
-                <Insets right="20" />
+                <Insets right="20"/>
             </padding>
         </HBox>
         <padding>
-            <Insets left="20" />
+            <Insets left="20"/>
         </padding>
     </HBox>
 
@@ -65,7 +68,7 @@
                 <Button styleClass="circle-button" prefWidth="30" prefHeight="30" onAction="#switchRoutes">
                     <graphic>
                         <ImageView fitHeight="15" fitWidth="15" preserveRatio="true">
-                            <Image url="/img/switch.png" />
+                            <Image url="/img/switch.png"/>
                         </ImageView>
                     </graphic>
                 </Button>
@@ -73,11 +76,11 @@
             <ComboBox fx:id="daysComboBox"/>
         </HBox>
         <Pane fx:id="stationsPane" prefWidth="1200">
-            <Line fx:id="stationsLine" startY="80" endY="80" stroke="black" strokeWidth="3" />
+            <Line fx:id="stationsLine" startY="80" endY="80" stroke="black" strokeWidth="3"/>
             <VBox.margin>
                 <Insets top="20" bottom="20"/>
             </VBox.margin>
         </Pane>
-        <TableView fx:id="timetable" />
+        <TableView fx:id="tableView"/>
     </VBox>
 </AnchorPane>
