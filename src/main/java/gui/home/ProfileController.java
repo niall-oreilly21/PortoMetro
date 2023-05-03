@@ -5,6 +5,7 @@ import com.metroporto.dao.userdao.UserDaoInterface;
 import com.metroporto.enums.Folder;
 import com.metroporto.enums.Page;
 import com.metroporto.exceptions.DaoException;
+import com.metroporto.users.Student;
 import gui.Controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +26,7 @@ import java.util.regex.Pattern;
 
 public class ProfileController extends Controller
 {
-    UserDaoInterface userDao;
+    private UserDaoInterface userDao;
 
     @FXML
     private ImageView editProfile;
@@ -131,6 +132,21 @@ public class ProfileController extends Controller
         emailLabel.setText("E-mail");
         emailBox.getChildren().addAll(emailLabel, emailText);
 
+        contentBox.getChildren().addAll(title, namesBox, emailBox);
+
+        if (user instanceof Student)
+        {
+            HBox universityBox = new HBox(10);
+            universityBox.setPadding(new Insets(10, 0,0,0));
+            Label universityText = new Label("University:");
+            universityText.getStyleClass().addAll("bold");
+            Label universityNameLabel = new Label();
+            universityNameLabel.setText(((Student) user).getUniversity().getUniversityName());
+            universityBox.getChildren().addAll(universityText, universityNameLabel);
+
+            contentBox.getChildren().add(universityBox);
+        }
+
         errorText = new Label();
 
         VBox buttonBox = new VBox();
@@ -148,7 +164,7 @@ public class ProfileController extends Controller
         surnameText.setFocusTraversable(false);
         emailText.setFocusTraversable(false);
 
-        contentBox.getChildren().addAll(title, namesBox, emailBox, errorText, buttonBox);
+        contentBox.getChildren().addAll(errorText, buttonBox);
     }
 
     @FXML
