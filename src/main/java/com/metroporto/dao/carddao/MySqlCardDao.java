@@ -169,7 +169,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
                 //Get a connection to the database
                 con = this.getConnection();
                 query = "INSERT INTO cards (card_id, user_id, card_price_id) VALUES\n" +
-                        "(?, ?, ?, ?, ?)";
+                        "(?, ?, ?)";
 
                 ps = con.prepareStatement(query);
 
@@ -235,7 +235,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
                 //Get a connection to the database
                 con = this.getConnection();
                 String query = "INSERT INTO grey_cards (card_id, card_start_date, card_end_date) VALUES\n" +
-                        "(?, ?)";
+                        "(?, ?, ?)";
 
                 ps = con.prepareStatement(query);
                 ps.setString(1, card.getCardId());
