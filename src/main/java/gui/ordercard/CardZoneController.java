@@ -1,12 +1,16 @@
 package gui.ordercard;
 
+import com.metroporto.cards.CardPrice;
+import com.metroporto.cards.StudentCard;
 import com.metroporto.dao.carddao.CardDaoInterface;
 import com.metroporto.dao.carddao.MySqlCardDao;
 import com.metroporto.dao.zonedao.MySqlZoneDao;
 import com.metroporto.dao.zonedao.ZoneDaoInterface;
+import com.metroporto.enums.CardAccessType;
 import com.metroporto.enums.Folder;
 import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Zone;
+import com.metroporto.users.Passenger;
 import com.metroporto.users.Student;
 import gui.Controller;
 import com.metroporto.enums.Page;
@@ -22,6 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +34,8 @@ public class CardZoneController extends Controller
 {
     private ZoneDaoInterface zoneDao;
     private CardDaoInterface cardDao;
+
+    private CardPrice cardPrice;
 
     @FXML
     private RadioButton allZonesRadioButton;
@@ -100,6 +107,7 @@ public class CardZoneController extends Controller
         {
             CheckBox checkBox = new CheckBox(zone.getZoneName());
             checkBox.setOnAction(this::handleCheckBoxAction);
+            checkBox.setUserData(zone);
             currentHBox.getChildren().add(checkBox);
             HBox.setMargin(checkBox, new Insets(15, 0, 0, 0));
             count++;
@@ -215,9 +223,9 @@ public class CardZoneController extends Controller
         Text redAsterisk = new Text(asterisk);
         redAsterisk.setFill(Color.web(errorColour));
 
-        List<CheckBox> selectedZones = getSelectedCheckboxes();
+        List<CheckBox> selectedZonesCheckboxes = getSelectedCheckboxes();
 
-        if (threeZonesRadioButton.isSelected() && selectedZones.size() < 3)
+        if (threeZonesRadioButton.isSelected() && selectedZonesCheckboxes.size() < 3)
         {
             errorText.setText(asterisk + " Choose 3 zones");
             zoneSelectionLabel.setGraphic(redAsterisk);
@@ -229,20 +237,48 @@ public class CardZoneController extends Controller
 
             if (user instanceof Student)
             {
-//                Card card = new StudentCard();
+                LocalDate now = LocalDate.now();
+                LocalDate startDate = LocalDate.of(now.getYear(), now.getMonth(), 1);
+                LocalDate endDate = startDate.plusMonths(1).withDayOfMonth(1).minusDays(1);
 
-                // if 3 zones -> card.setZones(zonesList)
-
-                // user.setCard(card)
-                // cardDao.insertCardForUser(user)
+                userCard = new StudentCard(startDate, endDate);
             }
 
-            for (CheckBox checkBox : selectedZones)
+            if (allZonesRadioButton.isSelected())
             {
-                System.out.println(checkBox.getText());
+                userCard.setAccessType(CardAccessType.ALL_ZONES);
+            } else
+            {
+                userCard.setAccessType(CardAccessType.THREE_ZONES);
+
+                List<Zone> selectedZones = new ArrayList<>();
+
+                for (CheckBox checkBox : selectedZonesCheckboxes)
+                {
+                    selectedZones.add((Zone) checkBox.getUserData());
+                }
+
+                userCard.setZones(selectedZones);
             }
 
-            // TODO: Add to database
+            try
+            {
+                cardPrice = cardDao.findCardPriceForCard(userCard);
+                userCard.setCardPrice(cardPrice);
+            } catch (DaoException de)
+            {
+                de.printStackTrace();
+            }
+
+            ((Passenger) user).setMetroCard(userCard);
+
+            try
+            {
+                cardDao.insertCardForPassenger(user);
+            } catch (DaoException de)
+            {
+                de.printStackTrace();
+            }
 
             redirectToPage(event, Folder.ORDER_CARD, Page.CARD_INVOICE);
         }
