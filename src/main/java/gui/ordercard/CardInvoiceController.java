@@ -1,6 +1,10 @@
 package gui.ordercard;
 
+import com.metroporto.cards.*;
+import com.metroporto.dao.carddao.CardDaoInterface;
+import com.metroporto.dao.carddao.MySqlCardDao;
 import com.metroporto.enums.Folder;
+import com.metroporto.exceptions.DaoException;
 import gui.Controller;
 import com.metroporto.enums.Page;
 import javafx.collections.FXCollections;
@@ -11,9 +15,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import java.io.IOException;
+import java.time.Period;
 
 public class CardInvoiceController extends Controller
 {
+    private CardPrice cardPrice;
+
+    private CardDaoInterface cardDao;
+
     @FXML
     private TableView<InvoiceItem> invoiceTable;
 
@@ -32,6 +41,21 @@ public class CardInvoiceController extends Controller
     @FXML
     private Label totalInvoicePrice;
 
+    public CardInvoiceController()
+    {
+        cardDao = new MySqlCardDao();
+
+        try
+        {
+            userCard = cardDao.findCardByUserId(user.getUserId());
+            cardPrice = cardDao.findCardPriceForCard(userCard);
+            userCard.setCardPrice(cardPrice);
+        } catch (DaoException de)
+        {
+            de.printStackTrace();
+        }
+    }
+
     public void initialize()
     {
         initialiseLogo();
@@ -39,8 +63,33 @@ public class CardInvoiceController extends Controller
 
         // Set the items of the table
         ObservableList<InvoiceItem> data = FXCollections.observableArrayList();
-        data.add(new InvoiceItem("Andante Grey Card", 1, 3));
-        data.add(new InvoiceItem("Monthly top up - 3 zones", 3, 30));
+
+        String cardType = getCardType(userCard);
+
+        data.add(new InvoiceItem("Andante " + capitalise(cardType) + " Card", 1,
+                cardPrice.getPhysicalCardPrice()));
+
+        int topUpQuantity;
+
+        if (userCard instanceof GreyCard)
+        {
+            topUpQuantity = (int) Period.between(((GreyCard) userCard).getStartDate(),
+                    ((GreyCard) userCard).getEndDate()).toTotalMonths() + 1;
+            data.add(new InvoiceItem("Monthly top up - " + userCard.getCardAccessType().getLabel(),
+                    topUpQuantity, cardPrice.getTopUpPrice()));
+        }
+
+        if (userCard instanceof BlueCard)
+        {
+            topUpQuantity = ((BlueCard) userCard).getTotalTrips();
+            if (userCard instanceof TourCard)
+                data.add(new InvoiceItem("1 trip (24 hours) - " + userCard.getCardAccessType().getLabel(),
+                        topUpQuantity, cardPrice.getTopUpPrice()));
+            else
+                data.add(new InvoiceItem("1 trip - " + userCard.getCardAccessType().getLabel(),
+                        topUpQuantity, cardPrice.getTopUpPrice()));
+        }
+
         invoiceTable.setItems(data);
 
         invoiceTable.setFixedCellSize(40);
@@ -54,26 +103,34 @@ public class CardInvoiceController extends Controller
         String formattedPrice = String.format("€ %.2f", total);
         totalInvoicePrice.setText(formattedPrice);
 
-        priceColumn.setCellFactory(tc -> new TableCell<>() {
+        priceColumn.setCellFactory(tc -> new TableCell<>()
+        {
             @Override
-            protected void updateItem(Double price, boolean empty) {
+            protected void updateItem(Double price, boolean empty)
+            {
                 super.updateItem(price, empty);
-                if (empty) {
+                if (empty)
+                {
                     setText(null);
-                } else {
+                } else
+                {
                     String formattedPrice = String.format("€ %.2f", price);
                     setText(formattedPrice);
                 }
             }
         });
 
-        totalPriceColumn.setCellFactory(tc -> new TableCell<>() {
+        totalPriceColumn.setCellFactory(tc -> new TableCell<>()
+        {
             @Override
-            protected void updateItem(Double price, boolean empty) {
+            protected void updateItem(Double price, boolean empty)
+            {
                 super.updateItem(price, empty);
-                if (empty) {
+                if (empty)
+                {
                     setText(null);
-                } else {
+                } else
+                {
                     String formattedPrice = String.format("€ %.2f", price);
                     setText(formattedPrice);
                 }
@@ -84,7 +141,7 @@ public class CardInvoiceController extends Controller
     public void setScene(Scene scene)
     {
         scene.heightProperty().addListener((observable, oldValue, newValue) ->
-            metro1.fitHeightProperty().setValue(newValue)
+                metro1.fitHeightProperty().setValue(newValue)
         );
     }
 
