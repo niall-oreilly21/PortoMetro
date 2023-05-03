@@ -1,10 +1,12 @@
 package gui.home;
 
 import com.metroporto.cards.*;
+import com.metroporto.dao.carddao.CardDaoInterface;
+import com.metroporto.dao.carddao.MySqlCardDao;
 import com.metroporto.enums.Folder;
 import com.metroporto.enums.Page;
+import com.metroporto.exceptions.DaoException;
 import com.metroporto.metro.Zone;
-import com.metroporto.users.Passenger;
 import com.metroporto.users.Student;
 import gui.Controller;
 import javafx.fxml.FXML;
@@ -23,6 +25,8 @@ import java.util.Objects;
 public class CardController extends Controller
 {
     private String cardType;
+
+    private CardDaoInterface cardDao;
 
     @FXML
     private ImageView cardTypeImageView;
@@ -49,7 +53,15 @@ public class CardController extends Controller
     {
         user = app.getUser();
 
-        userCard = ((Passenger) user).getMetroCard();
+        cardDao = new MySqlCardDao();
+
+        try
+        {
+            userCard = cardDao.findCardByUserId(user.getUserId());
+        } catch (DaoException de)
+        {
+            de.printStackTrace();
+        }
     }
 
     public void initialize()
