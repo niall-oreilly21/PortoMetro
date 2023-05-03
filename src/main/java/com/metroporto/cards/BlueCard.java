@@ -20,6 +20,11 @@ public class BlueCard extends Card
         checkExpiration();
     }
 
+    public BlueCard(int totalTrips)
+    {
+        this.totalTrips = totalTrips;
+    }
+
 
     public int getTotalTrips()
     {
