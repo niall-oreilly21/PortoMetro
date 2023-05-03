@@ -55,7 +55,14 @@
         <HBox spacing="50" alignment="CENTER">
             <ImageView fx:id="cardTypeImageView" preserveRatio="true" fitWidth="350"/>
             <VBox alignment="CENTER" spacing="5">
-                <HBox alignment="CENTER_LEFT">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <ImageView fx:id="activityIcon" fitWidth="30" fitHeight="30"/>
+                    <Label textFill="#00305f" fx:id="activityLabel" styleClass="subheader-label"/>
+                    <padding>
+                        <Insets bottom="10"/>
+                    </padding>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="5">
                     <Label textFill="#00305f" text="Card ID: " styleClass="subheader-label"/>
                     <Label fx:id="cardIdLabel"/>
                 </HBox>

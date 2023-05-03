@@ -2,6 +2,7 @@ package gui;
 
 import com.metroporto.ConnectionSchedule;
 import com.metroporto.JourneyRoute;
+import com.metroporto.cards.*;
 import com.metroporto.enums.Folder;
 import com.metroporto.enums.Page;
 import com.metroporto.metro.Schedule;
@@ -35,7 +36,9 @@ import java.util.Objects;
 
 public abstract class Controller
 {
-    protected User user;
+    protected static User user;
+
+    protected static Card userCard;
 
     @FXML
     protected ImageView logo;
@@ -359,5 +362,24 @@ public abstract class Controller
             group.getChildren().add(text);
             group.getChildren().add(timeText);
         }
+    }
+
+    public String getCardType(Card card)
+    {
+        String cardType = "";
+
+        if (card instanceof GreyCard)
+            if (card instanceof StudentCard)
+                cardType = "student";
+            else
+                cardType = "grey";
+
+        if (card instanceof BlueCard)
+            if (card instanceof TourCard)
+                cardType = "tour";
+            else
+                cardType = "blue";
+
+        return cardType;
     }
 }

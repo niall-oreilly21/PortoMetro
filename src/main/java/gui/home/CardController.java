@@ -17,13 +17,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class CardController extends Controller
 {
-    private Card userCard;
-
-    String cardType;
+    private String cardType;
 
     @FXML
     private ImageView cardTypeImageView;
@@ -31,6 +30,10 @@ public class CardController extends Controller
     @FXML
     private VBox cardBox;
 
+    @FXML
+    private ImageView activityIcon;
+    @FXML
+    private Label activityLabel;
     @FXML
     private Label cardIdLabel;
     @FXML
@@ -68,19 +71,7 @@ public class CardController extends Controller
 
     private void initialiseCardImage()
     {
-        cardType = "";
-
-        if (userCard instanceof GreyCard)
-            if (userCard instanceof StudentCard)
-                cardType = "student";
-            else
-                cardType = "grey";
-
-        if (userCard instanceof BlueCard)
-            if (userCard instanceof TourCard)
-                cardType = "tour";
-            else
-                cardType = "blue";
+        cardType = getCardType(userCard);
 
         Image cardTypeImage = new Image(Objects.requireNonNull(getClass()
                 .getResourceAsStream("/img/cards/" + cardType + ".png")));
@@ -89,8 +80,18 @@ public class CardController extends Controller
 
     private void initialiseCardDetails()
     {
-        cardIdLabel.setText(Integer.toString(userCard.getCardId()));
-        cardTypeLabel.setText(capitalise(cardType) + " userCard");
+        if (userCard.isActive())
+        {
+            activityIcon.setImage(new Image("/img/tick.png"));
+            activityLabel.setText("Card is active");
+        } else
+        {
+            activityIcon.setImage(new Image("/img/warning.png"));
+            activityLabel.setText("Card inactive");
+        }
+
+        cardIdLabel.setText(userCard.getCardId());
+        cardTypeLabel.setText(capitalise(cardType) + " Card");
 
         if (userCard.getZones() == null)
         {
@@ -99,17 +100,19 @@ public class CardController extends Controller
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.append(userCard.getCardAccessType().getLabel());
+            sb.append(userCard.getCardAccessType().getLabel()).append(" (");
 
             int count = 0;
             for (Zone zone : userCard.getZones())
             {
                 count++;
-                sb.append(zone.getZoneId()).append(", ");
                 if (count == userCard.getZones().size())
-                    sb.append(zone.getZoneId());
+                    sb.append(zone.getZoneName());
+                else
+                    sb.append(zone.getZoneName()).append(", ");
             }
 
+            sb.append(")");
             accessTypeLabel.setText(sb.toString());
         }
 
@@ -117,8 +120,16 @@ public class CardController extends Controller
         {
             case "student":
             case "grey":
-                topUpTitleLabel.setText("Validity end date: ");
-                topUpLabel.setText(((GreyCard) userCard).getEndDate().toString());
+                if (((GreyCard) userCard).getStartDate().isAfter(LocalDate.now()))
+                {
+                    topUpTitleLabel.setText("Validity start date: ");
+                    topUpLabel.setText(((GreyCard) userCard).getStartDate().toString());
+                }
+                else
+                {
+                    topUpTitleLabel.setText("Validity end date: ");
+                    topUpLabel.setText(((GreyCard) userCard).getEndDate().toString());
+                }
                 break;
             case "tour":
             case "blue":
