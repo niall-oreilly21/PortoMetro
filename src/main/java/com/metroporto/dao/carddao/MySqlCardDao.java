@@ -178,7 +178,7 @@ public class MySqlCardDao extends MySqlDao<Card> implements CardDaoInterface
                 card = ((Passenger) user).getMetroCard();
 
 
-                String cardId = prefix + String.format("%05d", nextNumber);
+                String cardId = prefix + String.format("%06d", nextNumber);
 
                 card.setCardId(cardId);
 
