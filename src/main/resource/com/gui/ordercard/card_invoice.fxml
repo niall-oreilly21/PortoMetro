@@ -47,15 +47,15 @@
                         </TableColumn>
                     </columns>
                 </TableView>
-                <HBox prefWidth="460" alignment="CENTER">
+                <HBox alignment="CENTER">
                     <Label text="Total price:" textFill="#00305f" styleClass="subheader-label" />
                     <Region HBox.hgrow="ALWAYS"/>
                     <Label fx:id="totalInvoicePrice" alignment="CENTER_RIGHT"/>
                     <padding>
-                        <Insets top="30"/>
+                        <Insets top="30" right="10"/>
                     </padding>
                 </HBox>
-                <Button onAction="#submitForm" text="Confirm and pay" prefWidth="470" styleClass="form-button">
+                <Button onAction="#submitForm" text="Confirm and pay" prefWidth="475" styleClass="form-button">
                     <VBox.margin>
                         <Insets>
                             <top>40</top>
