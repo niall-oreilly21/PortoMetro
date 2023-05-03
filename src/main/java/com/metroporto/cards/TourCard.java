@@ -18,4 +18,9 @@ public class TourCard extends BlueCard
     {
         super(cardAccessType, cardPrice, totalTrips);
     }
+
+    public TourCard(int totalTrips)
+    {
+        super(totalTrips);
+    }
 }
