@@ -68,11 +68,11 @@
 <br>
 <h3 id="built-with">:hammer: Built With</h3>
 
-<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
-<img src="https://img.shields.io/badge/-JavaFX-yellow?style=for-the-badge&color=yellow"/>
-<img src="https://shields.io/badge/Apache%20Maven-C71A36?logo=Apache%20Maven&style=for-the-badge&logoColor=white">
-<img src="https://shields.io/badge/MySQL-4479A1?logo=mysql&style=for-the-badge&logoColor=white">
-<img src="https://img.shields.io/badge/CSS-239120?&style=for-the-badge&logo=css3&logoColor=white">
+<a href="https://docs.oracle.com/en/java/"><img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"></a>
+<a href="https://openjfx.io/"><img src="https://img.shields.io/badge/-JavaFX-yellow?style=for-the-badge&color=yellow"/></a>
+<a href="https://maven.apache.org/guides/"><img src="https://shields.io/badge/Apache%20Maven-C71A36?logo=Apache%20Maven&style=for-the-badge&logoColor=white"></a>
+<a href="https://www.mysql.com/"><img src="https://shields.io/badge/MySQL-4479A1?logo=mysql&style=for-the-badge&logoColor=white"></a>
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS"><img src="https://img.shields.io/badge/CSS-239120?&style=for-the-badge&logo=css3&logoColor=white"></a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
