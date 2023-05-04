@@ -33,7 +33,7 @@
         <li><a href="#installation">:inbox_tray: Installation</a></li>
       </ul>
     </li>
-    <li><a href="#demo">:performing_arts: Demo</a>
+    <li><a href="#ui">:performing_arts: User Interface</a>
       <ul>
         <li><a href="#screenshots">:camera: Screenshots</a></li>
       </ul>
@@ -64,6 +64,8 @@
   <li>View user's card details</li>
 </ul>
 
+<p>There is also an administrator page that can only be accessed by the administrator of the page to show all trains, users, and cards.</p>
+<br>
 <h3 id="built-with">:hammer: Built With</h3>
 
 <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
@@ -77,7 +79,7 @@
 
 <h2 id="getting-started">:tada:&ensp;Getting Started</h2>
 <p>This project is a Java project built with Maven. To run locally, you will need a Java IDE (e.g. IntelliJ, Eclipse) and a running MySQL server.</p>
-
+<br>
 <h3 id="dependencies">:wrench: Dependencies</h3>
 <ul>
   <li>MySQL connector Java</li>
@@ -88,7 +90,7 @@
   <li>Apache PDFBox</li>
   <li>bcrypt</li>
 </ul>
-
+<br>
 <h3 id="installation">:inbox_tray: Installation</h3>
 <ol>
   <li>Clone the repository to your preferred Java IDE using the following link: <a href="https://github.com/niall-oreilly21/PortoMetro.git">https://github.com/niall-oreilly21/PortoMetro.git</a><br>
@@ -101,9 +103,29 @@
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)
 
-<h2 id="demo">:performing_arts:&ensp;Demo</h2>
+<h2 id="ui">:performing_arts:&ensp;User Interface</h2>
 
+<p>Shown in the picture below is the flow of the application's user interface:</p>
+<img width="700" src="https://i.postimg.cc/jSspVWFz/Flowchart.jpg">
+
+<br>
 <h3 id="screenshots">:camera: Screenshots</h3>
+
+| Screenshot | Page Title |
+| --- | --- |
+| <img src="https://i.postimg.cc/02GnqcT4/Screenshot-2023-05-04-at-02-24-28.png" alt="Sign up" width="500"/> | Sign Up  |
+| <img src="https://i.postimg.cc/VkYRsX1k/Screenshot-2023-05-04-at-02-24-06.png" alt="Sign in" width="500"/> | Sign In |
+| <img src="https://i.postimg.cc/hvNtyLrb/Screenshot-2023-05-04-at-03-13-18.png" alt="Passenger card" width="500"/> | Passenger Card |
+| <img src="https://i.postimg.cc/43GmR1TW/Screenshot-2023-05-04-at-03-11-45.png" alt="Student university" width="500"/> | Student University |
+| <img src="https://i.postimg.cc/rmnmWXRH/Screenshot-2023-05-04-at-03-12-11.png" alt="Card zone" width="500"/> | Card Zone |
+| <img src="https://i.postimg.cc/4yY3QLzx/Screenshot-2023-05-04-at-03-12-34.png" alt="Card invoice" width="500"/> | Card Invoice |
+| <img src="https://i.postimg.cc/VsTgf9t1/Screenshot-2023-05-04-at-00-19-31.png" alt="Home" width="500"/> | Home |
+| <img src="https://i.postimg.cc/pVFks2qR/Screenshot-2023-05-04-at-01-57-42.png" alt="Schedule" width="500"/> | Schedule |
+| <img src="https://i.postimg.cc/0jDfjfbb/Screenshot-2023-05-04-at-01-58-12.png" alt="Journey planner" width="500"/> | Journey Planner |
+| <img src="https://i.postimg.cc/28NGJPKv/Screenshot-2023-05-04-at-01-58-29.png" alt="Stations" width="500"/> | Stations |
+| <img src="https://i.postimg.cc/wvS29PxC/Screenshot-2023-05-04-at-01-59-08.png" alt="Edit profile" width="500"/> | Edit Profile |
+| <img src="https://i.postimg.cc/tT1DQybd/Screenshot-2023-05-04-at-01-59-24.png" alt="Card details" width="500"/> | Card Details |
+| <img src="https://i.postimg.cc/QxkMkT75/Screenshot-2023-05-04-at-03-17-34.png" alt="Administrator" width="500"/> | Administrator |
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)
 
@@ -126,4 +148,3 @@
   <li><a href="https://www.flaticon.com/">Flat Icon</a></li>
   <li><a href="https://en.metrodoporto.pt/metrodoporto/uploads/document/file/635/horarios_abril_2023.pdf">Porto Metro timetable information</a></li>
 </ul>
-
