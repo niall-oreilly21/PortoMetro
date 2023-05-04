@@ -6,7 +6,7 @@
 
 <h1 align="center">Porto Metro Application</h1>
   <p align="center">
-    The following application is a Java application which is based on the Porto Metro System.
+    The following application is a Java desktop application which is based on the Porto Metro System.
   <br/><br/>
     <a href="https://github.com/niall-oreilly21/PortoMetro"><strong>Explore the project »</strong></a>
     <br />
