@@ -20,7 +20,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">:train: About The Project</a>
+      <a href="#about-the-project">:train: About the Project</a>
       <ul>
         <li><a href="#main-features">:sparkles: Main Features</a></li>
         <l1><a href="#built-with">:hammer: Built With</a></li>
