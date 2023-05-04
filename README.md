@@ -72,6 +72,7 @@
 <img src="https://img.shields.io/badge/-JavaFX-yellow?style=for-the-badge&color=yellow"/>
 <img src="https://shields.io/badge/Apache%20Maven-C71A36?logo=Apache%20Maven&style=for-the-badge&logoColor=white">
 <img src="https://shields.io/badge/MySQL-4479A1?logo=mysql&style=for-the-badge&logoColor=white">
+<img src="https://img.shields.io/badge/CSS-239120?&style=for-the-badge&logo=css3&logoColor=white">
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -101,6 +102,8 @@
   <li>The application is now ready to go and can be accessed by running the application in: <a href="https://github.com/niall-oreilly21/PortoMetro/blob/master/src/main/java/com/gui/App.java">/src/main/java/com/gui/App.java</a></li>
 </ol>
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)
 
 <h2 id="ui">:performing_arts:&ensp;User Interface</h2>
@@ -127,6 +130,8 @@
 | <img src="https://i.postimg.cc/tT1DQybd/Screenshot-2023-05-04-at-01-59-24.png" alt="Card details" width="500"/> | Card Details |
 | <img src="https://i.postimg.cc/QxkMkT75/Screenshot-2023-05-04-at-03-17-34.png" alt="Administrator" width="500"/> | Administrator |
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)
 
 <h2 id="contributors">:busts_in_silhouette:&ensp;Contributors</h2>
@@ -139,6 +144,8 @@
 :boy:&ensp;<b>Niall O'Reilly</b> <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GitHub: <a href="https://github.com/niall-oreilly21">@niall-oreilly21</a> <br>
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)
 
 <h3 id="acknowledgments">:memo:&ensp;Acknowledgments</h3>
@@ -148,3 +155,5 @@
   <li><a href="https://www.flaticon.com/">Flat Icon</a></li>
   <li><a href="https://en.metrodoporto.pt/metrodoporto/uploads/document/file/635/horarios_abril_2023.pdf">Porto Metro timetable information</a></li>
 </ul>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
