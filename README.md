@@ -118,7 +118,7 @@
 | --- | --- |
 | <img src="https://i.postimg.cc/02GnqcT4/Screenshot-2023-05-04-at-02-24-28.png" alt="Sign up" width="500"/> | Sign Up  |
 | <img src="https://i.postimg.cc/VkYRsX1k/Screenshot-2023-05-04-at-02-24-06.png" alt="Sign in" width="500"/> | Sign In |
-| <img src="https://i.postimg.cc/hvNtyLrb/Screenshot-2023-05-04-at-03-13-18.png" alt="Passenger card" width="500"/> | Passenger Card |
+| <img src="https://i.postimg.cc/6pKhwJsw/Screenshot-2023-05-04-at-03-13-18.png" alt="Passenger card" width="500"/> | Passenger Card |
 | <img src="https://i.postimg.cc/43GmR1TW/Screenshot-2023-05-04-at-03-11-45.png" alt="Student university" width="500"/> | Student University |
 | <img src="https://i.postimg.cc/rmnmWXRH/Screenshot-2023-05-04-at-03-12-11.png" alt="Card zone" width="500"/> | Card Zone |
 | <img src="https://i.postimg.cc/4yY3QLzx/Screenshot-2023-05-04-at-03-12-34.png" alt="Card invoice" width="500"/> | Card Invoice |
